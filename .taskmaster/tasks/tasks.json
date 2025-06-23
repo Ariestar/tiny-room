@@ -1,0 +1,286 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 11,
+        "title": "Initialize React Project with Vite and Dependencies",
+        "description": "Set up the React project using Vite and TypeScript, including installing necessary dependencies.",
+        "details": "1.  Initialize a new React project with Vite and TypeScript: `npm create vite@latest my-website --template react-ts`\n2.  Install react-router-dom: `npm install react-router-dom`\n3.  Install framer-motion: `npm install framer-motion`\n4.  Install react-icons: `npm install react-icons`\n5.  Install Sass or set up CSS Modules based on the chosen styling approach.\n6.  Create the basic project structure as suggested in the PRD (src/components, src/pages, src/assets, src/styles).",
+        "testStrategy": "Verify that the project compiles successfully and that all dependencies are correctly installed. Run the default Vite development server to ensure the basic React app is running.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Vite React TypeScript Project",
+            "description": "Initialize a new React project with Vite and TypeScript using the command line.",
+            "dependencies": [],
+            "details": "Run the command `npm create vite@latest my-website --template react-ts` in the terminal to create a new Vite project with React and TypeScript. Replace `my-website` with the desired project name.",
+            "status": "done",
+            "testStrategy": "Verify that the project directory is created and contains the expected files and folders."
+          },
+          {
+            "id": 2,
+            "title": "Install Dependencies",
+            "description": "Install necessary dependencies including react-router-dom, framer-motion, react-icons, and sass.",
+            "dependencies": [],
+            "details": "Navigate to the project directory in the terminal and run the following commands:\n`npm install react-router-dom`\n`npm install framer-motion`\n`npm install react-icons`\n`npm install sass`",
+            "status": "done",
+            "testStrategy": "Check the `package.json` file to ensure that the dependencies are listed under the `dependencies` section. Also, verify that the `node_modules` directory contains the installed packages."
+          },
+          {
+            "id": 3,
+            "title": "Create Project Folder Structure",
+            "description": "Create the basic project folder structure including `src/components`, `src/pages`, `src/assets`, and `src/styles`.",
+            "dependencies": [],
+            "details": "Create the following directories within the `src` directory: `components`, `pages`, `assets`, and `styles`. This will help organize the project files.",
+            "status": "done",
+            "testStrategy": "Verify that the specified directories are created within the `src` directory."
+          },
+          {
+            "id": 4,
+            "title": "Configure SCSS Global Styles and Variables",
+            "description": "Configure SCSS for global styles and define variables for consistent styling.",
+            "dependencies": [],
+            "details": "Create a `global.scss` file in the `src/styles` directory. Define global styles and SCSS variables (e.g., colors, fonts) within this file. Import this file in the `main.tsx` file to apply the global styles.",
+            "status": "done",
+            "testStrategy": "Create a simple style rule in `global.scss` (e.g., setting the background color of the body) and verify that it is applied correctly in the browser."
+          },
+          {
+            "id": 5,
+            "title": "Set Up Basic Router in App.tsx",
+            "description": "Set up a basic router using react-router-dom in the `App.tsx` file and verify that the development server runs correctly.",
+            "dependencies": [],
+            "details": "Import `BrowserRouter`, `Routes`, and `Route` from `react-router-dom`. Wrap the application with `<BrowserRouter>`. Define a basic route (e.g., a route for the home page) using `<Routes>` and `<Route>`. Run `npm run dev` to start the development server and verify that the application runs without errors.",
+            "status": "done",
+            "testStrategy": "Verify that the development server starts without errors and that the defined route renders correctly in the browser."
+          },
+          {
+            "id": 6,
+            "title": "Initial Commit to Git",
+            "description": "Initialize a Git repository and commit the initial project setup.",
+            "dependencies": [],
+            "details": "Run `git init` in the project directory to initialize a Git repository. Add all files to the staging area using `git add .`. Commit the changes with a descriptive message using `git commit -m \"Initial project setup with Vite, React, TypeScript, and dependencies\"`.",
+            "status": "done",
+            "testStrategy": "Verify that the `.git` directory is created and that the initial commit is created with the specified message using `git log`."
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "title": "Implement Header and Footer Components",
+        "description": "Implement the header and footer components with navigation and basic styling.",
+        "details": "1.  Create Header and Footer components in `src/components`.\n2.  Implement the navigation links in the Header using `react-router-dom`.\n3.  Add basic styling to the Header and Footer using Sass or CSS Modules.\n4.  Include copyright information and social links in the Footer, using react-icons for social media icons.\n5.  Implement responsive design for both components.",
+        "testStrategy": "Verify that the Header and Footer components are displayed correctly on different screen sizes. Check that the navigation links work as expected and that social media icons are rendered correctly.",
+        "priority": "high",
+        "dependencies": [
+          11
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Header and Footer Layout",
+            "description": "Design the layout for the Header and Footer components, including navigation links, logo/name placement, responsive menu considerations, a placeholder for a dark mode toggle in the header, copyright information, and social media link placements in the footer.",
+            "dependencies": [],
+            "details": "Create mockups or wireframes for both components, paying attention to responsive design principles. Decide on the placement of key elements like the logo, navigation links, copyright notice, and social media icons. Consider how the navigation will collapse on smaller screens (e.g., hamburger menu).",
+            "status": "done",
+            "testStrategy": "Review the design mockups with the team to ensure they meet the project's requirements and are user-friendly."
+          },
+          {
+            "id": 2,
+            "title": "Implement Header Component",
+            "description": "Develop the Header component in `app/components/Header` using TypeScript and `NavLink` from `react-router-dom` for navigation. Include a placeholder for the dark mode toggle.",
+            "dependencies": [],
+            "details": "Create a `Header.tsx` file in the `app/components` directory. Use TypeScript to define the component's props (if any). Implement the navigation links using `NavLink` components from `react-router-dom`. Add a placeholder element (e.g., a button) for the dark mode toggle functionality, which will be implemented later. Ensure the component renders the logo/name and navigation links according to the design.",
+            "status": "done",
+            "testStrategy": "Manually test the Header component in the browser to ensure the navigation links are working correctly and the layout matches the design. Verify that the placeholder for the dark mode toggle is present."
+          },
+          {
+            "id": 3,
+            "title": "Implement Footer Component",
+            "description": "Develop the Footer component in `app/components/Footer` with copyright information and social media link icons using `react-icons`.",
+            "dependencies": [],
+            "details": "Create a `Footer.tsx` file in the `app/components` directory. Include the copyright information and social media links. Use the `react-icons` library to display the social media icons. Ensure the component renders the copyright notice and social media icons according to the design.",
+            "status": "done",
+            "testStrategy": "Manually test the Footer component in the browser to ensure the copyright information and social media icons are displayed correctly and the links are functional."
+          },
+          {
+            "id": 4,
+            "title": "Add Responsive SCSS Styling",
+            "description": "Add responsive SCSS styling to the Header and Footer components in `app/styles/components`.",
+            "dependencies": [],
+            "details": "Create SCSS files (e.g., `_header.scss`, `_footer.scss`) in the `app/styles/components` directory. Use SCSS variables, mixins, and media queries to implement the responsive design for both components. Ensure the styling matches the design mockups and adapts correctly to different screen sizes. Pay special attention to the mobile navigation menu.",
+            "status": "done",
+            "testStrategy": "Use browser developer tools to test the responsiveness of the Header and Footer components on different screen sizes. Verify that the styling matches the design mockups and that the mobile navigation menu functions correctly."
+          },
+          {
+            "id": 5,
+            "title": "Integrate Header and Footer in Layout",
+            "description": "Integrate the Header and Footer components into the root layout or main router of the application.",
+            "dependencies": [],
+            "details": "Import the Header and Footer components into the appropriate layout file (e.g., `app/layout.tsx` or the main router component). Render the Header at the top of the page and the Footer at the bottom. Ensure that the Header and Footer are visible on all pages of the application.",
+            "status": "done",
+            "testStrategy": "Navigate through the application in the browser to ensure that the Header and Footer are displayed correctly on all pages. Verify that the layout is consistent and that there are no styling issues."
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "title": "Implement Home, and Projects Pages",
+        "description": "Create the Home, and Projects pages with their respective content and styling. Replace the About page with a Gallery page.",
+        "status": "done",
+        "dependencies": [
+          11,
+          12
+        ],
+        "priority": "high",
+        "details": "1.  Create Home, and Projects components in `src/pages`.\n2.  Implement the content for each page as described in the PRD.\n3.  Create the ProjectCard component in `src/components` to display project information.\n4.  Use react-router-dom to set up routes for each page.\n5.  Apply styling to each page using Sass or CSS Modules.",
+        "testStrategy": "Verify that each page displays the correct content and that the layout is responsive. Check that the ProjectCard component renders project information correctly. Ensure that the routes are configured correctly and that navigation between pages works as expected.",
+        "subtasks": [
+          {
+            "id": 3,
+            "title": "Implement Projects Page Content and Structure",
+            "description": "Implement the Projects page with a grid of `ProjectCard` components, pulling data from a static array.",
+            "status": "done",
+            "dependencies": [],
+            "details": "Populate `src/pages/Projects.js` with a grid layout. Import the `ProjectCard` component and map over the static project data array (created in subtask 6) to render a `ProjectCard` for each project.",
+            "testStrategy": "Verify that all projects are displayed correctly in the grid layout."
+          },
+          {
+            "id": 4,
+            "title": "Create ProjectCard Component",
+            "description": "Create the `ProjectCard` component in `src/components` to display individual project information.",
+            "status": "done",
+            "dependencies": [],
+            "details": "Create `src/components/ProjectCard.js`. This component should accept props for project title, description, and image URL. It should render a card-like UI with this information.",
+            "testStrategy": "Verify that the component renders correctly with sample data."
+          },
+          {
+            "id": 5,
+            "title": "Create Placeholder Project Data",
+            "description": "Create a placeholder project data file under `src/assets/data/projects.js`.",
+            "status": "done",
+            "dependencies": [],
+            "details": "Create `src/assets/data/projects.js`. This file should export an array of project objects, each containing properties like `title`, `description`, and `imageUrl`. Include at least 3 sample projects.",
+            "testStrategy": "Verify that the data file exists and contains valid project data."
+          },
+          {
+            "id": 6,
+            "title": "Add SCSS Styling for Pages",
+            "description": "Add SCSS styling for the Home, and Projects pages under `src/styles/pages`.",
+            "status": "done",
+            "dependencies": [],
+            "details": "Create `src/styles/pages/Home.scss`, and `src/styles/pages/Projects.scss`. Add styling to each page to match the design specifications. Include styling for the `ProjectCard` component.",
+            "testStrategy": "Verify that the pages are styled correctly according to the design specifications."
+          },
+          {
+            "id": 7,
+            "title": "Implement Fade-in Animations",
+            "description": "Use Framer Motion to add simple fade-in animations to the Home, and Projects pages.",
+            "status": "done",
+            "dependencies": [],
+            "details": "Install `framer-motion`. Wrap the content of each page with a `motion.div` component and use the `initial`, `animate`, and `exit` props to create a fade-in animation.",
+            "testStrategy": "Verify that the fade-in animations are working correctly on each page."
+          },
+          {
+            "id": 8,
+            "title": "Implement Responsive Design",
+            "description": "Add responsive design with media queries to ensure the pages look good on different screen sizes.",
+            "status": "done",
+            "dependencies": [],
+            "details": "Add media queries to the SCSS files to adjust the layout and styling of the pages for different screen sizes. Test on various devices and screen resolutions.",
+            "testStrategy": "Verify that the pages are responsive and look good on different screen sizes."
+          },
+          {
+            "id": 9,
+            "title": "Remove About Page Files and Routes",
+            "description": "Remove the About page component and related route configurations.",
+            "status": "done",
+            "dependencies": [],
+            "details": "Delete `src/pages/About.js` and remove any references to the About page route in `App.js` or any other routing configuration files.",
+            "testStrategy": "Verify that the About page is no longer accessible and does not cause any errors."
+          },
+          {
+            "id": 10,
+            "title": "Create Gallery Page Route Files and Components",
+            "description": "Create the basic file structure and React components for the Gallery page within the `src/pages` directory.",
+            "status": "done",
+            "dependencies": [],
+            "details": "Create `src/pages/Gallery.js`. The file should contain a basic functional component that returns a placeholder JSX element (e.g., a div with the page name).",
+            "testStrategy": "Verify that the Gallery component renders without errors."
+          },
+          {
+            "id": 1,
+            "title": "Create Page Route Files and Components",
+            "description": "Create the basic file structure and React components for the Home, About, and Projects pages within the `src/pages` directory.",
+            "dependencies": [],
+            "details": "Create `src/pages/Home.js`, `src/pages/About.js`, and `src/pages/Projects.js`. Each file should contain a basic functional component that returns a placeholder JSX element (e.g., a div with the page name).",
+            "status": "done",
+            "testStrategy": "Verify that each component renders without errors."
+          },
+          {
+            "id": 2,
+            "title": "Implement Home Page Content and Structure",
+            "description": "Implement the hero section, introductory text, and call-to-action button on the Home page.",
+            "dependencies": [],
+            "details": "Populate `src/pages/Home.js` with the required content. The hero section should include a title and a brief description. The introductory text should provide an overview of the website. The call-to-action button should link to the Projects page.",
+            "status": "done",
+            "testStrategy": "Verify that all elements (hero, intro, CTA) are present and display the correct content."
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "title": "Deploy Website",
+        "description": "Deploy the website to Vercel, GitHub Pages, or Netlify.",
+        "details": "1.  Configure the project for deployment to the chosen platform.\n2.  Set up continuous deployment to automatically deploy changes when pushing to the repository.\n3.  Verify that the website is accessible and functioning correctly on the deployed platform.",
+        "testStrategy": "Verify that the website is deployed successfully and that all pages are accessible. Check that all features are working as expected on the deployed website.",
+        "priority": "high",
+        "dependencies": [
+          11,
+          12,
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "Implement Gallery Page with Responsive Photo Gallery",
+        "description": "Implement a Gallery page featuring a responsive photo gallery with a grid layout, image modal/lightbox, and smooth animations, integrated into the site navigation.",
+        "details": "1. Create a Gallery component in `src/pages`. 2. Implement a responsive grid layout for the photo gallery using CSS Grid or a library like Masonry. 3. Integrate an image modal/lightbox that opens when a photo is clicked, displaying the full-size image with smooth animations using `framer-motion`. 4. Fetch image data from a local source (e.g., a JSON file in `src/assets`) or a remote API. 5. Add navigation links to the Gallery page in the Header component. 6. Ensure the Gallery page is accessible and responsive on different devices and screen sizes. 7. Remove all About page related components, routes, and references from the project.",
+        "testStrategy": "1. Verify that the Gallery page displays the photo gallery in a responsive grid layout. 2. Check that clicking on an image opens the modal/lightbox with the full-size image and smooth animations. 3. Ensure that the navigation links to the Gallery page work correctly. 4. Test the Gallery page on different devices and screen sizes to ensure responsiveness. 5. Confirm that all About page related components, routes, and references have been successfully removed from the project.",
+        "status": "pending",
+        "dependencies": [
+          11,
+          12,
+          13
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Integrate and Finalize Gallery Page",
+        "description": "Finalize the Gallery page integration by adding the navigation link, ensuring the route loads the component correctly, removing obsolete references, and applying SCSS tweaks for navigation hover and active states.",
+        "details": "1.  Add a 'Gallery' navigation link to the Header component, ensuring it links to the `/gallery` route.\n2.  Verify that accessing the `/gallery` route correctly loads the Gallery component, including the responsive grid and modal lightbox.\n3.  Remove any leftover references to 'About' or 'Contact' pages from the codebase, including navigation links, component imports, or text content.\n4.  Write SCSS to style the navigation hover and active states for all navigation links, including the newly added 'Gallery' link. Ensure visual consistency across the site.\n5.  Review the Gallery component for any unnecessary code or comments and clean them up.\n6.  Ensure the Gallery page is accessible and responsive on different screen sizes and devices.",
+        "testStrategy": "1.  Verify that the 'Gallery' navigation link is present in the Header and correctly links to the `/gallery` route.\n2.  Confirm that the Gallery component loads correctly when accessing the `/gallery` route, displaying the responsive grid and modal lightbox.\n3.  Check that all references to 'About' or 'Contact' pages have been removed from the codebase.\n4.  Inspect the navigation links to ensure that the hover and active states are styled correctly and consistently across the site.\n5.  Test the Gallery page on different screen sizes and devices to ensure responsiveness and accessibility.",
+        "status": "pending",
+        "dependencies": [
+          12,
+          13,
+          16
+        ],
+        "priority": "high",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-06-23T11:52:57.450Z",
+      "updated": "2025-06-23T16:49:06.312Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

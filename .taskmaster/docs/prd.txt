@@ -1,0 +1,74 @@
+# 个人网站 PRD（产品需求文档）
+
+## 一、项目背景
+- 目标：搭建一个简洁、实用的个人网站，用于展示个人简介、项目作品、技能和联系方式。
+- 技术栈：React + Vite
+- 部署平台：Vercel（优先）、GitHub Pages 或 Netlify
+- 主要面向：个人展示、求职、作品集
+
+## 二、核心需求
+1. **首页（Home）**
+   - 简洁欢迎语
+   - 个人头像或形象图片
+   - 快速导航到其他页面
+
+2. **关于我（About）**
+   - 个人简介
+   - 技能标签
+   - 教育/工作经历（可选）
+
+3. **项目展示（Projects）**
+   - 以卡片形式展示主要项目
+   - 每个项目包含：名称、简介、技术栈、链接/截图
+
+4. **联系方式（Contact）**
+   - 邮箱、社交媒体链接（如 GitHub、LinkedIn、微信等）
+   - 可选：表单留言
+
+5. **全站导航与页脚**
+   - 顶部导航栏（Header）
+   - 底部页脚（Footer），包含版权信息和社交链接
+
+## 三、设计与体验
+- 响应式设计，适配手机、平板和桌面端
+- 简洁现代风格，配色清新
+- 支持暗色模式（可选）
+- 页面切换有基础动画效果
+- 图标使用 react-icons
+
+## 四、技术实现
+- 使用 Vite + React + TypeScript
+- 路由管理：react-router-dom
+- 动画：framer-motion
+- 样式：Sass 或 CSS Modules
+- 组件拆分：Header、Footer、ProjectCard、SocialLinks 等
+
+## 五、项目结构建议
+src/
+├── components/
+│   ├── Header/
+│   ├── Footer/
+│   ├── ProjectCard/
+│   └── SocialLinks/
+├── pages/
+│   ├── Home/
+│   ├── About/
+│   └── Projects/
+├── assets/
+├── styles/
+│   ├── variables.scss
+│   └── global.scss
+└── App.tsx
+
+## 六、部署
+- 推荐使用 Vercel，一键部署，自动 HTTPS
+- 可选：GitHub Pages、Netlify
+
+## 七、后续可扩展方向
+- 博客功能
+- 后台管理
+- 多语言支持
+- 作品详情页
+
+---
+如需进一步细化功能或设计，请补充具体需求。 
