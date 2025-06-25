@@ -1,6 +1,6 @@
 .site-footer {
-  background-color: #f1f5f9;
-  border-top: 1px solid #e2e8f0;
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
 
   .container {
     max-width: 1200px;
@@ -15,7 +15,7 @@
 
   .copyright {
     font-size: 0.875rem;
-    color: #4a5568;
+    color: var(--color-text);
   }
 
   .social-links {
@@ -23,7 +23,7 @@
     gap: 1rem;
 
     a {
-      color: #4a5568;
+      color: var(--color-text);
       font-size: 1.25rem;
       transition: color 0.2s ease;
 
@@ -32,4 +32,4 @@
       }
     }
   }
-} 
+}

@@ -2,760 +2,581 @@
   "master": {
     "tasks": [
       {
-        "id": 11,
-        "title": "Initialize React Project with Vite and Dependencies",
-        "description": "Set up the React project using Vite and TypeScript, including installing necessary dependencies.",
-        "details": "1.  Initialize a new React project with Vite and TypeScript: `npm create vite@latest my-website --template react-ts`\n2.  Install react-router-dom: `npm install react-router-dom`\n3.  Install framer-motion: `npm install framer-motion`\n4.  Install react-icons: `npm install react-icons`\n5.  Install Sass or set up CSS Modules based on the chosen styling approach.\n6.  Create the basic project structure as suggested in the PRD (src/components, src/pages, src/assets, src/styles).",
-        "testStrategy": "Verify that the project compiles successfully and that all dependencies are correctly installed. Run the default Vite development server to ensure the basic React app is running.",
+        "id": 1,
+        "title": "Define Website Structure and Data Models",
+        "description": "Define the website's structure, data models, and design tokens.",
+        "details": "1. Create a complete Sitemap/page flow diagram to visualize the website's structure.\n2. Define data models for each page using TypeScript interfaces or Prisma schema to ensure data consistency.\n3. Update the routing table (routes.ts) and top navigation (Header.tsx) to reflect the new structure.\n4. Extract design tokens (colors, fonts, spacing) into global.scss or tokens.ts for consistent styling.",
+        "testStrategy": "Verify the sitemap accurately reflects the intended website structure. Check that data models are correctly defined and used across the application. Ensure the routing table and navigation are updated and functional. Confirm that design tokens are correctly extracted and applied to the website's styling.",
         "priority": "high",
         "dependencies": [],
-        "status": "done",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Create Vite React TypeScript Project",
-            "description": "Initialize a new React project with Vite and TypeScript using the command line.",
-            "dependencies": [],
-            "details": "Run the command `npm create vite@latest my-website --template react-ts` in the terminal to create a new Vite project with React and TypeScript. Replace `my-website` with the desired project name.",
-            "status": "done",
-            "testStrategy": "Verify that the project directory is created and contains the expected files and folders."
-          },
-          {
-            "id": 2,
-            "title": "Install Dependencies",
-            "description": "Install necessary dependencies including react-router-dom, framer-motion, react-icons, and sass.",
-            "dependencies": [],
-            "details": "Navigate to the project directory in the terminal and run the following commands:\n`npm install react-router-dom`\n`npm install framer-motion`\n`npm install react-icons`\n`npm install sass`",
-            "status": "done",
-            "testStrategy": "Check the `package.json` file to ensure that the dependencies are listed under the `dependencies` section. Also, verify that the `node_modules` directory contains the installed packages."
-          },
-          {
-            "id": 3,
-            "title": "Create Project Folder Structure",
-            "description": "Create the basic project folder structure including `src/components`, `src/pages`, `src/assets`, and `src/styles`.",
-            "dependencies": [],
-            "details": "Create the following directories within the `src` directory: `components`, `pages`, `assets`, and `styles`. This will help organize the project files.",
-            "status": "done",
-            "testStrategy": "Verify that the specified directories are created within the `src` directory."
-          },
-          {
-            "id": 4,
-            "title": "Configure SCSS Global Styles and Variables",
-            "description": "Configure SCSS for global styles and define variables for consistent styling.",
-            "dependencies": [],
-            "details": "Create a `global.scss` file in the `src/styles` directory. Define global styles and SCSS variables (e.g., colors, fonts) within this file. Import this file in the `main.tsx` file to apply the global styles.",
-            "status": "done",
-            "testStrategy": "Create a simple style rule in `global.scss` (e.g., setting the background color of the body) and verify that it is applied correctly in the browser."
-          },
-          {
-            "id": 5,
-            "title": "Set Up Basic Router in App.tsx",
-            "description": "Set up a basic router using react-router-dom in the `App.tsx` file and verify that the development server runs correctly.",
-            "dependencies": [],
-            "details": "Import `BrowserRouter`, `Routes`, and `Route` from `react-router-dom`. Wrap the application with `<BrowserRouter>`. Define a basic route (e.g., a route for the home page) using `<Routes>` and `<Route>`. Run `npm run dev` to start the development server and verify that the application runs without errors.",
-            "status": "done",
-            "testStrategy": "Verify that the development server starts without errors and that the defined route renders correctly in the browser."
-          },
-          {
-            "id": 6,
-            "title": "Initial Commit to Git",
-            "description": "Initialize a Git repository and commit the initial project setup.",
-            "dependencies": [],
-            "details": "Run `git init` in the project directory to initialize a Git repository. Add all files to the staging area using `git add .`. Commit the changes with a descriptive message using `git commit -m \"Initial project setup with Vite, React, TypeScript, and dependencies\"`.",
-            "status": "done",
-            "testStrategy": "Verify that the `.git` directory is created and that the initial commit is created with the specified message using `git log`."
-          }
-        ]
-      },
-      {
-        "id": 12,
-        "title": "Implement Header and Footer Components",
-        "description": "Implement the header and footer components with navigation and basic styling.",
-        "details": "1.  Create Header and Footer components in `src/components`.\n2.  Implement the navigation links in the Header using `react-router-dom`.\n3.  Add basic styling to the Header and Footer using Sass or CSS Modules.\n4.  Include copyright information and social links in the Footer, using react-icons for social media icons.\n5.  Implement responsive design for both components.",
-        "testStrategy": "Verify that the Header and Footer components are displayed correctly on different screen sizes. Check that the navigation links work as expected and that social media icons are rendered correctly.",
-        "priority": "high",
-        "dependencies": [
-          11
-        ],
-        "status": "done",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Design Header and Footer Layout",
-            "description": "Design the layout for the Header and Footer components, including navigation links, logo/name placement, responsive menu considerations, a placeholder for a dark mode toggle in the header, copyright information, and social media link placements in the footer.",
-            "dependencies": [],
-            "details": "Create mockups or wireframes for both components, paying attention to responsive design principles. Decide on the placement of key elements like the logo, navigation links, copyright notice, and social media icons. Consider how the navigation will collapse on smaller screens (e.g., hamburger menu).",
-            "status": "done",
-            "testStrategy": "Review the design mockups with the team to ensure they meet the project's requirements and are user-friendly."
-          },
-          {
-            "id": 2,
-            "title": "Implement Header Component",
-            "description": "Develop the Header component in `app/components/Header` using TypeScript and `NavLink` from `react-router-dom` for navigation. Include a placeholder for the dark mode toggle.",
-            "dependencies": [],
-            "details": "Create a `Header.tsx` file in the `app/components` directory. Use TypeScript to define the component's props (if any). Implement the navigation links using `NavLink` components from `react-router-dom`. Add a placeholder element (e.g., a button) for the dark mode toggle functionality, which will be implemented later. Ensure the component renders the logo/name and navigation links according to the design.",
-            "status": "done",
-            "testStrategy": "Manually test the Header component in the browser to ensure the navigation links are working correctly and the layout matches the design. Verify that the placeholder for the dark mode toggle is present."
-          },
-          {
-            "id": 3,
-            "title": "Implement Footer Component",
-            "description": "Develop the Footer component in `app/components/Footer` with copyright information and social media link icons using `react-icons`.",
-            "dependencies": [],
-            "details": "Create a `Footer.tsx` file in the `app/components` directory. Include the copyright information and social media links. Use the `react-icons` library to display the social media icons. Ensure the component renders the copyright notice and social media icons according to the design.",
-            "status": "done",
-            "testStrategy": "Manually test the Footer component in the browser to ensure the copyright information and social media icons are displayed correctly and the links are functional."
-          },
-          {
-            "id": 4,
-            "title": "Add Responsive SCSS Styling",
-            "description": "Add responsive SCSS styling to the Header and Footer components in `app/styles/components`.",
-            "dependencies": [],
-            "details": "Create SCSS files (e.g., `_header.scss`, `_footer.scss`) in the `app/styles/components` directory. Use SCSS variables, mixins, and media queries to implement the responsive design for both components. Ensure the styling matches the design mockups and adapts correctly to different screen sizes. Pay special attention to the mobile navigation menu.",
-            "status": "done",
-            "testStrategy": "Use browser developer tools to test the responsiveness of the Header and Footer components on different screen sizes. Verify that the styling matches the design mockups and that the mobile navigation menu functions correctly."
-          },
-          {
-            "id": 5,
-            "title": "Integrate Header and Footer in Layout",
-            "description": "Integrate the Header and Footer components into the root layout or main router of the application.",
-            "dependencies": [],
-            "details": "Import the Header and Footer components into the appropriate layout file (e.g., `app/layout.tsx` or the main router component). Render the Header at the top of the page and the Footer at the bottom. Ensure that the Header and Footer are visible on all pages of the application.",
-            "status": "done",
-            "testStrategy": "Navigate through the application in the browser to ensure that the Header and Footer are displayed correctly on all pages. Verify that the layout is consistent and that there are no styling issues."
-          }
-        ]
-      },
-      {
-        "id": 13,
-        "title": "Implement Home, and Projects Pages",
-        "description": "Create the Home, and Projects pages with their respective content and styling. Replace the About page with a Gallery page.",
-        "status": "done",
-        "dependencies": [
-          11,
-          12
-        ],
-        "priority": "high",
-        "details": "1.  Create Home, and Projects components in `src/pages`.\n2.  Implement the content for each page as described in the PRD.\n3.  Create the ProjectCard component in `src/components` to display project information.\n4.  Use react-router-dom to set up routes for each page.\n5.  Apply styling to each page using Sass or CSS Modules.",
-        "testStrategy": "Verify that each page displays the correct content and that the layout is responsive. Check that the ProjectCard component renders project information correctly. Ensure that the routes are configured correctly and that navigation between pages works as expected.",
-        "subtasks": [
-          {
-            "id": 3,
-            "title": "Implement Projects Page Content and Structure",
-            "description": "Implement the Projects page with a grid of `ProjectCard` components, pulling data from a static array.",
-            "status": "done",
-            "dependencies": [],
-            "details": "Populate `src/pages/Projects.js` with a grid layout. Import the `ProjectCard` component and map over the static project data array (created in subtask 6) to render a `ProjectCard` for each project.",
-            "testStrategy": "Verify that all projects are displayed correctly in the grid layout."
-          },
-          {
-            "id": 4,
-            "title": "Create ProjectCard Component",
-            "description": "Create the `ProjectCard` component in `src/components` to display individual project information.",
-            "status": "done",
-            "dependencies": [],
-            "details": "Create `src/components/ProjectCard.js`. This component should accept props for project title, description, and image URL. It should render a card-like UI with this information.",
-            "testStrategy": "Verify that the component renders correctly with sample data."
-          },
-          {
-            "id": 5,
-            "title": "Create Placeholder Project Data",
-            "description": "Create a placeholder project data file under `src/assets/data/projects.js`.",
-            "status": "done",
-            "dependencies": [],
-            "details": "Create `src/assets/data/projects.js`. This file should export an array of project objects, each containing properties like `title`, `description`, and `imageUrl`. Include at least 3 sample projects.",
-            "testStrategy": "Verify that the data file exists and contains valid project data."
-          },
-          {
-            "id": 6,
-            "title": "Add SCSS Styling for Pages",
-            "description": "Add SCSS styling for the Home, and Projects pages under `src/styles/pages`.",
-            "status": "done",
-            "dependencies": [],
-            "details": "Create `src/styles/pages/Home.scss`, and `src/styles/pages/Projects.scss`. Add styling to each page to match the design specifications. Include styling for the `ProjectCard` component.",
-            "testStrategy": "Verify that the pages are styled correctly according to the design specifications."
-          },
-          {
-            "id": 7,
-            "title": "Implement Fade-in Animations",
-            "description": "Use Framer Motion to add simple fade-in animations to the Home, and Projects pages.",
-            "status": "done",
-            "dependencies": [],
-            "details": "Install `framer-motion`. Wrap the content of each page with a `motion.div` component and use the `initial`, `animate`, and `exit` props to create a fade-in animation.",
-            "testStrategy": "Verify that the fade-in animations are working correctly on each page."
-          },
-          {
-            "id": 8,
-            "title": "Implement Responsive Design",
-            "description": "Add responsive design with media queries to ensure the pages look good on different screen sizes.",
-            "status": "done",
-            "dependencies": [],
-            "details": "Add media queries to the SCSS files to adjust the layout and styling of the pages for different screen sizes. Test on various devices and screen resolutions.",
-            "testStrategy": "Verify that the pages are responsive and look good on different screen sizes."
-          },
-          {
-            "id": 9,
-            "title": "Remove About Page Files and Routes",
-            "description": "Remove the About page component and related route configurations.",
-            "status": "done",
-            "dependencies": [],
-            "details": "Delete `src/pages/About.js` and remove any references to the About page route in `App.js` or any other routing configuration files.",
-            "testStrategy": "Verify that the About page is no longer accessible and does not cause any errors."
-          },
-          {
-            "id": 10,
-            "title": "Create Gallery Page Route Files and Components",
-            "description": "Create the basic file structure and React components for the Gallery page within the `src/pages` directory.",
-            "status": "done",
-            "dependencies": [],
-            "details": "Create `src/pages/Gallery.js`. The file should contain a basic functional component that returns a placeholder JSX element (e.g., a div with the page name).",
-            "testStrategy": "Verify that the Gallery component renders without errors."
-          },
-          {
-            "id": 1,
-            "title": "Create Page Route Files and Components",
-            "description": "Create the basic file structure and React components for the Home, About, and Projects pages within the `src/pages` directory.",
-            "dependencies": [],
-            "details": "Create `src/pages/Home.js`, `src/pages/About.js`, and `src/pages/Projects.js`. Each file should contain a basic functional component that returns a placeholder JSX element (e.g., a div with the page name).",
-            "status": "done",
-            "testStrategy": "Verify that each component renders without errors."
-          },
-          {
-            "id": 2,
-            "title": "Implement Home Page Content and Structure",
-            "description": "Implement the hero section, introductory text, and call-to-action button on the Home page.",
-            "dependencies": [],
-            "details": "Populate `src/pages/Home.js` with the required content. The hero section should include a title and a brief description. The introductory text should provide an overview of the website. The call-to-action button should link to the Projects page.",
-            "status": "done",
-            "testStrategy": "Verify that all elements (hero, intro, CTA) are present and display the correct content."
-          }
-        ]
-      },
-      {
-        "id": 15,
-        "title": "Deploy Website",
-        "description": "Deploy the website to Vercel, GitHub Pages, or Netlify.",
-        "details": "1.  Configure the project for deployment to the chosen platform.\n2.  Set up continuous deployment to automatically deploy changes when pushing to the repository.\n3.  Verify that the website is accessible and functioning correctly on the deployed platform.",
-        "testStrategy": "Verify that the website is deployed successfully and that all pages are accessible. Check that all features are working as expected on the deployed website.",
-        "priority": "high",
-        "dependencies": [
-          11,
-          12,
-          13
-        ],
         "status": "pending",
         "subtasks": [
           {
             "id": 1,
-            "title": "Choose Deployment Platform and Configure Project",
-            "description": "Select either Vercel, GitHub Pages, or Netlify as the deployment platform and configure the project accordingly. This includes creating necessary configuration files (e.g., `vercel.json`, `.github/workflows/deploy.yml`, or `netlify.toml`) and adjusting build scripts if needed.",
-            "dependencies": [],
-            "details": "Research the pros and cons of each platform based on project needs (e.g., cost, ease of use, features). For Vercel, create a `vercel.json` file to specify build and routing configurations. For GitHub Pages, configure the `package.json` to build to a `docs` directory or a specific branch. For Netlify, create a `netlify.toml` file to define build commands and publish directory. Ensure the chosen platform's CLI is installed and configured locally.\n<info added on 2025-06-25T03:50:13.106Z>\nChosen platform: Vercel\n\nReasons:\n• Simple integration with React/Vite\n• Automatic preview deployments on pull requests\n• Built-in CDN & image optimization\n\nImplementation plan:\n1. Install Vercel CLI globally: `npm i -g vercel` (one-time).\n2. Run `vercel init` the first time to link local repo with Vercel project (answers: framework = \"React\", output dir = `build`). This creates `.vercel` folder and saves project/ORG ID.\n3. Add minimal `vercel.json` in repo root:\n   ```json\n   {\n     \"rewrites\": [\n       { \"source\": \"/(.*)\", \"destination\": \"/index.html\" }\n     ]\n   }\n   ```\n   This ensures client-side routing works (all paths serve index.html).\n4. Ensure `package.json` has correct build script (already `react-router build`). Vercel will run `npm run build` by default; add a fallback script:\n   ```json\n   \"scripts\": {\n     \"build\": \"react-router build\",\n     \"vercel-build\": \"npm run build\"\n   }\n   ```\n5. Push `.vercel`, `vercel.json`, and script change to GitHub. Because Vercel project is linked, pushing to `master` automatically triggers build & deploy.\n6. Verify deployment in Vercel dashboard. Expected production URL: `https://<project>.vercel.app`.\n7. Once deployment is live, test navigation, gallery modal, footer animations. \n8. If issues appear (e.g., 404 on refresh), double-check `vercel.json` rewrite and that `react-router build` outputs `static/` assets under `build`.\n\nNext step after this subtask: configure continuous deployment settings (subtask 15.2) and run first deploy (15.3).\n</info added on 2025-06-25T03:50:13.106Z>",
-            "status": "done",
-            "testStrategy": "Manually verify the configuration files are correctly formatted and contain the necessary settings for the chosen platform."
-          },
-          {
-            "id": 2,
-            "title": "Set Up Continuous Deployment",
-            "description": "Configure continuous deployment to automatically deploy changes to the chosen platform whenever changes are pushed to the main branch of the repository.",
-            "dependencies": [],
-            "details": "For Vercel, link the project to the GitHub repository through the Vercel dashboard. For GitHub Pages, create a GitHub Actions workflow file (`.github/workflows/deploy.yml`) to automatically build and deploy the website on push to the main branch. For Netlify, link the project to the GitHub repository through the Netlify dashboard. Ensure the necessary API keys or tokens are configured securely.",
-            "status": "done",
-            "testStrategy": "Push a small change to the main branch and verify that the deployment is triggered automatically on the chosen platform's dashboard."
-          },
-          {
-            "id": 3,
-            "title": "Deploy Initial Version of the Website",
-            "description": "Trigger the initial deployment of the website to the chosen platform.",
-            "dependencies": [],
-            "details": "If continuous deployment is set up correctly, pushing to the main branch will trigger the deployment. Alternatively, manually trigger a deployment through the platform's CLI or dashboard. Monitor the deployment process for any errors.",
-            "status": "done",
-            "testStrategy": "Check the deployment logs on the chosen platform for any errors or warnings. Verify that the deployment completes successfully."
-          },
-          {
-            "id": 4,
-            "title": "Verify Website Accessibility and Functionality",
-            "description": "Verify that the website is accessible through the deployed URL and that all core functionalities are working as expected.",
-            "dependencies": [],
-            "details": "Access the deployed website URL in a web browser. Test all major features, such as navigation, forms, and interactive elements. Check for any broken links or missing resources. Use browser developer tools to inspect for any JavaScript errors or network issues.",
-            "status": "cancelled",
-            "testStrategy": "Perform manual testing of all key features and functionalities of the website on different browsers and devices. Use automated testing tools (e.g., Cypress, Selenium) to create end-to-end tests for critical workflows."
-          },
-          {
-            "id": 5,
-            "title": "Monitor and Optimize Deployment Performance",
-            "description": "Monitor the website's performance on the deployed platform and identify areas for optimization.",
-            "dependencies": [],
-            "details": "Use the platform's built-in monitoring tools or third-party services (e.g., Google Analytics, New Relic) to track website performance metrics such as page load time, error rates, and traffic. Identify any performance bottlenecks and implement optimizations such as image compression, code minification, and caching. Set up alerts to be notified of any performance issues.",
+            "title": "绘制完整 Sitemap／页面流程图",
+            "description": "创建网站的完整站点地图和页面流程图，以可视化方式展示网站结构",
+            "details": "1. 分析网站需求和用户流程\n2. 确定所有页面和它们之间的关系\n3. 创建站点地图图表\n4. 创建用户流程图\n5. 记录页面之间的导航路径",
             "status": "pending",
-            "testStrategy": "Use website speed testing tools (e.g., Google PageSpeed Insights, WebPageTest) to measure website performance before and after optimizations. Continuously monitor website performance metrics and address any issues that arise."
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 2,
+            "title": "定义各页面数据模型",
+            "description": "使用 TypeScript 接口或 Prisma schema 定义各页面所需的数据模型",
+            "details": "1. 分析每个页面所需的数据结构\n2. 为项目页面创建数据模型（Project 接口）\n3. 为图库页面创建数据模型（GalleryImage 接口）\n4. 为博客页面创建数据模型（BlogPost 接口，如适用）\n5. 创建用户数据模型（User 接口，用于认证）\n6. 创建网站设置数据模型（SiteSettings 接口）",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 3,
+            "title": "更新路由表和顶部导航",
+            "description": "更新路由表和顶部导航以反映新的网站结构",
+            "details": "1. 根据站点地图更新 routes.ts 文件\n2. 添加新的路由配置\n3. 更新 Header.tsx 组件以包含所有主要导航链接\n4. 确保导航项目与路由表一致\n5. 实现活动链接样式\n6. 测试所有导航链接",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 4,
+            "title": "抽取 Design Tokens",
+            "description": "将设计标记（颜色、字体、间距）提取到全局样式文件中",
+            "details": "1. 分析当前使用的颜色、字体和间距\n2. 创建 CSS 变量系统\n3. 在 globals.scss 中定义颜色变量\n4. 在 globals.scss 中定义字体变量\n5. 在 globals.scss 中定义间距变量\n6. 创建 tokens.ts 文件以在 JavaScript/TypeScript 中使用这些变量\n7. 更新现有样式以使用新的变量",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
           }
         ]
       },
       {
-        "id": 16,
-        "title": "Implement Gallery Page with Responsive Photo Gallery",
-        "description": "Implement a Gallery page featuring a responsive photo gallery with a grid layout, image modal/lightbox, and smooth animations, integrated into the site navigation.",
-        "details": "1. Create a Gallery component in `src/pages`. 2. Implement a responsive grid layout for the photo gallery using CSS Grid or a library like Masonry. 3. Integrate an image modal/lightbox that opens when a photo is clicked, displaying the full-size image with smooth animations using `framer-motion`. 4. Fetch image data from a local source (e.g., a JSON file in `src/assets`) or a remote API. 5. Add navigation links to the Gallery page in the Header component. 6. Ensure the Gallery page is accessible and responsive on different devices and screen sizes. 7. Remove all About page related components, routes, and references from the project.",
-        "testStrategy": "1. Verify that the Gallery page displays the photo gallery in a responsive grid layout. 2. Check that clicking on an image opens the modal/lightbox with the full-size image and smooth animations. 3. Ensure that the navigation links to the Gallery page work correctly. 4. Test the Gallery page on different devices and screen sizes to ensure responsiveness. 5. Confirm that all About page related components, routes, and references have been successfully removed from the project.",
-        "status": "done",
-        "dependencies": [
-          11,
-          12,
-          13
-        ],
-        "priority": "medium",
-        "subtasks": []
-      },
-      {
-        "id": 17,
-        "title": "Integrate and Finalize Gallery Page",
-        "description": "Finalize the Gallery page integration by adding the navigation link, ensuring the route loads the component correctly, removing obsolete references, and applying SCSS tweaks for navigation hover and active states.",
-        "details": "1.  Add a 'Gallery' navigation link to the Header component, ensuring it links to the `/gallery` route.\n2.  Verify that accessing the `/gallery` route correctly loads the Gallery component, including the responsive grid and modal lightbox.\n3.  Remove any leftover references to 'About' or 'Contact' pages from the codebase, including navigation links, component imports, or text content.\n4.  Write SCSS to style the navigation hover and active states for all navigation links, including the newly added 'Gallery' link. Ensure visual consistency across the site.\n5.  Review the Gallery component for any unnecessary code or comments and clean them up.\n6.  Ensure the Gallery page is accessible and responsive on different screen sizes and devices.",
-        "testStrategy": "1.  Verify that the 'Gallery' navigation link is present in the Header and correctly links to the `/gallery` route.\n2.  Confirm that the Gallery component loads correctly when accessing the `/gallery` route, displaying the responsive grid and modal lightbox.\n3.  Check that all references to 'About' or 'Contact' pages have been removed from the codebase.\n4.  Inspect the navigation links to ensure that the hover and active states are styled correctly and consistently across the site.\n5.  Test the Gallery page on different screen sizes and devices to ensure responsiveness and accessibility.",
-        "status": "done",
-        "dependencies": [
-          12,
-          13,
-          16
-        ],
+        "id": 2,
+        "title": "Implement Project Page",
+        "description": "Implement the Project page with project categorization, filtering, detailed data display, and UI enhancements.",
+        "details": "1. Develop project categorization and filtering components to allow users to easily find projects.\n2. Display detailed project data, including tech stack, screenshots, external links, and roles.\n3. Implement a card UI with skeleton loading and hover effects for an enhanced user experience.\n4. Migrate data sources to a unified data layer for efficient data management.",
+        "testStrategy": "Verify that project categorization and filtering work correctly. Check that all project details are displayed accurately. Ensure the card UI with skeleton loading and hover effects functions as expected. Confirm that data is being fetched from the unified data layer.",
         "priority": "high",
-        "subtasks": []
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "项目分类与筛选组件",
+            "description": "实现项目分类和筛选功能",
+            "details": "1. 设计项目分类方案（如技术栈、类型、年份等）\n2. 创建分类和标签数据结构\n3. 实现筛选组件 UI\n4. 实现筛选逻辑\n5. 添加筛选状态管理\n6. 实现多选筛选功能\n7. 添加清除筛选选项",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 2
+          },
+          {
+            "id": 2,
+            "title": "详情数据：技术栈、截图、外链、角色",
+            "description": "丰富项目详情数据，包括技术栈、截图、外链和角色信息",
+            "details": "1. 扩展项目数据模型以包含更多详细信息\n2. 为每个项目添加技术栈标签\n3. 添加项目截图和图片展示\n4. 添加外部链接（如 GitHub、演示地址）\n5. 添加项目角色和贡献信息\n6. 设计详情展示布局\n7. 实现详情页面或模态框",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 2
+          },
+          {
+            "id": 3,
+            "title": "卡片 UI：Skeleton loading + Hover 动效",
+            "description": "优化项目卡片 UI，添加骨架屏加载和悬停效果",
+            "details": "1. 设计改进的项目卡片 UI\n2. 实现骨架屏加载效果\n3. 添加卡片悬停动画\n4. 优化卡片内容布局\n5. 添加标签和图标\n6. 确保响应式设计\n7. 优化加载性能",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 2
+          },
+          {
+            "id": 4,
+            "title": "数据来源迁移至统一数据层",
+            "description": "将项目数据迁移到统一的数据层",
+            "details": "1. 设计统一的数据获取接口\n2. 创建数据服务层\n3. 实现数据缓存机制\n4. 迁移现有数据到新的数据层\n5. 更新组件以使用新的数据服务\n6. 添加错误处理和加载状态\n7. 测试数据流程",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 2
+          }
+        ]
       },
       {
-        "id": 18,
-        "title": "Select Primary Codebase",
-        "description": "Select the primary codebase for the project, choosing between Next.js tiny-room or Remix my-website.",
-        "details": "Evaluate the existing Next.js and Remix codebases based on project requirements, team familiarity, and long-term maintainability. Document the decision and rationale.",
-        "testStrategy": "Verify the selected codebase aligns with project goals and team expertise. Confirm the decision is documented and communicated to the team.",
+        "id": 3,
+        "title": "Implement Gallery Page",
+        "description": "Implement the Gallery page with a Masonry layout, image lazy loading, lightbox preview, and optional tag filtering.",
+        "details": "1. Implement a Masonry/waterfall layout for displaying images in the gallery.\n2. Implement image lazy loading to improve page load performance.\n3. Add a lightbox preview for viewing images in detail.\n4. Implement tag filtering (optional) to allow users to filter images by tag.",
+        "testStrategy": "Verify that the Masonry layout is implemented correctly. Check that image lazy loading is functioning as expected. Ensure the lightbox preview works correctly. Confirm that tag filtering (if implemented) is working as expected.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Masonry / 瀑布流布局实现",
+            "description": "实现 Masonry 瀑布流布局以展示图片",
+            "details": "1. 研究 Masonry 布局实现方案（CSS Columns、Grid 或第三方库）\n2. 选择最适合的实现方式\n3. 设计瀑布流布局组件\n4. 处理不同尺寸图片的展示\n5. 确保响应式设计\n6. 优化布局重排性能\n7. 添加动画效果",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 2,
+            "title": "图片懒加载 + Lightbox 预览",
+            "description": "实现图片懒加载和 Lightbox 预览功能",
+            "details": "1. 研究图片懒加载技术（Intersection Observer API）\n2. 实现图片懒加载组件\n3. 添加图片加载占位符或模糊预览\n4. 设计 Lightbox 组件\n5. 实现图片点击放大查看功能\n6. 添加图片浏览控制（上一张、下一张、关闭）\n7. 优化大图加载性能",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 3,
+            "title": "分页或无限滚动",
+            "description": "实现分页或无限滚动功能",
+            "details": "1. 评估分页与无限滚动的优缺点\n2. 选择合适的方案\n3. 实现数据分页逻辑\n4. 设计分页控件或无限滚动触发器\n5. 处理加载状态和错误\n6. 优化滚动性能\n7. 添加滚动位置记忆功能",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 4,
+            "title": "标签过滤（可选）",
+            "description": "实现图片标签过滤功能（可选）",
+            "details": "1. 设计图片标签系统\n2. 为图片数据添加标签属性\n3. 创建标签筛选 UI 组件\n4. 实现标签筛选逻辑\n5. 添加多标签组合筛选\n6. 优化筛选性能\n7. 添加标签云或热门标签展示",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 3
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Implement UI Enhancements",
+        "description": "Implement UI enhancements, including dark mode switching, artistic elements, and other detail improvements.",
+        "details": "1. Design a dark theme color scheme.\n2. Implement a CSS variable system for easy theme switching.\n3. Add a theme switching button to allow users to switch between light and dark modes.\n4. Save the user's theme preference to local storage.\n5. Design and implement an artistic font.\n6. Add GSAP/Framer Motion animation effects to enhance the user experience.\n7. Implement interactive background effects.\n8. Optimize button hover effects.\n9. Beautify the scrollbar.\n10. Design a 404 page.\n11. Add a loading indicator.",
+        "testStrategy": "Verify that the dark theme is implemented correctly. Check that the theme switching button works as expected and that the user's theme preference is saved. Ensure that the artistic font is displayed correctly. Confirm that the animation effects and interactive background effects are functioning as expected. Verify that the button hover effects, scrollbar, 404 page, and loading indicator are implemented correctly.",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Dark 模式切换",
+            "description": "实现网站的暗色模式",
+            "details": "1. 设计暗色主题配色方案\n2. 实现 CSS 变量系统\n3. 添加主题切换按钮\n4. 保存用户主题偏好\n5. 支持系统主题自动切换（prefers-color-scheme）\n6. 确保所有组件在两种主题下都有良好的可读性\n7. 添加主题切换动画",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 4
+          },
+          {
+            "id": 2,
+            "title": "加入艺术元素",
+            "description": "添加艺术元素以提升网站视觉效果",
+            "details": "1. 设计并实现艺术字体\n2. 添加 GSAP/Framer Motion 动画效果\n3. 实现交互式背景效果\n4. 设计独特的页面过渡动画\n5. 添加微互动效果\n6. 确保动画不影响性能\n7. 提供动画关闭选项（减少动效）",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 4
+          },
+          {
+            "id": 3,
+            "title": "其他细节美化",
+            "description": "完善网站细节，提升用户体验",
+            "details": "1. 优化按钮 hover 效果\n2. 美化滚动条样式\n3. 设计创意 404 页面\n4. 添加加载指示器和过渡状态\n5. 优化表单和交互元素的反馈\n6. 添加页面进入和退出动画\n7. 实现平滑滚动效果",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 4
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Implement Data Update Functionality",
+        "description": "Implement data update functionality, including rich text upload and display, and multiple upload methods.",
+        "details": "1. Select and integrate a rich text editor.\n2. Implement Markdown rendering.\n3. Support code highlighting and syntax formatting.\n4. Implement backend login authentication.\n5. Develop a management interface.\n6. Implement local file upload.\n7. Develop a CLI tool to support offline editing.",
+        "testStrategy": "Verify that the rich text editor is integrated correctly. Check that Markdown rendering is functioning as expected. Ensure that code highlighting and syntax formatting are working correctly. Confirm that backend login authentication is secure. Verify that the management interface is user-friendly. Check that local file upload is working correctly. Ensure that the CLI tool is functioning as expected.",
         "priority": "high",
         "dependencies": [],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "实现富文本上传显示",
+            "description": "实现富文本编辑和显示功能",
+            "details": "1. 选择并集成富文本编辑器（如 TipTap、Editor.js）\n2. 实现 Markdown 渲染功能\n3. 支持代码高亮和语法格式化\n4. 添加图片和媒体嵌入支持\n5. 实现编辑器工具栏和格式控制\n6. 添加内容保存和自动保存功能\n7. 确保内容在不同设备上正确显示",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 5
+          },
+          {
+            "id": 2,
+            "title": "多种上传方式",
+            "description": "实现多种内容上传方式",
+            "details": "1. 实现后台登录认证系统\n2. 开发管理界面\n3. 实现本地文件上传功能\n4. 开发 CLI 工具支持离线编辑\n5. 添加内容版本控制\n6. 实现草稿和发布工作流\n7. 添加内容审核和预览功能",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 5
+          }
+        ]
       },
       {
-        "id": 19,
-        "title": "Standardize Package Management & Linting/Styling",
-        "description": "Standardize package management and linting/styling rules across the project.",
-        "details": "Choose a package manager (e.g., npm, yarn, pnpm) and configure linting (e.g., ESLint) and styling (e.g., Prettier) rules. Ensure consistent configuration across the codebase.",
-        "testStrategy": "Verify consistent package management and code style across the project. Run linters and formatters to ensure compliance.",
-        "priority": "high",
-        "dependencies": [
-          18
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 20,
-        "title": "Create Sitemap & Page Flow Diagram",
-        "description": "Create a complete sitemap and page flow diagram for the website.",
-        "details": "Map out all pages and their relationships, including user flows and navigation paths. Use a diagramming tool to visualize the site structure.",
-        "testStrategy": "Review the sitemap and page flow diagram for completeness and accuracy. Ensure all pages and user flows are accounted for.",
-        "priority": "high",
-        "dependencies": [
-          19
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 21,
-        "title": "Define Page Data Models",
-        "description": "Define data models for each page using TypeScript interfaces or Prisma schema.",
-        "details": "Define the structure and types of data required for each page. Use TypeScript interfaces or Prisma schema to enforce data consistency.",
-        "testStrategy": "Verify data models are well-defined and consistent across the project. Ensure data types are appropriate for the data being stored.",
-        "priority": "high",
-        "dependencies": [
-          19
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 22,
-        "title": "Update Routing Table & Top Navigation",
-        "description": "Update the routing table and top navigation based on the sitemap and data models.",
-        "details": "Update the routes.ts file (or equivalent) with the new routes. Update the Header.tsx component (or equivalent) with the new navigation links.",
-        "testStrategy": "Verify all routes are correctly defined and accessible. Ensure the top navigation is accurate and user-friendly.",
-        "priority": "high",
-        "dependencies": [
-          20,
-          21
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 23,
-        "title": "Extract Design Tokens",
-        "description": "Extract design tokens (colors, fonts, spacing) into globals.scss or tokens.ts.",
-        "details": "Define design tokens for colors, fonts, spacing, and other design elements. Store these tokens in a central location (e.g., globals.scss or tokens.ts) for consistent styling.",
-        "testStrategy": "Verify design tokens are consistently applied across the project. Ensure tokens are easily accessible and maintainable.",
-        "priority": "high",
-        "dependencies": [
-          19
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 24,
-        "title": "Implement Project Category & Filtering Components",
-        "description": "Implement project category and filtering components for the Project page.",
-        "details": "Create UI components to categorize and filter projects based on different criteria (e.g., technology, industry). Implement filtering logic to display relevant projects.",
-        "testStrategy": "Verify project categories and filters are working correctly. Ensure the UI is intuitive and user-friendly.",
-        "priority": "high",
-        "dependencies": [
-          21,
-          23
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 25,
-        "title": "Display Detailed Project Data",
-        "description": "Display detailed project data on the Project page, including tech stack, screenshots, external links, and roles.",
-        "details": "Implement UI components to display project details. Fetch and display data from the data models defined earlier.",
-        "testStrategy": "Verify all project details are displayed correctly. Ensure data is accurate and up-to-date.",
-        "priority": "high",
-        "dependencies": [
-          21,
-          23
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 26,
-        "title": "Implement Card UI with Skeleton Loading & Hover Effects",
-        "description": "Implement card UI with skeleton loading and hover effects for project items.",
-        "details": "Create a card UI component for displaying project items. Implement skeleton loading to improve perceived performance. Add hover effects to enhance user interaction.",
-        "testStrategy": "Verify card UI is visually appealing and functional. Ensure skeleton loading and hover effects are working correctly.",
-        "priority": "high",
-        "dependencies": [
-          23
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 27,
-        "title": "Migrate Data to Unified Data Layer",
-        "description": "Migrate project data source to a unified data layer.",
-        "details": "Implement a unified data layer to manage project data. Migrate existing data to the new data layer. Ensure data consistency and integrity.",
-        "testStrategy": "Verify data migration is successful. Ensure the unified data layer is working correctly.",
-        "priority": "high",
-        "dependencies": [
-          21,
-          24,
-          25,
-          26
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 28,
-        "title": "Implement Masonry/Waterfall Layout",
-        "description": "Implement Masonry/Waterfall layout for the Gallery page.",
-        "details": "Use a Masonry or Waterfall layout library to display images in a visually appealing way. Ensure the layout is responsive and adapts to different screen sizes.",
-        "testStrategy": "Verify the Masonry/Waterfall layout is working correctly. Ensure the layout is responsive and visually appealing.",
-        "priority": "high",
-        "dependencies": [
-          23
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 29,
-        "title": "Implement Image Lazy Loading & Lightbox Preview",
-        "description": "Implement image lazy loading and lightbox preview for the Gallery page.",
-        "details": "Implement image lazy loading to improve page performance. Implement a lightbox preview to allow users to view images in full size.",
-        "testStrategy": "Verify image lazy loading and lightbox preview are working correctly. Ensure images are displayed correctly in the lightbox.",
-        "priority": "high",
-        "dependencies": [
-          28
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 30,
-        "title": "Implement Pagination or Infinite Scrolling",
-        "description": "Implement pagination or infinite scrolling for the Gallery page.",
-        "details": "Implement pagination or infinite scrolling to handle a large number of images. Choose the appropriate approach based on user experience considerations.",
-        "testStrategy": "Verify pagination or infinite scrolling is working correctly. Ensure the UI is user-friendly.",
-        "priority": "high",
-        "dependencies": [
-          28
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 31,
-        "title": "Implement Tag Filtering (Optional)",
-        "description": "Implement tag filtering for the Gallery page (optional).",
-        "details": "Implement tag filtering to allow users to filter images based on different tags. This is an optional feature.",
-        "testStrategy": "Verify tag filtering is working correctly. Ensure the UI is intuitive and user-friendly.",
+        "id": 6,
+        "title": "Optimize Performance and SEO",
+        "description": "Optimize website performance and SEO.",
+        "details": "1. Implement image lazy loading.\n2. Implement code splitting and on-demand loading.\n3. Configure HTTP/2 and compression.\n4. Optimize Lighthouse performance (images, code splitting, Lighthouse >90).\n5. Implement dynamic meta tags.\n6. Add OpenGraph and Twitter Card support.\n7. Generate sitemap.xml and robots.txt.\n8. Implement structured data (JSON-LD).",
+        "testStrategy": "Verify that image lazy loading and code splitting are implemented correctly. Check that HTTP/2 and compression are configured correctly. Ensure that Lighthouse performance is optimized. Confirm that dynamic meta tags, OpenGraph, and Twitter Card support are implemented correctly. Verify that sitemap.xml, robots.txt, and structured data are generated correctly.",
         "priority": "medium",
         "dependencies": [
-          28
+          2,
+          3,
+          4,
+          5
         ],
         "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 32,
-        "title": "Implement Light/Dark Mode Switching",
-        "description": "Implement light/dark mode switching using CSS variables and prefers-color-scheme.",
-        "details": "Use CSS variables to define different color schemes for light and dark modes. Use prefers-color-scheme to detect the user's preferred color scheme. Implement a toggle to allow users to switch between modes.",
-        "testStrategy": "Verify light/dark mode switching is working correctly. Ensure the UI is visually appealing in both modes.",
-        "priority": "medium",
-        "dependencies": [
-          23
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 33,
-        "title": "Add Artistic Elements",
-        "description": "Add artistic elements such as SVG path text or GSAP/Framer-motion animations.",
-        "details": "Incorporate artistic elements to enhance the visual appeal of the website. Use SVG path text or GSAP/Framer-motion animations to create engaging interactions.",
-        "testStrategy": "Verify artistic elements are visually appealing and functional. Ensure animations are smooth and performant.",
-        "priority": "medium",
-        "dependencies": [
-          23
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 34,
-        "title": "Implement Detail Optimizations",
-        "description": "Implement detail optimizations such as button hover effects, custom scrollbars, 404 page, and loading indicators.",
-        "details": "Implement detail optimizations to improve the user experience. Add button hover effects, custom scrollbars, a custom 404 page, and loading indicators.",
-        "testStrategy": "Verify detail optimizations are working correctly. Ensure the UI is polished and user-friendly.",
-        "priority": "medium",
-        "dependencies": [
-          23
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 35,
-        "title": "Select CMS Approach",
-        "description": "Select a content management system (CMS) approach: Markdown + gray-matter or a Headless CMS (Sanity/Strapi).",
-        "details": "Evaluate the pros and cons of using Markdown + gray-matter versus a Headless CMS. Consider factors such as ease of use, flexibility, and scalability. Document the decision and rationale.",
-        "testStrategy": "Verify the selected CMS approach aligns with project requirements and team expertise. Confirm the decision is documented and communicated to the team.",
-        "priority": "high",
-        "dependencies": [],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 36,
-        "title": "Integrate Rich Text Editor",
-        "description": "Integrate a rich text editor (TipTap/Editor.js) for content creation.",
-        "details": "Integrate a rich text editor into the CMS. Choose between TipTap and Editor.js based on project requirements and team familiarity. Configure the editor to support the required formatting options.",
-        "testStrategy": "Verify the rich text editor is working correctly. Ensure the editor supports the required formatting options.",
-        "priority": "high",
-        "dependencies": [
-          35
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 37,
-        "title": "Implement Authentication",
-        "description": "Implement authentication using Next-Auth JWT.",
-        "details": "Implement authentication using Next-Auth JWT. Configure Next-Auth to use JWT for authentication. Implement login, logout, and user management functionality.",
-        "testStrategy": "Verify authentication is working correctly. Ensure users can log in, log out, and manage their accounts.",
-        "priority": "high",
-        "dependencies": [
-          19
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 38,
-        "title": "Implement Media Upload",
-        "description": "Implement media upload functionality using S3 or Cloudinary.",
-        "details": "Implement media upload functionality using S3 or Cloudinary. Configure S3 or Cloudinary to store uploaded media. Implement UI components to allow users to upload media.",
-        "testStrategy": "Verify media upload functionality is working correctly. Ensure uploaded media is stored correctly and accessible.",
-        "priority": "high",
-        "dependencies": [
-          37
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 39,
-        "title": "Implement CLI Synchronization Script",
-        "description": "Implement a local CLI synchronization script to support offline writing and automatic uploading.",
-        "details": "Implement a local CLI synchronization script to allow users to write content offline and automatically upload it when they are back online. Use the CMS API to upload content.",
-        "testStrategy": "Verify the CLI synchronization script is working correctly. Ensure content is uploaded correctly and automatically.",
-        "priority": "high",
-        "dependencies": [
-          35,
-          36,
-          38
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 40,
-        "title": "Implement Image Optimization",
-        "description": "Implement image optimization using lazy loading, WebP/AVIF, and vite-plugin-imagemin.",
-        "details": "Implement image optimization techniques to improve page performance. Use lazy loading to load images only when they are visible. Use WebP/AVIF to compress images. Use vite-plugin-imagemin to optimize images during the build process.",
-        "testStrategy": "Verify image optimization is working correctly. Ensure images are loading quickly and efficiently.",
-        "priority": "medium",
-        "dependencies": [],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 41,
-        "title": "Implement Code Splitting & On-Demand Loading",
-        "description": "Implement code splitting and on-demand loading using React.lazy/dynamic import.",
-        "details": "Implement code splitting and on-demand loading to improve page performance. Use React.lazy and dynamic import to load components only when they are needed.",
-        "testStrategy": "Verify code splitting and on-demand loading are working correctly. Ensure components are loaded only when they are needed.",
-        "priority": "medium",
-        "dependencies": [],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 42,
-        "title": "Configure HTTP/2, Brotli Compression & Caching",
-        "description": "Configure HTTP/2, brotli compression, and caching strategies.",
-        "details": "Configure HTTP/2, brotli compression, and caching strategies to improve page performance. Configure the server to use HTTP/2. Enable brotli compression. Implement caching strategies to cache static assets.",
-        "testStrategy": "Verify HTTP/2, brotli compression, and caching strategies are working correctly. Ensure the website is loading quickly and efficiently.",
-        "priority": "medium",
-        "dependencies": [],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 43,
-        "title": "Optimize Lighthouse Scores",
-        "description": "Optimize Lighthouse scores for FCP, CLS, and TBT to be ≥ 90.",
-        "details": "Use Lighthouse to identify performance bottlenecks. Optimize the website to improve Lighthouse scores for FCP, CLS, and TBT. Aim for scores of ≥ 90.",
-        "testStrategy": "Verify Lighthouse scores are ≥ 90 for FCP, CLS, and TBT. Ensure the website is loading quickly and efficiently.",
-        "priority": "medium",
-        "dependencies": [
-          40,
-          41,
-          42
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 44,
-        "title": "Implement Dynamic Metadata",
-        "description": "Implement dynamic title, description, and keywords for each page.",
-        "details": "Implement dynamic title, description, and keywords for each page to improve SEO. Use the CMS to manage metadata.",
-        "testStrategy": "Verify dynamic title, description, and keywords are working correctly. Ensure metadata is accurate and up-to-date.",
-        "priority": "medium",
-        "dependencies": [],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 45,
-        "title": "Implement OpenGraph & Twitter Card Metadata",
-        "description": "Implement OpenGraph and Twitter Card metadata.",
-        "details": "Implement OpenGraph and Twitter Card metadata to improve social sharing. Use the CMS to manage metadata.",
-        "testStrategy": "Verify OpenGraph and Twitter Card metadata are working correctly. Ensure metadata is accurate and up-to-date.",
-        "priority": "medium",
-        "dependencies": [],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 46,
-        "title": "Generate Sitemap, Robots.txt & RSS Feed",
-        "description": "Generate sitemap.xml, robots.txt, and RSS feed.",
-        "details": "Generate sitemap.xml, robots.txt, and RSS feed to improve SEO. Use a library or tool to generate these files automatically.",
-        "testStrategy": "Verify sitemap.xml, robots.txt, and RSS feed are generated correctly. Ensure these files are accessible to search engines.",
-        "priority": "medium",
-        "dependencies": [],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 47,
-        "title": "Implement JSON-LD Structured Data",
-        "description": "Implement JSON-LD structured data (Breadcrumb/Article).",
-        "details": "Implement JSON-LD structured data to improve SEO. Use Breadcrumb and Article schema to provide structured data to search engines.",
-        "testStrategy": "Verify JSON-LD structured data is implemented correctly. Ensure structured data is valid and accurate.",
-        "priority": "medium",
-        "dependencies": [],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 48,
-        "title": "Implement Unit Tests",
-        "description": "Implement unit tests (Vitest/Jest) to cover core components.",
-        "details": "Implement unit tests to cover core components. Use Vitest or Jest as the testing framework. Aim for high test coverage.",
-        "testStrategy": "Verify unit tests are passing. Ensure test coverage is adequate.",
-        "priority": "medium",
-        "dependencies": [],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 49,
-        "title": "Implement E2E Tests",
-        "description": "Implement E2E tests (Playwright/Cypress) to cover critical user flows.",
-        "details": "Implement E2E tests to cover critical user flows. Use Playwright or Cypress as the testing framework. Ensure all critical user flows are tested.",
-        "testStrategy": "Verify E2E tests are passing. Ensure all critical user flows are working correctly.",
-        "priority": "medium",
-        "dependencies": [],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 50,
-        "title": "Set Up GitHub Actions",
-        "description": "Set up GitHub Actions for linting, testing, building, and deploying.",
-        "details": "Set up GitHub Actions to automate the build, test, and deployment process. Configure GitHub Actions to run linters, unit tests, and E2E tests. Configure GitHub Actions to build and deploy the website.",
-        "testStrategy": "Verify GitHub Actions are working correctly. Ensure the build, test, and deployment process is automated.",
-        "priority": "medium",
-        "dependencies": [
-          48,
-          49
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 51,
-        "title": "Regularly Update Dependencies & Perform Security Audits",
-        "description": "Regularly update dependencies and perform security audits.",
-        "details": "Regularly update dependencies to ensure the website is secure and up-to-date. Perform security audits to identify and fix vulnerabilities.",
-        "testStrategy": "Verify dependencies are up-to-date. Ensure security audits are performed regularly.",
-        "priority": "medium",
-        "dependencies": [],
-        "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "图片优化",
+            "description": "优化图片加载性能",
+            "details": "1. 实现图片懒加载\n2. 使用现代图片格式（WebP、AVIF）\n3. 配置 vite-plugin-imagemin 进行图片压缩\n4. 实现响应式图片加载\n5. 添加图片占位符和模糊预览\n6. 优化图片缓存策略\n7. 监控和优化图片加载性能",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 2,
+            "title": "代码分割与按需加载",
+            "description": "实现代码分割和按需加载",
+            "details": "1. 使用 React.lazy 和 Suspense 实现组件懒加载\n2. 配置路由级代码分割\n3. 实现动态导入（dynamic import）\n4. 优化初始加载包大小\n5. 配置预加载策略\n6. 监控和优化代码分割效果\n7. 实现渐进式加载策略",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 3,
+            "title": "HTTP/2 与压缩配置",
+            "description": "配置 HTTP/2 和压缩策略",
+            "details": "1. 配置 HTTP/2 服务器\n2. 设置 brotli 压缩\n3. 配置资源缓存策略\n4. 优化资源加载顺序\n5. 配置资源预加载和预连接\n6. 减少 HTTP 请求数量\n7. 监控和优化网络性能",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 4,
+            "title": "Lighthouse 性能优化",
+            "description": "优化网站性能指标，达到 Lighthouse 90+ 分",
+            "details": "1. 运行 Lighthouse 分析获取基准分数\n2. 优化首次内容绘制 (FCP)\n3. 优化累积布局偏移 (CLS)\n4. 优化总阻塞时间 (TBT)\n5. 优化最大内容绘制 (LCP)\n6. 修复可访问性问题\n7. 实施 SEO 最佳实践",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 5,
+            "title": "SEO 优化",
+            "description": "实现动态 Meta 标签和 SEO 优化",
+            "details": "1. 为每个页面实现动态 Title / Description / Keywords\n2. 添加 OpenGraph 和 Twitter Card 元数据\n3. 生成 sitemap.xml 和 robots.txt\n4. 实现 JSON-LD 结构化数据\n5. 优化页面 URL 结构\n6. 添加规范链接（canonical links）\n7. 实现 RSS Feed（可选）",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 6
+          }
+        ]
       }
     ],
     "metadata": {
-      "created": "2025-06-23T11:52:57.450Z",
-      "updated": "2025-06-25T10:46:52.863Z",
-      "description": "Tasks for master context"
+      "created": "2025-06-25T13:46:17.188Z",
+      "updated": "2025-06-25T13:47:01.225Z",
+      "description": "Tasks for phase2 context"
+    }
+  },
+  "phase2": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Define Website Structure and Data Models",
+        "description": "Define the website's structure, data models, and design tokens.",
+        "details": "1. Create a complete Sitemap/page flow diagram to visualize the website's structure.\n2. Define data models for each page using TypeScript interfaces or Prisma schema to ensure data consistency.\n3. Update the routing table (routes.ts) and top navigation (Header.tsx) to reflect the new structure.\n4. Extract design tokens (colors, fonts, spacing) into global.scss or tokens.ts for consistent styling.",
+        "testStrategy": "Verify the sitemap accurately reflects the intended website structure. Check that data models are correctly defined and used across the application. Ensure the routing table and navigation are updated and functional. Confirm that design tokens are correctly extracted and applied to the website's styling.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "绘制完整 Sitemap／页面流程图",
+            "description": "创建网站的完整站点地图和页面流程图，以可视化方式展示网站结构",
+            "details": "1. 分析网站需求和用户流程\n2. 确定所有页面和它们之间的关系\n3. 创建站点地图图表\n4. 创建用户流程图\n5. 记录页面之间的导航路径\n<info added on 2025-06-25T14:06:50.586Z>\n网站技术栈：\n1. 前端框架：React 19\n2. 路由系统：React Router 7 (包含@react-router/node和@react-router/dev)\n3. 样式解决方案：SCSS (组件级别样式文件)\n4. 动画库：Framer Motion\n5. 图标库：React Icons\n6. 构建工具：Vite 6\n7. 代码质量工具：ESLint、Prettier、Husky和lint-staged\n8. CSS框架：部分Tailwind CSS (待确认是否完全集成)\n\n网站结构：\n1. 路由系统：React Router 7声明式路由\n2. 组件结构：Header、Footer、ProjectCard等\n3. 页面组件：主页、项目展示、图库页面\n4. 数据模型：Project和GalleryImage接口\n5. 样式系统：SCSS模块化\n\n站点地图和页面流程文档：docs/sitemap.md\n\n将基于现有文档创建更详细的站点地图可视化图表。\n</info added on 2025-06-25T14:06:50.586Z>\n<info added on 2025-06-25T14:10:20.818Z>\n已创建详细的网站地图可视化文档，保存在 tiny-room/docs/sitemap-visual.md 文件中。\n\n文档内容：\n1. 使用 Mermaid 图表可视化展示了网站结构、技术栈、数据流和用户流程\n2. 详细描述了网站的技术栈，包括核心框架、样式解决方案、增强库和开发工具\n3. 详细描述了主要导航路径和计划中的导航路径\n4. 列出了现有的数据模型（Project 和 GalleryImage 接口）\n5. 提出了计划扩展的数据模型，包括扩展现有接口和新增接口（BlogPost、User、SiteSettings）\n\n该文档提供了全面的网站结构和数据流程视图，可作为后续开发的重要参考。\n\n技术选择分析：\n- 使用 Mermaid 图表是因为它可以直接在 Markdown 文件中渲染，无需额外工具\n- 图表分成多个子图（subgraph）使结构更清晰\n- 提出的数据模型扩展基于现有模型，并考虑了未来功能的需求\n</info added on 2025-06-25T14:10:20.818Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 2,
+            "title": "定义各页面数据模型",
+            "description": "使用 TypeScript 接口或 Prisma schema 定义各页面所需的数据模型",
+            "details": "1. 分析每个页面所需的数据结构\n2. 为项目页面创建数据模型（Project 接口）\n3. 为图库页面创建数据模型（GalleryImage 接口）\n4. 为博客页面创建数据模型（BlogPost 接口，如适用）\n5. 创建用户数据模型（User 接口，用于认证）\n6. 创建网站设置数据模型（SiteSettings 接口）\n<info added on 2025-06-25T14:15:56.620Z>\n实施过程和技术分析：\n\n1. 数据模型文档:\n   - 创建了详细的数据模型文档 `tiny-room/docs/data-model.md`，包含现有数据模型的描述、扩展后的数据模型接口定义、新增的数据模型接口定义、数据关系图（使用Mermaid）以及数据存储策略和使用指南。\n\n2. 类型定义文件:\n   - 在项目中创建了类型定义文件 `tiny-room/app/types/index.ts`，实现了 Project, GalleryImage, BlogPost, Comment, User, SiteSettings, NavItem, ContactMessage 等接口。\n\n3. 数据文件更新:\n   - 更新了 `projects.ts` 和 `gallery.ts`，添加了必要的字段。\n   - 移除了原来在 `ProjectCard.tsx` 中的接口定义，改为导入新的类型定义。\n\n4. 组件更新:\n   - 更新了 `ProjectCard.tsx` 组件，使其使用新的Project接口，并添加了新的UI元素来展示额外的数据字段，如标签和日期类别。\n\n技术栈分析：\n- 使用TypeScript接口定义数据模型，提供了类型安全和代码补全。\n- 遵循了React组件的最佳实践，将类型定义与组件实现分离。\n- 采用了模块化的方式组织类型定义，便于维护和扩展。\n- 使用了Framer Motion进行动画效果，提升用户体验。\n\n数据模型设计考虑因素：\n1. 可扩展性：通过添加可选字段，使模型可以根据需求逐步扩展。\n2. 类型安全：使用TypeScript接口确保类型检查。\n3. 关联性：通过ID引用建立模型之间的关系。\n4. 前端友好：模型设计考虑了前端展示和筛选需求。\n\n这些更改为网站的下一阶段开发奠定了坚实的基础，特别是对于项目筛选、图片标签过滤和博客功能的实现。\n</info added on 2025-06-25T14:15:56.620Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 3,
+            "title": "更新路由表和顶部导航",
+            "description": "更新路由表和顶部导航以反映新的网站结构",
+            "details": "1. 根据站点地图更新 routes.ts 文件\n2. 添加新的路由配置\n3. 更新 Header.tsx 组件以包含所有主要导航链接\n4. 确保导航项目与路由表一致\n5. 实现活动链接样式\n6. 测试所有导航链接\n<info added on 2025-06-25T14:35:43.960Z>\n已完成路由表和顶部导航的更新工作：\n\n1. 更新了 routes.ts 文件，添加了以下新路由：\n   - projects/:id - 项目详情页\n   - about - 关于页面\n   - blog - 博客列表页\n   - blog/:slug - 博客文章详情页\n   - contact - 联系页面\n\n2. 更新了 Header.tsx 组件，添加了以下功能：\n   - 添加了所有主要导航链接（首页、项目、图库、关于、博客、联系）\n   - 实现了活动链接样式通过 getActiveClass 函数\n   - 添加了暗色模式切换功能\n\n3. 创建了新的路由组件：\n   - project-detail.tsx - 项目详情页面，显示项目的详细信息\n   - about.tsx - 关于页面，包含个人简介、技能、工作经历和教育背景\n   - blog.tsx - 博客列表页面，展示博客文章列表\n   - blog-post.tsx - 博客文章详情页面，展示单篇博客文章\n   - contact.tsx - 联系页面，包含联系表单和联系信息\n\n4. 所有导航链接都已测试，确保它们正确指向相应的页面。\n\n技术实现细节：\n- 使用 React Router 7 的 NavLink 组件实现导航链接\n- 使用 React Icons 库添加图标\n- 使用 useState 钩子管理暗色模式状态\n- 路由配置使用 React Router 7 的声明式路由配置\n</info added on 2025-06-25T14:35:43.960Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 4,
+            "title": "抽取 Design Tokens",
+            "description": "将设计标记（颜色、字体、间距）提取到全局样式文件中",
+            "details": "1. 分析当前使用的颜色、字体和间距\n2. 创建 CSS 变量系统\n3. 在 globals.scss 中定义颜色变量\n4. 在 globals.scss 中定义字体变量\n5. 在 globals.scss 中定义间距变量\n6. 创建 tokens.ts 文件以在 JavaScript/TypeScript 中使用这些变量\n7. 更新现有样式以使用新的变量\n<info added on 2025-06-25T14:42:38.212Z>\n1. 新建 `tiny-room/app/styles/tokens.scss`，定义 CSS 变量：\n   - 颜色：`--color-primary` `--color-bg` `--color-text` `--color-surface` `--color-border`\n   - 字体：`--font-base`\n   - 间距：`--spacing-xs` … `--spacing-xl`\n   - 暗色模式：`[data-theme='dark']` 覆盖同名变量\n\n2. 更新 `global.scss`：\n   - `@import \"./tokens.scss\"` 作为第一行\n   - `$primary-color` 改为 `var(--color-primary)`，`$font-family-base` 改为 `var(--font-base)`\n   - `body` 背景/文字颜色改为 `var(--color-bg)` / `var(--color-text)`\n\n3. 更新组件样式：\n   - `header.scss`：背景、边框、文字颜色改用 `var(--color-*)`\n   - `footer.scss`：背景、边框、文字颜色改用 `var(--color-*)`\n\n4. 新建 `tokens.ts`，导出 `colors`、`spacing`、`fonts` 对象，值均为对应 `var(--token)`，供 TS/JS 代码使用。\n\n5. 在 `Header.tsx` 实现暗色模式切换：点击按钮时在 `document.documentElement` 上设置 / 移除 `data-theme=\"dark\"`。\n\n6. 手动验证：\n   - 浏览器 DevTools 查看 `:root` 变量已生效；\n   - 切换暗色模式时变量值随之改变；\n   - 页面主色、背景、文字颜色正常；\n   - 无编译 / 运行错误。\n\n至此 1.4 子任务标记为完成。\n</info added on 2025-06-25T14:42:38.212Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 1
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Implement Project Page",
+        "description": "Implement the Project page with project categorization, filtering, detailed data display, and UI enhancements.",
+        "details": "1. Develop project categorization and filtering components to allow users to easily find projects.\n2. Display detailed project data, including tech stack, screenshots, external links, and roles.\n3. Implement a card UI with skeleton loading and hover effects for an enhanced user experience.\n4. Migrate data sources to a unified data layer for efficient data management.",
+        "testStrategy": "Verify that project categorization and filtering work correctly. Check that all project details are displayed accurately. Ensure the card UI with skeleton loading and hover effects functions as expected. Confirm that data is being fetched from the unified data layer.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "项目分类与筛选组件",
+            "description": "实现项目分类和筛选功能",
+            "details": "1. 设计项目分类方案（如技术栈、类型、年份等）\n2. 创建分类和标签数据结构\n3. 实现筛选组件 UI\n4. 实现筛选逻辑\n5. 添加筛选状态管理\n6. 实现多选筛选功能\n7. 添加清除筛选选项",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 2
+          },
+          {
+            "id": 2,
+            "title": "详情数据：技术栈、截图、外链、角色",
+            "description": "丰富项目详情数据，包括技术栈、截图、外链和角色信息",
+            "details": "1. 扩展项目数据模型以包含更多详细信息\n2. 为每个项目添加技术栈标签\n3. 添加项目截图和图片展示\n4. 添加外部链接（如 GitHub、演示地址）\n5. 添加项目角色和贡献信息\n6. 设计详情展示布局\n7. 实现详情页面或模态框",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 2
+          },
+          {
+            "id": 3,
+            "title": "卡片 UI：Skeleton loading + Hover 动效",
+            "description": "优化项目卡片 UI，添加骨架屏加载和悬停效果",
+            "details": "1. 设计改进的项目卡片 UI\n2. 实现骨架屏加载效果\n3. 添加卡片悬停动画\n4. 优化卡片内容布局\n5. 添加标签和图标\n6. 确保响应式设计\n7. 优化加载性能",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 2
+          },
+          {
+            "id": 4,
+            "title": "数据来源迁移至统一数据层",
+            "description": "将项目数据迁移到统一的数据层",
+            "details": "1. 设计统一的数据获取接口\n2. 创建数据服务层\n3. 实现数据缓存机制\n4. 迁移现有数据到新的数据层\n5. 更新组件以使用新的数据服务\n6. 添加错误处理和加载状态\n7. 测试数据流程",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 2
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Implement Gallery Page",
+        "description": "Implement the Gallery page with a Masonry layout, image lazy loading, lightbox preview, and optional tag filtering.",
+        "details": "1. Implement a Masonry/waterfall layout for displaying images in the gallery.\n2. Implement image lazy loading to improve page load performance.\n3. Add a lightbox preview for viewing images in detail.\n4. Implement tag filtering (optional) to allow users to filter images by tag.",
+        "testStrategy": "Verify that the Masonry layout is implemented correctly. Check that image lazy loading is functioning as expected. Ensure the lightbox preview works correctly. Confirm that tag filtering (if implemented) is working as expected.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Masonry / 瀑布流布局实现",
+            "description": "实现 Masonry 瀑布流布局以展示图片",
+            "details": "1. 研究 Masonry 布局实现方案（CSS Columns、Grid 或第三方库）\n2. 选择最适合的实现方式\n3. 设计瀑布流布局组件\n4. 处理不同尺寸图片的展示\n5. 确保响应式设计\n6. 优化布局重排性能\n7. 添加动画效果",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 2,
+            "title": "图片懒加载 + Lightbox 预览",
+            "description": "实现图片懒加载和 Lightbox 预览功能",
+            "details": "1. 研究图片懒加载技术（Intersection Observer API）\n2. 实现图片懒加载组件\n3. 添加图片加载占位符或模糊预览\n4. 设计 Lightbox 组件\n5. 实现图片点击放大查看功能\n6. 添加图片浏览控制（上一张、下一张、关闭）\n7. 优化大图加载性能",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 3,
+            "title": "分页或无限滚动",
+            "description": "实现分页或无限滚动功能",
+            "details": "1. 评估分页与无限滚动的优缺点\n2. 选择合适的方案\n3. 实现数据分页逻辑\n4. 设计分页控件或无限滚动触发器\n5. 处理加载状态和错误\n6. 优化滚动性能\n7. 添加滚动位置记忆功能",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 4,
+            "title": "标签过滤（可选）",
+            "description": "实现图片标签过滤功能（可选）",
+            "details": "1. 设计图片标签系统\n2. 为图片数据添加标签属性\n3. 创建标签筛选 UI 组件\n4. 实现标签筛选逻辑\n5. 添加多标签组合筛选\n6. 优化筛选性能\n7. 添加标签云或热门标签展示",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 3
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Implement UI Enhancements",
+        "description": "Implement UI enhancements, including dark mode switching, artistic elements, and other detail improvements.",
+        "details": "1. Design a dark theme color scheme.\n2. Implement a CSS variable system for easy theme switching.\n3. Add a theme switching button to allow users to switch between light and dark modes.\n4. Save the user's theme preference to local storage.\n5. Design and implement an artistic font.\n6. Add GSAP/Framer Motion animation effects to enhance the user experience.\n7. Implement interactive background effects.\n8. Optimize button hover effects.\n9. Beautify the scrollbar.\n10. Design a 404 page.\n11. Add a loading indicator.",
+        "testStrategy": "Verify that the dark theme is implemented correctly. Check that the theme switching button works as expected and that the user's theme preference is saved. Ensure that the artistic font is displayed correctly. Confirm that the animation effects and interactive background effects are functioning as expected. Verify that the button hover effects, scrollbar, 404 page, and loading indicator are implemented correctly.",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Dark 模式切换",
+            "description": "实现网站的暗色模式",
+            "details": "1. 设计暗色主题配色方案\n2. 实现 CSS 变量系统\n3. 添加主题切换按钮\n4. 保存用户主题偏好\n5. 支持系统主题自动切换（prefers-color-scheme）\n6. 确保所有组件在两种主题下都有良好的可读性\n7. 添加主题切换动画",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 4
+          },
+          {
+            "id": 2,
+            "title": "加入艺术元素",
+            "description": "添加艺术元素以提升网站视觉效果",
+            "details": "1. 设计并实现艺术字体\n2. 添加 GSAP/Framer Motion 动画效果\n3. 实现交互式背景效果\n4. 设计独特的页面过渡动画\n5. 添加微互动效果\n6. 确保动画不影响性能\n7. 提供动画关闭选项（减少动效）",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 4
+          },
+          {
+            "id": 3,
+            "title": "其他细节美化",
+            "description": "完善网站细节，提升用户体验",
+            "details": "1. 优化按钮 hover 效果\n2. 美化滚动条样式\n3. 设计创意 404 页面\n4. 添加加载指示器和过渡状态\n5. 优化表单和交互元素的反馈\n6. 添加页面进入和退出动画\n7. 实现平滑滚动效果",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 4
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Implement Data Update Functionality",
+        "description": "Implement data update functionality, including rich text upload and display, and multiple upload methods.",
+        "details": "1. Select and integrate a rich text editor.\n2. Implement Markdown rendering.\n3. Support code highlighting and syntax formatting.\n4. Implement backend login authentication.\n5. Develop a management interface.\n6. Implement local file upload.\n7. Develop a CLI tool to support offline editing.",
+        "testStrategy": "Verify that the rich text editor is integrated correctly. Check that Markdown rendering is functioning as expected. Ensure that code highlighting and syntax formatting are working correctly. Confirm that backend login authentication is secure. Verify that the management interface is user-friendly. Check that local file upload is working correctly. Ensure that the CLI tool is functioning as expected.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "实现富文本上传显示",
+            "description": "实现富文本编辑和显示功能",
+            "details": "1. 选择并集成富文本编辑器（如 TipTap、Editor.js）\n2. 实现 Markdown 渲染功能\n3. 支持代码高亮和语法格式化\n4. 添加图片和媒体嵌入支持\n5. 实现编辑器工具栏和格式控制\n6. 添加内容保存和自动保存功能\n7. 确保内容在不同设备上正确显示",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 5
+          },
+          {
+            "id": 2,
+            "title": "多种上传方式",
+            "description": "实现多种内容上传方式",
+            "details": "1. 实现后台登录认证系统\n2. 开发管理界面\n3. 实现本地文件上传功能\n4. 开发 CLI 工具支持离线编辑\n5. 添加内容版本控制\n6. 实现草稿和发布工作流\n7. 添加内容审核和预览功能",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 5
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Optimize Performance and SEO",
+        "description": "Optimize website performance and SEO.",
+        "details": "1. Implement image lazy loading.\n2. Implement code splitting and on-demand loading.\n3. Configure HTTP/2 and compression.\n4. Optimize Lighthouse performance (images, code splitting, Lighthouse >90).\n5. Implement dynamic meta tags.\n6. Add OpenGraph and Twitter Card support.\n7. Generate sitemap.xml and robots.txt.\n8. Implement structured data (JSON-LD).",
+        "testStrategy": "Verify that image lazy loading and code splitting are implemented correctly. Check that HTTP/2 and compression are configured correctly. Ensure that Lighthouse performance is optimized. Confirm that dynamic meta tags, OpenGraph, and Twitter Card support are implemented correctly. Verify that sitemap.xml, robots.txt, and structured data are generated correctly.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "图片优化",
+            "description": "优化图片加载性能",
+            "details": "1. 实现图片懒加载\n2. 使用现代图片格式（WebP、AVIF）\n3. 配置 vite-plugin-imagemin 进行图片压缩\n4. 实现响应式图片加载\n5. 添加图片占位符和模糊预览\n6. 优化图片缓存策略\n7. 监控和优化图片加载性能",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 2,
+            "title": "代码分割与按需加载",
+            "description": "实现代码分割和按需加载",
+            "details": "1. 使用 React.lazy 和 Suspense 实现组件懒加载\n2. 配置路由级代码分割\n3. 实现动态导入（dynamic import）\n4. 优化初始加载包大小\n5. 配置预加载策略\n6. 监控和优化代码分割效果\n7. 实现渐进式加载策略",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 3,
+            "title": "HTTP/2 与压缩配置",
+            "description": "配置 HTTP/2 和压缩策略",
+            "details": "1. 配置 HTTP/2 服务器\n2. 设置 brotli 压缩\n3. 配置资源缓存策略\n4. 优化资源加载顺序\n5. 配置资源预加载和预连接\n6. 减少 HTTP 请求数量\n7. 监控和优化网络性能",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 4,
+            "title": "Lighthouse 性能优化",
+            "description": "优化网站性能指标，达到 Lighthouse 90+ 分",
+            "details": "1. 运行 Lighthouse 分析获取基准分数\n2. 优化首次内容绘制 (FCP)\n3. 优化累积布局偏移 (CLS)\n4. 优化总阻塞时间 (TBT)\n5. 优化最大内容绘制 (LCP)\n6. 修复可访问性问题\n7. 实施 SEO 最佳实践",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 5,
+            "title": "SEO 优化",
+            "description": "实现动态 Meta 标签和 SEO 优化",
+            "details": "1. 为每个页面实现动态 Title / Description / Keywords\n2. 添加 OpenGraph 和 Twitter Card 元数据\n3. 生成 sitemap.xml 和 robots.txt\n4. 实现 JSON-LD 结构化数据\n5. 优化页面 URL 结构\n6. 添加规范链接（canonical links）\n7. 实现 RSS Feed（可选）",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 6
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-06-25T13:46:17.188Z",
+      "updated": "2025-06-25T14:48:09.631Z",
+      "description": "Tasks for phase2 context"
     }
   }
 }

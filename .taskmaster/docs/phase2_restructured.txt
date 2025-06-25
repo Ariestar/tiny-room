@@ -1,0 +1,65 @@
+# 第二阶段任务 - Tiny Room 网站开发
+
+## 1. 丰富网页内容，确定整体结构 (Priority: high)
+- 绘制完整 Sitemap／页面流程图
+- 定义各页面数据模型（TypeScript interface / Prisma schema）
+- 更新路由表 + 顶部导航（routes.ts／Header.tsx）
+- 抽取 Design Tokens（颜色、字体、间距）到 globals.scss / tokens.ts
+
+## 2. 完善各分页面 (Priority: high)
+
+### 2.1 完善 Project 页面
+- 项目分类与筛选组件
+- 详情数据：技术栈、截图、外链、角色
+- 卡片 UI：Skeleton loading + Hover 动效
+- 数据来源迁移至统一数据层
+
+### 2.2 完善 Gallery 页面
+- Masonry / 瀑布流布局实现
+- 图片懒加载 + Lightbox 预览
+- 分页或无限滚动
+- 标签过滤（可选）
+
+## 3. UI 美化 (Priority: medium)
+
+### 3.1 Dark 模式切换
+- 设计暗色主题配色方案
+- 实现 CSS 变量系统
+- 添加主题切换按钮
+- 保存用户主题偏好
+
+### 3.2 加入艺术元素
+- 设计并实现艺术字体
+- 添加 GSAP/Framer Motion 动画效果
+- 实现交互式背景效果
+
+### 3.3 其他细节美化
+- 优化按钮 hover 效果
+- 美化滚动条
+- 设计 404 页面
+- 添加加载指示器
+
+## 4. 数据更新功能 (Priority: high)
+
+### 4.1 实现富文本上传显示
+- 选择并集成富文本编辑器
+- 实现 Markdown 渲染
+- 支持代码高亮和语法格式化
+
+### 4.2 多种上传方式
+- 实现后台登录认证
+- 开发管理界面
+- 实现本地文件上传
+- 开发 CLI 工具支持离线编辑
+
+## 5. 性能优化 (Priority: medium)
+- 图片懒加载实现
+- 代码分割与按需加载
+- HTTP/2 与压缩配置
+- Lighthouse 性能优化（图片、代码分割、Lighthouse >90）
+
+## 6. SEO 优化 (Priority: medium)
+- 实现动态 Meta 标签
+- 添加 OpenGraph 和 Twitter Card 支持
+- 生成 sitemap.xml 和 robots.txt
+- 实现结构化数据 (JSON-LD) 

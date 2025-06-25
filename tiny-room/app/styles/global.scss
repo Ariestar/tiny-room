@@ -1,7 +1,8 @@
-// 全局 SCSS 变量与基础样式在前，组件样式后导入
+@import './tokens.scss';
+
 // 变量与基础
-$primary-color: #0d9488; // 青色
-$font-family-base: 'Inter', Arial, sans-serif;
+$primary-color: var(--color-primary);
+$font-family-base: var(--font-base);
 
 // 基础样式
 * {
@@ -11,13 +12,13 @@ $font-family-base: 'Inter', Arial, sans-serif;
 body {
   margin: 0;
   font-family: $font-family-base;
-  background-color: #f7fafc;
-  color: #1a202c;
+  background-color: var(--color-bg);
+  color: var(--color-text);
   // 隐藏滚动条
   &::-webkit-scrollbar {
     display: none;
   }
 }
 
-@import "./components/header.scss";
-@import "./components/footer.scss"; 
+@import './components/header.scss';
+@import './components/footer.scss';
