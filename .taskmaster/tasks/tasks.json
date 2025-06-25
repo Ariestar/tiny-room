@@ -251,7 +251,7 @@
             "description": "Select either Vercel, GitHub Pages, or Netlify as the deployment platform and configure the project accordingly. This includes creating necessary configuration files (e.g., `vercel.json`, `.github/workflows/deploy.yml`, or `netlify.toml`) and adjusting build scripts if needed.",
             "dependencies": [],
             "details": "Research the pros and cons of each platform based on project needs (e.g., cost, ease of use, features). For Vercel, create a `vercel.json` file to specify build and routing configurations. For GitHub Pages, configure the `package.json` to build to a `docs` directory or a specific branch. For Netlify, create a `netlify.toml` file to define build commands and publish directory. Ensure the chosen platform's CLI is installed and configured locally.\n<info added on 2025-06-25T03:50:13.106Z>\nChosen platform: Vercel\n\nReasons:\n• Simple integration with React/Vite\n• Automatic preview deployments on pull requests\n• Built-in CDN & image optimization\n\nImplementation plan:\n1. Install Vercel CLI globally: `npm i -g vercel` (one-time).\n2. Run `vercel init` the first time to link local repo with Vercel project (answers: framework = \"React\", output dir = `build`). This creates `.vercel` folder and saves project/ORG ID.\n3. Add minimal `vercel.json` in repo root:\n   ```json\n   {\n     \"rewrites\": [\n       { \"source\": \"/(.*)\", \"destination\": \"/index.html\" }\n     ]\n   }\n   ```\n   This ensures client-side routing works (all paths serve index.html).\n4. Ensure `package.json` has correct build script (already `react-router build`). Vercel will run `npm run build` by default; add a fallback script:\n   ```json\n   \"scripts\": {\n     \"build\": \"react-router build\",\n     \"vercel-build\": \"npm run build\"\n   }\n   ```\n5. Push `.vercel`, `vercel.json`, and script change to GitHub. Because Vercel project is linked, pushing to `master` automatically triggers build & deploy.\n6. Verify deployment in Vercel dashboard. Expected production URL: `https://<project>.vercel.app`.\n7. Once deployment is live, test navigation, gallery modal, footer animations. \n8. If issues appear (e.g., 404 on refresh), double-check `vercel.json` rewrite and that `react-router build` outputs `static/` assets under `build`.\n\nNext step after this subtask: configure continuous deployment settings (subtask 15.2) and run first deploy (15.3).\n</info added on 2025-06-25T03:50:13.106Z>",
-            "status": "in-progress",
+            "status": "done",
             "testStrategy": "Manually verify the configuration files are correctly formatted and contain the necessary settings for the chosen platform."
           },
           {
@@ -260,7 +260,7 @@
             "description": "Configure continuous deployment to automatically deploy changes to the chosen platform whenever changes are pushed to the main branch of the repository.",
             "dependencies": [],
             "details": "For Vercel, link the project to the GitHub repository through the Vercel dashboard. For GitHub Pages, create a GitHub Actions workflow file (`.github/workflows/deploy.yml`) to automatically build and deploy the website on push to the main branch. For Netlify, link the project to the GitHub repository through the Netlify dashboard. Ensure the necessary API keys or tokens are configured securely.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Push a small change to the main branch and verify that the deployment is triggered automatically on the chosen platform's dashboard."
           },
           {
@@ -269,7 +269,7 @@
             "description": "Trigger the initial deployment of the website to the chosen platform.",
             "dependencies": [],
             "details": "If continuous deployment is set up correctly, pushing to the main branch will trigger the deployment. Alternatively, manually trigger a deployment through the platform's CLI or dashboard. Monitor the deployment process for any errors.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Check the deployment logs on the chosen platform for any errors or warnings. Verify that the deployment completes successfully."
           },
           {
@@ -278,7 +278,7 @@
             "description": "Verify that the website is accessible through the deployed URL and that all core functionalities are working as expected.",
             "dependencies": [],
             "details": "Access the deployed website URL in a web browser. Test all major features, such as navigation, forms, and interactive elements. Check for any broken links or missing resources. Use browser developer tools to inspect for any JavaScript errors or network issues.",
-            "status": "pending",
+            "status": "cancelled",
             "testStrategy": "Perform manual testing of all key features and functionalities of the website on different browsers and devices. Use automated testing tools (e.g., Cypress, Selenium) to create end-to-end tests for critical workflows."
           },
           {
@@ -321,11 +321,440 @@
         ],
         "priority": "high",
         "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Select Primary Codebase",
+        "description": "Select the primary codebase for the project, choosing between Next.js tiny-room or Remix my-website.",
+        "details": "Evaluate the existing Next.js and Remix codebases based on project requirements, team familiarity, and long-term maintainability. Document the decision and rationale.",
+        "testStrategy": "Verify the selected codebase aligns with project goals and team expertise. Confirm the decision is documented and communicated to the team.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Standardize Package Management & Linting/Styling",
+        "description": "Standardize package management and linting/styling rules across the project.",
+        "details": "Choose a package manager (e.g., npm, yarn, pnpm) and configure linting (e.g., ESLint) and styling (e.g., Prettier) rules. Ensure consistent configuration across the codebase.",
+        "testStrategy": "Verify consistent package management and code style across the project. Run linters and formatters to ensure compliance.",
+        "priority": "high",
+        "dependencies": [
+          18
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Create Sitemap & Page Flow Diagram",
+        "description": "Create a complete sitemap and page flow diagram for the website.",
+        "details": "Map out all pages and their relationships, including user flows and navigation paths. Use a diagramming tool to visualize the site structure.",
+        "testStrategy": "Review the sitemap and page flow diagram for completeness and accuracy. Ensure all pages and user flows are accounted for.",
+        "priority": "high",
+        "dependencies": [
+          19
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 21,
+        "title": "Define Page Data Models",
+        "description": "Define data models for each page using TypeScript interfaces or Prisma schema.",
+        "details": "Define the structure and types of data required for each page. Use TypeScript interfaces or Prisma schema to enforce data consistency.",
+        "testStrategy": "Verify data models are well-defined and consistent across the project. Ensure data types are appropriate for the data being stored.",
+        "priority": "high",
+        "dependencies": [
+          19
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Update Routing Table & Top Navigation",
+        "description": "Update the routing table and top navigation based on the sitemap and data models.",
+        "details": "Update the routes.ts file (or equivalent) with the new routes. Update the Header.tsx component (or equivalent) with the new navigation links.",
+        "testStrategy": "Verify all routes are correctly defined and accessible. Ensure the top navigation is accurate and user-friendly.",
+        "priority": "high",
+        "dependencies": [
+          20,
+          21
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "Extract Design Tokens",
+        "description": "Extract design tokens (colors, fonts, spacing) into globals.scss or tokens.ts.",
+        "details": "Define design tokens for colors, fonts, spacing, and other design elements. Store these tokens in a central location (e.g., globals.scss or tokens.ts) for consistent styling.",
+        "testStrategy": "Verify design tokens are consistently applied across the project. Ensure tokens are easily accessible and maintainable.",
+        "priority": "high",
+        "dependencies": [
+          19
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "Implement Project Category & Filtering Components",
+        "description": "Implement project category and filtering components for the Project page.",
+        "details": "Create UI components to categorize and filter projects based on different criteria (e.g., technology, industry). Implement filtering logic to display relevant projects.",
+        "testStrategy": "Verify project categories and filters are working correctly. Ensure the UI is intuitive and user-friendly.",
+        "priority": "high",
+        "dependencies": [
+          21,
+          23
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "Display Detailed Project Data",
+        "description": "Display detailed project data on the Project page, including tech stack, screenshots, external links, and roles.",
+        "details": "Implement UI components to display project details. Fetch and display data from the data models defined earlier.",
+        "testStrategy": "Verify all project details are displayed correctly. Ensure data is accurate and up-to-date.",
+        "priority": "high",
+        "dependencies": [
+          21,
+          23
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 26,
+        "title": "Implement Card UI with Skeleton Loading & Hover Effects",
+        "description": "Implement card UI with skeleton loading and hover effects for project items.",
+        "details": "Create a card UI component for displaying project items. Implement skeleton loading to improve perceived performance. Add hover effects to enhance user interaction.",
+        "testStrategy": "Verify card UI is visually appealing and functional. Ensure skeleton loading and hover effects are working correctly.",
+        "priority": "high",
+        "dependencies": [
+          23
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 27,
+        "title": "Migrate Data to Unified Data Layer",
+        "description": "Migrate project data source to a unified data layer.",
+        "details": "Implement a unified data layer to manage project data. Migrate existing data to the new data layer. Ensure data consistency and integrity.",
+        "testStrategy": "Verify data migration is successful. Ensure the unified data layer is working correctly.",
+        "priority": "high",
+        "dependencies": [
+          21,
+          24,
+          25,
+          26
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 28,
+        "title": "Implement Masonry/Waterfall Layout",
+        "description": "Implement Masonry/Waterfall layout for the Gallery page.",
+        "details": "Use a Masonry or Waterfall layout library to display images in a visually appealing way. Ensure the layout is responsive and adapts to different screen sizes.",
+        "testStrategy": "Verify the Masonry/Waterfall layout is working correctly. Ensure the layout is responsive and visually appealing.",
+        "priority": "high",
+        "dependencies": [
+          23
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 29,
+        "title": "Implement Image Lazy Loading & Lightbox Preview",
+        "description": "Implement image lazy loading and lightbox preview for the Gallery page.",
+        "details": "Implement image lazy loading to improve page performance. Implement a lightbox preview to allow users to view images in full size.",
+        "testStrategy": "Verify image lazy loading and lightbox preview are working correctly. Ensure images are displayed correctly in the lightbox.",
+        "priority": "high",
+        "dependencies": [
+          28
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 30,
+        "title": "Implement Pagination or Infinite Scrolling",
+        "description": "Implement pagination or infinite scrolling for the Gallery page.",
+        "details": "Implement pagination or infinite scrolling to handle a large number of images. Choose the appropriate approach based on user experience considerations.",
+        "testStrategy": "Verify pagination or infinite scrolling is working correctly. Ensure the UI is user-friendly.",
+        "priority": "high",
+        "dependencies": [
+          28
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 31,
+        "title": "Implement Tag Filtering (Optional)",
+        "description": "Implement tag filtering for the Gallery page (optional).",
+        "details": "Implement tag filtering to allow users to filter images based on different tags. This is an optional feature.",
+        "testStrategy": "Verify tag filtering is working correctly. Ensure the UI is intuitive and user-friendly.",
+        "priority": "medium",
+        "dependencies": [
+          28
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 32,
+        "title": "Implement Light/Dark Mode Switching",
+        "description": "Implement light/dark mode switching using CSS variables and prefers-color-scheme.",
+        "details": "Use CSS variables to define different color schemes for light and dark modes. Use prefers-color-scheme to detect the user's preferred color scheme. Implement a toggle to allow users to switch between modes.",
+        "testStrategy": "Verify light/dark mode switching is working correctly. Ensure the UI is visually appealing in both modes.",
+        "priority": "medium",
+        "dependencies": [
+          23
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 33,
+        "title": "Add Artistic Elements",
+        "description": "Add artistic elements such as SVG path text or GSAP/Framer-motion animations.",
+        "details": "Incorporate artistic elements to enhance the visual appeal of the website. Use SVG path text or GSAP/Framer-motion animations to create engaging interactions.",
+        "testStrategy": "Verify artistic elements are visually appealing and functional. Ensure animations are smooth and performant.",
+        "priority": "medium",
+        "dependencies": [
+          23
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 34,
+        "title": "Implement Detail Optimizations",
+        "description": "Implement detail optimizations such as button hover effects, custom scrollbars, 404 page, and loading indicators.",
+        "details": "Implement detail optimizations to improve the user experience. Add button hover effects, custom scrollbars, a custom 404 page, and loading indicators.",
+        "testStrategy": "Verify detail optimizations are working correctly. Ensure the UI is polished and user-friendly.",
+        "priority": "medium",
+        "dependencies": [
+          23
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 35,
+        "title": "Select CMS Approach",
+        "description": "Select a content management system (CMS) approach: Markdown + gray-matter or a Headless CMS (Sanity/Strapi).",
+        "details": "Evaluate the pros and cons of using Markdown + gray-matter versus a Headless CMS. Consider factors such as ease of use, flexibility, and scalability. Document the decision and rationale.",
+        "testStrategy": "Verify the selected CMS approach aligns with project requirements and team expertise. Confirm the decision is documented and communicated to the team.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 36,
+        "title": "Integrate Rich Text Editor",
+        "description": "Integrate a rich text editor (TipTap/Editor.js) for content creation.",
+        "details": "Integrate a rich text editor into the CMS. Choose between TipTap and Editor.js based on project requirements and team familiarity. Configure the editor to support the required formatting options.",
+        "testStrategy": "Verify the rich text editor is working correctly. Ensure the editor supports the required formatting options.",
+        "priority": "high",
+        "dependencies": [
+          35
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 37,
+        "title": "Implement Authentication",
+        "description": "Implement authentication using Next-Auth JWT.",
+        "details": "Implement authentication using Next-Auth JWT. Configure Next-Auth to use JWT for authentication. Implement login, logout, and user management functionality.",
+        "testStrategy": "Verify authentication is working correctly. Ensure users can log in, log out, and manage their accounts.",
+        "priority": "high",
+        "dependencies": [
+          19
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 38,
+        "title": "Implement Media Upload",
+        "description": "Implement media upload functionality using S3 or Cloudinary.",
+        "details": "Implement media upload functionality using S3 or Cloudinary. Configure S3 or Cloudinary to store uploaded media. Implement UI components to allow users to upload media.",
+        "testStrategy": "Verify media upload functionality is working correctly. Ensure uploaded media is stored correctly and accessible.",
+        "priority": "high",
+        "dependencies": [
+          37
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 39,
+        "title": "Implement CLI Synchronization Script",
+        "description": "Implement a local CLI synchronization script to support offline writing and automatic uploading.",
+        "details": "Implement a local CLI synchronization script to allow users to write content offline and automatically upload it when they are back online. Use the CMS API to upload content.",
+        "testStrategy": "Verify the CLI synchronization script is working correctly. Ensure content is uploaded correctly and automatically.",
+        "priority": "high",
+        "dependencies": [
+          35,
+          36,
+          38
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 40,
+        "title": "Implement Image Optimization",
+        "description": "Implement image optimization using lazy loading, WebP/AVIF, and vite-plugin-imagemin.",
+        "details": "Implement image optimization techniques to improve page performance. Use lazy loading to load images only when they are visible. Use WebP/AVIF to compress images. Use vite-plugin-imagemin to optimize images during the build process.",
+        "testStrategy": "Verify image optimization is working correctly. Ensure images are loading quickly and efficiently.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 41,
+        "title": "Implement Code Splitting & On-Demand Loading",
+        "description": "Implement code splitting and on-demand loading using React.lazy/dynamic import.",
+        "details": "Implement code splitting and on-demand loading to improve page performance. Use React.lazy and dynamic import to load components only when they are needed.",
+        "testStrategy": "Verify code splitting and on-demand loading are working correctly. Ensure components are loaded only when they are needed.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 42,
+        "title": "Configure HTTP/2, Brotli Compression & Caching",
+        "description": "Configure HTTP/2, brotli compression, and caching strategies.",
+        "details": "Configure HTTP/2, brotli compression, and caching strategies to improve page performance. Configure the server to use HTTP/2. Enable brotli compression. Implement caching strategies to cache static assets.",
+        "testStrategy": "Verify HTTP/2, brotli compression, and caching strategies are working correctly. Ensure the website is loading quickly and efficiently.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 43,
+        "title": "Optimize Lighthouse Scores",
+        "description": "Optimize Lighthouse scores for FCP, CLS, and TBT to be ≥ 90.",
+        "details": "Use Lighthouse to identify performance bottlenecks. Optimize the website to improve Lighthouse scores for FCP, CLS, and TBT. Aim for scores of ≥ 90.",
+        "testStrategy": "Verify Lighthouse scores are ≥ 90 for FCP, CLS, and TBT. Ensure the website is loading quickly and efficiently.",
+        "priority": "medium",
+        "dependencies": [
+          40,
+          41,
+          42
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 44,
+        "title": "Implement Dynamic Metadata",
+        "description": "Implement dynamic title, description, and keywords for each page.",
+        "details": "Implement dynamic title, description, and keywords for each page to improve SEO. Use the CMS to manage metadata.",
+        "testStrategy": "Verify dynamic title, description, and keywords are working correctly. Ensure metadata is accurate and up-to-date.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 45,
+        "title": "Implement OpenGraph & Twitter Card Metadata",
+        "description": "Implement OpenGraph and Twitter Card metadata.",
+        "details": "Implement OpenGraph and Twitter Card metadata to improve social sharing. Use the CMS to manage metadata.",
+        "testStrategy": "Verify OpenGraph and Twitter Card metadata are working correctly. Ensure metadata is accurate and up-to-date.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 46,
+        "title": "Generate Sitemap, Robots.txt & RSS Feed",
+        "description": "Generate sitemap.xml, robots.txt, and RSS feed.",
+        "details": "Generate sitemap.xml, robots.txt, and RSS feed to improve SEO. Use a library or tool to generate these files automatically.",
+        "testStrategy": "Verify sitemap.xml, robots.txt, and RSS feed are generated correctly. Ensure these files are accessible to search engines.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 47,
+        "title": "Implement JSON-LD Structured Data",
+        "description": "Implement JSON-LD structured data (Breadcrumb/Article).",
+        "details": "Implement JSON-LD structured data to improve SEO. Use Breadcrumb and Article schema to provide structured data to search engines.",
+        "testStrategy": "Verify JSON-LD structured data is implemented correctly. Ensure structured data is valid and accurate.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 48,
+        "title": "Implement Unit Tests",
+        "description": "Implement unit tests (Vitest/Jest) to cover core components.",
+        "details": "Implement unit tests to cover core components. Use Vitest or Jest as the testing framework. Aim for high test coverage.",
+        "testStrategy": "Verify unit tests are passing. Ensure test coverage is adequate.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 49,
+        "title": "Implement E2E Tests",
+        "description": "Implement E2E tests (Playwright/Cypress) to cover critical user flows.",
+        "details": "Implement E2E tests to cover critical user flows. Use Playwright or Cypress as the testing framework. Ensure all critical user flows are tested.",
+        "testStrategy": "Verify E2E tests are passing. Ensure all critical user flows are working correctly.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 50,
+        "title": "Set Up GitHub Actions",
+        "description": "Set up GitHub Actions for linting, testing, building, and deploying.",
+        "details": "Set up GitHub Actions to automate the build, test, and deployment process. Configure GitHub Actions to run linters, unit tests, and E2E tests. Configure GitHub Actions to build and deploy the website.",
+        "testStrategy": "Verify GitHub Actions are working correctly. Ensure the build, test, and deployment process is automated.",
+        "priority": "medium",
+        "dependencies": [
+          48,
+          49
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 51,
+        "title": "Regularly Update Dependencies & Perform Security Audits",
+        "description": "Regularly update dependencies and perform security audits.",
+        "details": "Regularly update dependencies to ensure the website is secure and up-to-date. Perform security audits to identify and fix vulnerabilities.",
+        "testStrategy": "Verify dependencies are up-to-date. Ensure security audits are performed regularly.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-06-23T11:52:57.450Z",
-      "updated": "2025-06-25T03:49:55.899Z",
+      "updated": "2025-06-25T10:46:52.863Z",
       "description": "Tasks for master context"
     }
   }
