@@ -244,7 +244,53 @@
           13
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Choose Deployment Platform and Configure Project",
+            "description": "Select either Vercel, GitHub Pages, or Netlify as the deployment platform and configure the project accordingly. This includes creating necessary configuration files (e.g., `vercel.json`, `.github/workflows/deploy.yml`, or `netlify.toml`) and adjusting build scripts if needed.",
+            "dependencies": [],
+            "details": "Research the pros and cons of each platform based on project needs (e.g., cost, ease of use, features). For Vercel, create a `vercel.json` file to specify build and routing configurations. For GitHub Pages, configure the `package.json` to build to a `docs` directory or a specific branch. For Netlify, create a `netlify.toml` file to define build commands and publish directory. Ensure the chosen platform's CLI is installed and configured locally.\n<info added on 2025-06-25T03:50:13.106Z>\nChosen platform: Vercel\n\nReasons:\n• Simple integration with React/Vite\n• Automatic preview deployments on pull requests\n• Built-in CDN & image optimization\n\nImplementation plan:\n1. Install Vercel CLI globally: `npm i -g vercel` (one-time).\n2. Run `vercel init` the first time to link local repo with Vercel project (answers: framework = \"React\", output dir = `build`). This creates `.vercel` folder and saves project/ORG ID.\n3. Add minimal `vercel.json` in repo root:\n   ```json\n   {\n     \"rewrites\": [\n       { \"source\": \"/(.*)\", \"destination\": \"/index.html\" }\n     ]\n   }\n   ```\n   This ensures client-side routing works (all paths serve index.html).\n4. Ensure `package.json` has correct build script (already `react-router build`). Vercel will run `npm run build` by default; add a fallback script:\n   ```json\n   \"scripts\": {\n     \"build\": \"react-router build\",\n     \"vercel-build\": \"npm run build\"\n   }\n   ```\n5. Push `.vercel`, `vercel.json`, and script change to GitHub. Because Vercel project is linked, pushing to `master` automatically triggers build & deploy.\n6. Verify deployment in Vercel dashboard. Expected production URL: `https://<project>.vercel.app`.\n7. Once deployment is live, test navigation, gallery modal, footer animations. \n8. If issues appear (e.g., 404 on refresh), double-check `vercel.json` rewrite and that `react-router build` outputs `static/` assets under `build`.\n\nNext step after this subtask: configure continuous deployment settings (subtask 15.2) and run first deploy (15.3).\n</info added on 2025-06-25T03:50:13.106Z>",
+            "status": "in-progress",
+            "testStrategy": "Manually verify the configuration files are correctly formatted and contain the necessary settings for the chosen platform."
+          },
+          {
+            "id": 2,
+            "title": "Set Up Continuous Deployment",
+            "description": "Configure continuous deployment to automatically deploy changes to the chosen platform whenever changes are pushed to the main branch of the repository.",
+            "dependencies": [],
+            "details": "For Vercel, link the project to the GitHub repository through the Vercel dashboard. For GitHub Pages, create a GitHub Actions workflow file (`.github/workflows/deploy.yml`) to automatically build and deploy the website on push to the main branch. For Netlify, link the project to the GitHub repository through the Netlify dashboard. Ensure the necessary API keys or tokens are configured securely.",
+            "status": "pending",
+            "testStrategy": "Push a small change to the main branch and verify that the deployment is triggered automatically on the chosen platform's dashboard."
+          },
+          {
+            "id": 3,
+            "title": "Deploy Initial Version of the Website",
+            "description": "Trigger the initial deployment of the website to the chosen platform.",
+            "dependencies": [],
+            "details": "If continuous deployment is set up correctly, pushing to the main branch will trigger the deployment. Alternatively, manually trigger a deployment through the platform's CLI or dashboard. Monitor the deployment process for any errors.",
+            "status": "pending",
+            "testStrategy": "Check the deployment logs on the chosen platform for any errors or warnings. Verify that the deployment completes successfully."
+          },
+          {
+            "id": 4,
+            "title": "Verify Website Accessibility and Functionality",
+            "description": "Verify that the website is accessible through the deployed URL and that all core functionalities are working as expected.",
+            "dependencies": [],
+            "details": "Access the deployed website URL in a web browser. Test all major features, such as navigation, forms, and interactive elements. Check for any broken links or missing resources. Use browser developer tools to inspect for any JavaScript errors or network issues.",
+            "status": "pending",
+            "testStrategy": "Perform manual testing of all key features and functionalities of the website on different browsers and devices. Use automated testing tools (e.g., Cypress, Selenium) to create end-to-end tests for critical workflows."
+          },
+          {
+            "id": 5,
+            "title": "Monitor and Optimize Deployment Performance",
+            "description": "Monitor the website's performance on the deployed platform and identify areas for optimization.",
+            "dependencies": [],
+            "details": "Use the platform's built-in monitoring tools or third-party services (e.g., Google Analytics, New Relic) to track website performance metrics such as page load time, error rates, and traffic. Identify any performance bottlenecks and implement optimizations such as image compression, code minification, and caching. Set up alerts to be notified of any performance issues.",
+            "status": "pending",
+            "testStrategy": "Use website speed testing tools (e.g., Google PageSpeed Insights, WebPageTest) to measure website performance before and after optimizations. Continuously monitor website performance metrics and address any issues that arise."
+          }
+        ]
       },
       {
         "id": 16,
@@ -252,7 +298,7 @@
         "description": "Implement a Gallery page featuring a responsive photo gallery with a grid layout, image modal/lightbox, and smooth animations, integrated into the site navigation.",
         "details": "1. Create a Gallery component in `src/pages`. 2. Implement a responsive grid layout for the photo gallery using CSS Grid or a library like Masonry. 3. Integrate an image modal/lightbox that opens when a photo is clicked, displaying the full-size image with smooth animations using `framer-motion`. 4. Fetch image data from a local source (e.g., a JSON file in `src/assets`) or a remote API. 5. Add navigation links to the Gallery page in the Header component. 6. Ensure the Gallery page is accessible and responsive on different devices and screen sizes. 7. Remove all About page related components, routes, and references from the project.",
         "testStrategy": "1. Verify that the Gallery page displays the photo gallery in a responsive grid layout. 2. Check that clicking on an image opens the modal/lightbox with the full-size image and smooth animations. 3. Ensure that the navigation links to the Gallery page work correctly. 4. Test the Gallery page on different devices and screen sizes to ensure responsiveness. 5. Confirm that all About page related components, routes, and references have been successfully removed from the project.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           11,
           12,
@@ -267,7 +313,7 @@
         "description": "Finalize the Gallery page integration by adding the navigation link, ensuring the route loads the component correctly, removing obsolete references, and applying SCSS tweaks for navigation hover and active states.",
         "details": "1.  Add a 'Gallery' navigation link to the Header component, ensuring it links to the `/gallery` route.\n2.  Verify that accessing the `/gallery` route correctly loads the Gallery component, including the responsive grid and modal lightbox.\n3.  Remove any leftover references to 'About' or 'Contact' pages from the codebase, including navigation links, component imports, or text content.\n4.  Write SCSS to style the navigation hover and active states for all navigation links, including the newly added 'Gallery' link. Ensure visual consistency across the site.\n5.  Review the Gallery component for any unnecessary code or comments and clean them up.\n6.  Ensure the Gallery page is accessible and responsive on different screen sizes and devices.",
         "testStrategy": "1.  Verify that the 'Gallery' navigation link is present in the Header and correctly links to the `/gallery` route.\n2.  Confirm that the Gallery component loads correctly when accessing the `/gallery` route, displaying the responsive grid and modal lightbox.\n3.  Check that all references to 'About' or 'Contact' pages have been removed from the codebase.\n4.  Inspect the navigation links to ensure that the hover and active states are styled correctly and consistently across the site.\n5.  Test the Gallery page on different screen sizes and devices to ensure responsiveness and accessibility.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           12,
           13,
@@ -279,7 +325,7 @@
     ],
     "metadata": {
       "created": "2025-06-23T11:52:57.450Z",
-      "updated": "2025-06-23T16:49:06.312Z",
+      "updated": "2025-06-25T03:49:55.899Z",
       "description": "Tasks for master context"
     }
   }
