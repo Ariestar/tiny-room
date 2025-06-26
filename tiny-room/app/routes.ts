@@ -9,4 +9,5 @@ export default [
   route('blog', 'routes/blog.tsx'),
   route('blog/:slug', 'routes/blog-post.tsx'),
   route('contact', 'routes/contact.tsx'),
+  route('editor', 'routes/editor.tsx'),
 ] satisfies RouteConfig;
