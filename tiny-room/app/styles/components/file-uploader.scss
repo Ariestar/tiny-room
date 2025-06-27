@@ -1,0 +1,390 @@
+// File Uploader Component Styles
+.file-uploader {
+  --uploader-border-color: #d1d5db;
+  --uploader-bg: #ffffff;
+  --uploader-hover-bg: #f9fafb;
+  --uploader-drag-bg: #eff6ff;
+  --uploader-drag-border: #3b82f6;
+  --uploader-text-color: #374151;
+  --uploader-text-muted: #6b7280;
+  --uploader-success-color: #10b981;
+  --uploader-error-color: #ef4444;
+  --uploader-progress-bg: #e5e7eb;
+  --uploader-progress-fill: #3b82f6;
+
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+
+  // 拖拽上传区域
+  .upload-dropzone {
+    border: 2px dashed var(--uploader-border-color);
+    border-radius: 12px;
+    background: var(--uploader-bg);
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 240px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background: var(--uploader-hover-bg);
+      border-color: var(--uploader-drag-border);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &.drag-over {
+      background: var(--uploader-drag-bg);
+      border-color: var(--uploader-drag-border);
+      border-style: solid;
+      transform: scale(1.02);
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+    }
+
+    .upload-icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.6;
+      color: var(--uploader-drag-border);
+    }
+
+    .upload-text {
+      color: var(--uploader-text-color);
+
+      h3 {
+        margin: 0 0 1rem;
+        font-size: 1.375rem;
+        font-weight: 600;
+        color: var(--uploader-text-color);
+      }
+
+      p {
+        margin: 0;
+        color: var(--uploader-text-muted);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        max-width: 400px;
+      }
+    }
+
+    .file-input-hidden {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      width: 0;
+      height: 0;
+    }
+  }
+
+  // 上传进度列表
+  .upload-progress-list {
+    margin-top: 2rem;
+
+    h4 {
+      margin: 0 0 1.5rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--uploader-text-color);
+    }
+
+    .progress-item {
+      background: white;
+      border: 1px solid var(--uploader-border-color);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &.completed {
+        border-color: var(--uploader-success-color);
+        background: #f0fdf4;
+        box-shadow: 0 1px 3px rgba(16, 185, 129, 0.2);
+      }
+
+      &.error {
+        border-color: var(--uploader-error-color);
+        background: #fef2f2;
+        box-shadow: 0 1px 3px rgba(239, 68, 68, 0.2);
+      }
+
+      &.uploading {
+        border-color: var(--uploader-progress-fill);
+        background: #eff6ff;
+        box-shadow: 0 1px 3px rgba(59, 130, 246, 0.2);
+      }
+
+      .file-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        .status-icon {
+          font-size: 1.5rem;
+          margin-right: 1rem;
+          min-width: 2rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .file-details {
+          flex: 1;
+          min-width: 0;
+
+          .filename {
+            font-weight: 600;
+            color: var(--uploader-text-color);
+            word-break: break-all;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+          }
+
+          .file-size {
+            font-size: 0.85rem;
+            color: var(--uploader-text-muted);
+          }
+        }
+      }
+
+      .progress-section {
+        .progress-bar {
+          position: relative;
+          background: var(--uploader-progress-bg);
+          border-radius: 6px;
+          height: 10px;
+          overflow: hidden;
+          box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+
+          .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--uploader-progress-fill), #60a5fa);
+            border-radius: 6px;
+            transition: width 0.3s ease;
+            position: relative;
+
+            &::after {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+              );
+              animation: shimmer 2s infinite;
+            }
+          }
+
+          .progress-text {
+            position: absolute;
+            top: -2rem;
+            right: 0;
+            font-size: 0.85rem;
+            color: var(--uploader-text-muted);
+            font-weight: 600;
+          }
+        }
+
+        .success-message {
+          color: var(--uploader-success-color);
+          font-size: 0.9rem;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+
+          &::before {
+            content: '✓';
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+          }
+        }
+
+        .error-message {
+          color: var(--uploader-error-color);
+          font-size: 0.9rem;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+
+          &::before {
+            content: '✗';
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+          }
+        }
+      }
+    }
+  }
+
+  // 进度条动画
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  // Gallery和Files专用样式
+  &.gallery-uploader {
+    .upload-dropzone {
+      background: #fafbfc;
+      border-color: #e1e5e9;
+
+      &:hover {
+        background: #f4f6f8;
+        border-color: var(--uploader-drag-border);
+      }
+    }
+  }
+
+  &.files-uploader {
+    .upload-dropzone {
+      min-height: 200px;
+      padding: 2rem;
+    }
+  }
+
+  // 响应式设计
+  @media (max-width: 768px) {
+    .upload-dropzone {
+      padding: 2rem 1rem;
+      min-height: 200px;
+
+      .upload-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .upload-text {
+        h3 {
+          font-size: 1.2rem;
+        }
+
+        p {
+          font-size: 0.875rem;
+        }
+      }
+    }
+
+    .upload-progress-list {
+      .progress-item {
+        padding: 1rem;
+
+        .file-info {
+          .status-icon {
+            font-size: 1.25rem;
+            margin-right: 0.75rem;
+            min-width: 1.5rem;
+          }
+
+          .file-details {
+            .filename {
+              font-size: 0.875rem;
+            }
+
+            .file-size {
+              font-size: 0.75rem;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .upload-dropzone {
+      padding: 1.5rem 1rem;
+      min-height: 160px;
+
+      .upload-icon {
+        font-size: 2.5rem;
+      }
+
+      .upload-text {
+        h3 {
+          font-size: 1.1rem;
+        }
+
+        p {
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+
+  // 暗色模式支持
+  @media (prefers-color-scheme: dark) {
+    --uploader-border-color: #374151;
+    --uploader-bg: #1f2937;
+    --uploader-hover-bg: #374151;
+    --uploader-drag-bg: #1e3a8a;
+    --uploader-text-color: #f9fafb;
+    --uploader-text-muted: #d1d5db;
+    --uploader-progress-bg: #374151;
+
+    .upload-progress-list {
+      .progress-item {
+        background: #1f2937;
+        border-color: var(--uploader-border-color);
+
+        &.completed {
+          background: #064e3b;
+          border-color: var(--uploader-success-color);
+        }
+
+        &.error {
+          background: #7f1d1d;
+          border-color: var(--uploader-error-color);
+        }
+
+        &.uploading {
+          background: #1e3a8a;
+          border-color: var(--uploader-progress-fill);
+        }
+      }
+    }
+  }
+
+  // 动画效果
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  .progress-item.uploading .status-icon {
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  // 辅助功能
+  .upload-dropzone:focus-visible {
+    outline: 2px solid var(--uploader-drag-border);
+    outline-offset: 2px;
+  }
+
+  .file-input-hidden:focus + .upload-dropzone {
+    outline: 2px solid var(--uploader-drag-border);
+    outline-offset: 2px;
+  }
+}

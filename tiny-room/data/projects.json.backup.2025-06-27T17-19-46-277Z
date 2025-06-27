@@ -1,0 +1,71 @@
+[
+  {
+    "id": 1,
+    "title": "Portfolio Website",
+    "description": "A modern portfolio website built with React Router",
+    "imageUrl": "/images/portfolio-preview.jpg",
+    "demoUrl": "https://tiny-room.vercel.app",
+    "githubUrl": "https://github.com/user/tiny-room",
+    "techStack": [
+      "React",
+      "TypeScript",
+      "React Router",
+      "SCSS"
+    ],
+    "category": "Web Development",
+    "featured": true,
+    "status": "completed",
+    "startDate": "2024-01-01",
+    "endDate": "2024-01-15",
+    "role": "Full Stack Developer",
+    "tags": [
+      "react",
+      "portfolio",
+      "web",
+      "frontend"
+    ],
+    "client": "Personal Project",
+    "duration": "2 weeks",
+    "details": "A comprehensive portfolio website showcasing projects and skills"
+  },
+  {
+    "id": 2,
+    "title": "E-commerce Platform",
+    "description": "Modern e-commerce solution with advanced features",
+    "imageUrl": "/images/ecommerce-preview.jpg",
+    "techStack": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "Stripe"
+    ],
+    "category": "E-commerce",
+    "featured": false,
+    "status": "in-progress",
+    "startDate": "2024-01-20",
+    "role": "Lead Developer",
+    "tags": [
+      "ecommerce",
+      "react",
+      "nodejs",
+      "mongodb"
+    ],
+    "details": "Full-featured e-commerce platform with payment integration"
+  },
+  {
+    "id": 3,
+    "title": "Test Project via API",
+    "description": "A test project created via API call",
+    "imageUrl": "/images/test-project.jpg",
+    "techStack": [
+      "React",
+      "TypeScript"
+    ],
+    "category": "Web Development",
+    "featured": false,
+    "status": "planning",
+    "startDate": "2025-06-27",
+    "role": "Full Stack Developer",
+    "tags": []
+  }
+]

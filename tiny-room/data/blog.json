@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "title": "Building a Modern Portfolio with React Router",
+    "slug": "building-modern-portfolio-react-router",
+    "excerpt": "Learn how to create a stunning portfolio website using React Router and TypeScript",
+    "content": "Creating a portfolio website is essential for showcasing your work and skills. In this post, we'll explore how to build a modern, responsive portfolio using React Router and TypeScript...",
+    "author": "John Doe",
+    "publishDate": "2024-01-15T10:00:00.000Z",
+    "lastModified": "2024-01-15T10:00:00.000Z",
+    "category": "Web Development",
+    "tags": ["react", "portfolio", "web development", "typescript"],
+    "status": "published",
+    "readingTime": 8,
+    "featuredImage": "/images/blog/react-portfolio.jpg",
+    "seo": {
+      "metaTitle": "Building a Modern Portfolio with React Router | Tiny Room",
+      "metaDescription": "Step-by-step guide to creating a stunning portfolio website using React Router and TypeScript with modern best practices.",
+      "keywords": ["react", "portfolio", "web development", "typescript", "react router"]
+    }
+  },
+  {
+    "id": 2,
+    "title": "Advanced TypeScript Patterns for React",
+    "slug": "advanced-typescript-patterns-react",
+    "excerpt": "Explore advanced TypeScript patterns that will improve your React development workflow",
+    "content": "TypeScript has become an essential tool for React development. In this comprehensive guide, we'll dive deep into advanced patterns...",
+    "author": "John Doe",
+    "publishDate": "2024-01-10T14:30:00.000Z",
+    "lastModified": "2024-01-10T14:30:00.000Z",
+    "category": "TypeScript",
+    "tags": ["typescript", "react", "patterns", "advanced"],
+    "status": "published",
+    "readingTime": 12,
+    "featuredImage": "/images/blog/typescript-patterns.jpg",
+    "seo": {
+      "metaTitle": "Advanced TypeScript Patterns for React Development",
+      "metaDescription": "Master advanced TypeScript patterns to write better, more maintainable React applications.",
+      "keywords": ["typescript", "react", "patterns", "advanced", "development"]
+    }
+  }
+]

@@ -10,4 +10,10 @@ export default [
   route('blog/:slug', 'routes/blog-post.tsx'),
   route('contact', 'routes/contact.tsx'),
   route('editor', 'routes/editor.tsx'),
+  route('admin', 'routes/admin.tsx'),
+
+  // API Routes - using splat routes for parameter handling
+  route('api/projects/*', 'routes/api.projects.tsx'),
+  route('api/gallery/*', 'routes/api.gallery.tsx'),
+  route('api/blog/*', 'routes/api.blog.tsx'),
 ] satisfies RouteConfig;

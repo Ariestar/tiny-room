@@ -26,14 +26,14 @@ export default function ProjectCard({ project }: { project: Project }) {
       </div>
 
       <div className="text-xs text-gray-500 mb-3">
-        <span>{project.date}</span>
+        <span>{project.date || project.startDate}</span>
         <span className="mx-2">•</span>
         <span>{project.category}</span>
       </div>
 
-      {project.link && (
+      {(project.link || project.demoUrl || project.githubUrl) && (
         <a
-          href={project.link}
+          href={project.link || project.demoUrl || project.githubUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="text-teal-600 hover:underline text-sm"

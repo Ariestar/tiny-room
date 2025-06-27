@@ -97,19 +97,21 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
           keepMarks: true,
           keepAttributes: false,
         },
+        codeBlock: false, // 禁用默认代码块，使用lowlight版本
       }),
       CodeBlockLowlight.configure({
         lowlight,
+        defaultLanguage: 'plaintext',
       }),
       Image.configure({
         HTMLAttributes: {
-          style: 'max-width: 100%; height: auto; border-radius: 8px; margin: 8px 0;',
+          class: 'editor-image',
         },
       }),
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          style: 'color: #3b82f6; text-decoration: underline;',
+          class: 'editor-link',
         },
       }),
     ],
@@ -121,14 +123,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     },
     editorProps: {
       attributes: {
-        style: `
-          outline: none;
-          padding: 16px;
-          min-height: 200px;
-          line-height: 1.6;
-          color: #374151;
-        `,
-        'data-placeholder': placeholder,
+        class: 'prose-content',
       },
     },
   });
@@ -159,7 +154,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     if (!editor) return;
 
     const previousUrl = editor.getAttributes('link').href;
-    const url = window.prompt('URL', previousUrl);
+    const url = window.prompt('链接地址', previousUrl);
 
     if (url === null) {
       return;
@@ -211,122 +206,158 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   };
 
   if (!editor) {
-    return <div style={styles.loading}>加载编辑器中...</div>;
+    return (
+      <div className="rich-text-editor loading">
+        <div className="loading-text">加载编辑器中...</div>
+      </div>
+    );
   }
 
   return (
-    <div style={styles.container}>
+    <div className="rich-text-editor">
       {editable && (
-        <div style={styles.toolbar}>
-          <ToolbarButton
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            isActive={editor.isActive('bold')}
-            title="加粗 (Ctrl+B)"
-          >
-            <strong>B</strong>
-          </ToolbarButton>
+        <div className="toolbar">
+          <div className="toolbar-group">
+            <button
+              onClick={() => editor.chain().focus().toggleBold().run()}
+              className={`toolbar-button ${editor.isActive('bold') ? 'active' : ''}`}
+              title="粗体 (Ctrl+B)"
+            >
+              <strong>B</strong>
+            </button>
 
-          <ToolbarButton
-            onClick={() => editor.chain().focus().toggleItalic().run()}
-            isActive={editor.isActive('italic')}
-            title="斜体 (Ctrl+I)"
-          >
-            <em>I</em>
-          </ToolbarButton>
+            <button
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+              className={`toolbar-button ${editor.isActive('italic') ? 'active' : ''}`}
+              title="斜体 (Ctrl+I)"
+            >
+              <em>I</em>
+            </button>
 
-          <ToolbarButton
-            onClick={() => editor.chain().focus().toggleStrike().run()}
-            isActive={editor.isActive('strike')}
-            title="删除线"
-          >
-            <s>S</s>
-          </ToolbarButton>
+            <button
+              onClick={() => editor.chain().focus().toggleStrike().run()}
+              className={`toolbar-button ${editor.isActive('strike') ? 'active' : ''}`}
+              title="删除线"
+            >
+              <span style={{ textDecoration: 'line-through' }}>S</span>
+            </button>
 
-          <div style={styles.divider} />
+            <button
+              onClick={() => editor.chain().focus().toggleCode().run()}
+              className={`toolbar-button ${editor.isActive('code') ? 'active' : ''}`}
+              title="行内代码"
+            >
+              <code>code</code>
+            </button>
+          </div>
 
-          <ToolbarButton
-            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-            isActive={editor.isActive('heading', { level: 1 })}
-            title="标题1"
-          >
-            H1
-          </ToolbarButton>
+          <div className="toolbar-divider" />
 
-          <ToolbarButton
-            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-            isActive={editor.isActive('heading', { level: 2 })}
-            title="标题2"
-          >
-            H2
-          </ToolbarButton>
+          <div className="toolbar-group">
+            <button
+              onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+              className={`toolbar-button ${editor.isActive('heading', { level: 1 }) ? 'active' : ''}`}
+              title="一级标题"
+            >
+              H1
+            </button>
 
-          <ToolbarButton
-            onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-            isActive={editor.isActive('heading', { level: 3 })}
-            title="标题3"
-          >
-            H3
-          </ToolbarButton>
+            <button
+              onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+              className={`toolbar-button ${editor.isActive('heading', { level: 2 }) ? 'active' : ''}`}
+              title="二级标题"
+            >
+              H2
+            </button>
 
-          <div style={styles.divider} />
+            <button
+              onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+              className={`toolbar-button ${editor.isActive('heading', { level: 3 }) ? 'active' : ''}`}
+              title="三级标题"
+            >
+              H3
+            </button>
+          </div>
 
-          <ToolbarButton
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-            isActive={editor.isActive('bulletList')}
-            title="无序列表"
-          >
-            •••
-          </ToolbarButton>
+          <div className="toolbar-divider" />
 
-          <ToolbarButton
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            isActive={editor.isActive('orderedList')}
-            title="有序列表"
-          >
-            123
-          </ToolbarButton>
+          <div className="toolbar-group">
+            <button
+              onClick={() => editor.chain().focus().toggleBulletList().run()}
+              className={`toolbar-button ${editor.isActive('bulletList') ? 'active' : ''}`}
+              title="无序列表"
+            >
+              <span>•</span>
+            </button>
 
-          <ToolbarButton
-            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-            isActive={editor.isActive('codeBlock')}
-            title="代码块"
-          >
-            {'</>'}
-          </ToolbarButton>
+            <button
+              onClick={() => editor.chain().focus().toggleOrderedList().run()}
+              className={`toolbar-button ${editor.isActive('orderedList') ? 'active' : ''}`}
+              title="有序列表"
+            >
+              <span>1.</span>
+            </button>
 
-          <div style={styles.divider} />
+            <button
+              onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+              className={`toolbar-button ${editor.isActive('codeBlock') ? 'active' : ''}`}
+              title="代码块"
+            >
+              {'</>'}
+            </button>
 
-          <ToolbarButton onClick={setLink} isActive={editor.isActive('link')} title="添加链接">
-            🔗
-          </ToolbarButton>
+            <button
+              onClick={() => editor.chain().focus().toggleBlockquote().run()}
+              className={`toolbar-button ${editor.isActive('blockquote') ? 'active' : ''}`}
+              title="引用"
+            >
+              ❝
+            </button>
+          </div>
 
-          {onImageUpload && (
-            <ToolbarButton onClick={handleImageUpload} title="上传图片">
-              🖼️
-            </ToolbarButton>
-          )}
+          <div className="toolbar-divider" />
 
-          <div style={styles.divider} />
+          <div className="toolbar-group">
+            <button
+              onClick={setLink}
+              className={`toolbar-button ${editor.isActive('link') ? 'active' : ''}`}
+              title="添加链接"
+            >
+              🔗
+            </button>
 
-          <ToolbarButton
-            onClick={() => editor.chain().focus().undo().run()}
-            disabled={!editor.can().chain().focus().undo().run()}
-            title="撤销 (Ctrl+Z)"
-          >
-            ↶
-          </ToolbarButton>
+            {onImageUpload && (
+              <button onClick={handleImageUpload} className="toolbar-button" title="上传图片">
+                🖼️
+              </button>
+            )}
+          </div>
 
-          <ToolbarButton
-            onClick={() => editor.chain().focus().redo().run()}
-            disabled={!editor.can().chain().focus().redo().run()}
-            title="重做 (Ctrl+Y)"
-          >
-            ↷
-          </ToolbarButton>
+          <div className="toolbar-divider" />
+
+          <div className="toolbar-group">
+            <button
+              onClick={() => editor.chain().focus().undo().run()}
+              disabled={!editor.can().chain().focus().undo().run()}
+              className="toolbar-button"
+              title="撤销 (Ctrl+Z)"
+            >
+              ↶
+            </button>
+
+            <button
+              onClick={() => editor.chain().focus().redo().run()}
+              disabled={!editor.can().chain().focus().redo().run()}
+              className="toolbar-button"
+              title="重做 (Ctrl+Y)"
+            >
+              ↷
+            </button>
+          </div>
         </div>
       )}
 
-      <div style={styles.editorContent}>
+      <div className="editor-content">
         <EditorContent editor={editor} />
       </div>
     </div>

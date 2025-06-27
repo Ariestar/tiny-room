@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "title": "Sunset Over Mountains",
+    "description": "Beautiful sunset captured over mountain peaks",
+    "imageUrl": "/images/gallery/sunset-mountains.jpg",
+    "thumbnailUrl": "/images/gallery/thumbs/sunset-mountains.jpg",
+    "category": "Landscape",
+    "tags": ["sunset", "mountains", "nature", "golden hour"],
+    "captureDate": "2024-01-10",
+    "location": "Rocky Mountains, Colorado",
+    "camera": "Canon EOS R5",
+    "settings": {
+      "aperture": "f/8",
+      "shutterSpeed": "1/125s",
+      "iso": 200,
+      "focalLength": "70mm"
+    }
+  },
+  {
+    "id": 2,
+    "title": "City Architecture",
+    "description": "Modern architectural details in downtown",
+    "imageUrl": "/images/gallery/city-architecture.jpg",
+    "thumbnailUrl": "/images/gallery/thumbs/city-architecture.jpg",
+    "category": "Architecture",
+    "tags": ["architecture", "city", "modern", "urban"],
+    "captureDate": "2024-01-15",
+    "location": "New York City",
+    "camera": "Sony A7R IV"
+  }
+]

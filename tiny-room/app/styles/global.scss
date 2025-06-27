@@ -1,8 +1,10 @@
-@import './tokens.scss';
-
-// 变量与基础
-$primary-color: var(--color-primary);
-$font-family-base: var(--font-base);
+@use './tokens.scss';
+@use './variables' as vars;
+@use './components/header.scss';
+@use './components/footer.scss';
+@use './components/rich-text-editor.scss';
+@use './components/file-uploader.scss';
+@use './pages/admin.scss';
 
 // 基础样式
 * {
@@ -11,7 +13,7 @@ $font-family-base: var(--font-base);
 
 body {
   margin: 0;
-  font-family: $font-family-base;
+  font-family: vars.$font-family-base;
   background-color: var(--color-bg);
   color: var(--color-text);
   // 隐藏滚动条
@@ -19,7 +21,3 @@ body {
     display: none;
   }
 }
-
-@import './components/header.scss';
-@import './components/footer.scss';
-@import './components/rich-text-editor.scss';
