@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 
 export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {

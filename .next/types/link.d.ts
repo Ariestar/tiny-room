@@ -31,6 +31,7 @@ declare namespace __next_route_internal_types__ {
   type StaticRoutes = 
     | `/`
     | `/dashboard`
+    | `/dashboard/login`
     | `/ui-showcase`
     | `/ui-showcase/animations`
     | `/ui-showcase/components`
