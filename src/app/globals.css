@@ -1,0 +1,323 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 增强文本选中效果 */
+::selection {
+    background-color: #d1d5db;
+    /* 深灰 (Tailwind gray-300) */
+    color: #171717;
+    /* 深色文字 */
+}
+
+::-moz-selection {
+    background-color: #d1d5db;
+    /* Firefox 兼容 */
+    color: #171717;
+}
+
+/* 字体导入 - Vercel 风格现代字体 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+/* 全局基础样式 */
+@layer base {
+    html {
+        @apply antialiased scroll-smooth;
+        font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+        font-variant-ligatures: common-ligatures;
+    }
+
+    body {
+        @apply text-gray-700 bg-gray-50 font-sans;
+        font-feature-settings: 'rlig' 1, 'calt' 1;
+    }
+
+    /* 现代化标题系统 - 响应式设计 */
+    h1 {
+        @apply text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight leading-none;
+        font-family: 'Cal Sans', 'Inter', system-ui, sans-serif;
+        letter-spacing: -0.02em;
+    }
+
+    h2 {
+        @apply text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight leading-tight;
+        font-family: 'Cal Sans', 'Inter', system-ui, sans-serif;
+        letter-spacing: -0.015em;
+    }
+
+    h3 {
+        @apply text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 tracking-tight leading-tight;
+        letter-spacing: -0.01em;
+    }
+
+    h4 {
+        @apply text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900 tracking-tight leading-snug;
+        letter-spacing: -0.005em;
+    }
+
+    h5 {
+        @apply text-lg md:text-xl lg:text-2xl font-medium text-gray-900 leading-snug;
+    }
+
+    h6 {
+        @apply text-base md:text-lg lg:text-xl font-medium text-gray-900 leading-snug;
+    }
+
+    /* 段落和文本样式 */
+    p {
+        @apply text-base md:text-lg text-gray-600 leading-relaxed;
+        max-width: 65ch;
+        /* 优化阅读体验的行长度 */
+    }
+
+    /* 链接样式 */
+    a {
+        @apply text-brand-600 hover:text-brand-700 transition-colors duration-200;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 4px;
+    }
+
+    /* 代码块样式 */
+    code {
+        @apply font-mono text-sm bg-gray-100 text-gray-800 px-2 py-1 rounded-md;
+        font-feature-settings: 'calt' 1;
+    }
+
+    pre {
+        @apply font-mono text-sm bg-gray-900 text-gray-100 p-4 rounded-xl overflow-x-auto;
+        font-feature-settings: 'calt' 1;
+    }
+
+    pre code {
+        @apply bg-transparent text-gray-100 px-0 py-0;
+    }
+
+    /* 引用样式 */
+    blockquote {
+        @apply border-l-4 border-brand-200 pl-6 py-2 italic text-gray-700 bg-gray-50 rounded-r-lg;
+    }
+
+    /* 列表样式 */
+    ul,
+    ol {
+        @apply text-gray-600 leading-relaxed;
+    }
+
+    li {
+        @apply mb-2;
+    }
+
+    /* 分隔线 */
+    hr {
+        @apply border-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-8;
+    }
+}
+
+/* 组件样式 */
+@layer components {
+
+    /* 按钮基础样式 */
+    .btn {
+        @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+    }
+
+    .btn-primary {
+        @apply btn bg-brand-500 hover:bg-brand-600 text-white shadow-soft hover:shadow-medium focus:ring-brand-300;
+    }
+
+    .btn-secondary {
+        @apply btn bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 focus:ring-gray-300;
+    }
+
+    .btn-ghost {
+        @apply btn bg-transparent hover:bg-gray-100 text-gray-600 hover:text-gray-900 focus:ring-gray-300;
+    }
+
+    /* 卡片基础样式 */
+    .card {
+        @apply bg-white rounded-2xl shadow-soft border border-gray-150 overflow-hidden;
+    }
+
+    .card-hover {
+        @apply card hover:shadow-medium hover:-translate-y-1 transition-all duration-300;
+    }
+
+    /* 输入框基础样式 */
+    .input {
+        @apply w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-300 focus:ring-2 focus:ring-brand-100 outline-none transition-all duration-200 bg-white text-gray-900 placeholder-gray-400;
+    }
+
+    /* 文本样式工具类 */
+    .text-display {
+        font-family: 'Cal Sans', 'Inter', system-ui, sans-serif;
+        @apply font-bold tracking-tight;
+    }
+
+    .text-gradient {
+        @apply bg-gradient-to-r from-brand-600 to-accent-purple-600 bg-clip-text text-transparent;
+    }
+
+    .text-gradient-accent {
+        @apply bg-gradient-to-r from-accent-pink-500 to-accent-orange-500 bg-clip-text text-transparent;
+    }
+
+    /* 容器样式 */
+    .container-prose {
+        @apply max-w-4xl mx-auto px-6;
+    }
+
+    .container-wide {
+        @apply max-w-7xl mx-auto px-6;
+    }
+
+    .container-narrow {
+        @apply max-w-2xl mx-auto px-6;
+    }
+}
+
+/* 工具样式 */
+@layer utilities {
+
+    /* 文本选择样式 */
+    ::selection {
+        @apply bg-gray-300 text-gray-900;
+    }
+
+    /* 滚动条样式 */
+    ::-webkit-scrollbar {
+        @apply w-2;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-gray-100;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-gray-300 rounded-full;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-gray-400;
+    }
+
+    /* Focus 样式增强 */
+    .focus-brand {
+        @apply focus:outline-none focus:ring-2 focus:ring-brand-300 focus:ring-offset-2;
+    }
+
+    .focus-accent {
+        @apply focus:outline-none focus:ring-2 focus:ring-accent-purple-300 focus:ring-offset-2;
+    }
+
+    /* 动画增强 */
+    .animate-on-scroll {
+        @apply opacity-0 translate-y-8 transition-all duration-700 ease-out;
+    }
+
+    .animate-on-scroll.in-view {
+        @apply opacity-100 translate-y-0;
+    }
+
+    /* 渐变文本效果 */
+    .gradient-text-animated {
+        @apply bg-gradient-to-r from-brand-600 via-accent-purple-600 to-accent-pink-600 bg-clip-text text-transparent;
+        background-size: 200% auto;
+        animation: gradient-shift 3s linear infinite;
+    }
+
+    /* 玻璃形态效果 */
+    .glass {
+        @apply bg-white/80 backdrop-blur-xl border border-white/20;
+    }
+
+    .glass-dark {
+        @apply bg-gray-900/80 backdrop-blur-xl border border-gray-700/20;
+    }
+}
+
+/* 自定义属性 */
+:root {
+    /* 字体大小比例 */
+    --text-xs: 0.75rem;
+    /* 12px */
+    --text-sm: 0.875rem;
+    /* 14px */
+    --text-base: 1rem;
+    /* 16px */
+    --text-lg: 1.125rem;
+    /* 18px */
+    --text-xl: 1.25rem;
+    /* 20px */
+    --text-2xl: 1.5rem;
+    /* 24px */
+    --text-3xl: 1.875rem;
+    /* 30px */
+    --text-4xl: 2.25rem;
+    /* 36px */
+    --text-5xl: 3rem;
+    /* 48px */
+    --text-6xl: 3.75rem;
+    /* 60px */
+    --text-7xl: 4.5rem;
+    /* 72px */
+
+    /* 行高比例 */
+    --leading-none: 1;
+    --leading-tight: 1.25;
+    --leading-snug: 1.375;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
+    --leading-loose: 2;
+
+    /* 字间距 */
+    --tracking-tighter: -0.05em;
+    --tracking-tight: -0.025em;
+    --tracking-normal: 0em;
+    --tracking-wide: 0.025em;
+    --tracking-wider: 0.05em;
+    --tracking-widest: 0.1em;
+}
+
+/* 响应式字体缩放 */
+@media (max-width: 640px) {
+    :root {
+        --text-4xl: 2rem;
+        /* 32px */
+        --text-5xl: 2.5rem;
+        /* 40px */
+        --text-6xl: 3rem;
+        /* 48px */
+        --text-7xl: 3.5rem;
+        /* 56px */
+    }
+}
+
+/* 深色模式准备 */
+@media (prefers-color-scheme: dark) {
+    .dark-auto {
+        @apply bg-gray-900 text-gray-100;
+    }
+
+    .dark-auto h1,
+    .dark-auto h2,
+    .dark-auto h3,
+    .dark-auto h4,
+    .dark-auto h5,
+    .dark-auto h6 {
+        @apply text-gray-50;
+    }
+
+    .dark-auto p {
+        @apply text-gray-300;
+    }
+
+    .dark-auto .card {
+        @apply bg-gray-800 border-gray-700;
+    }
+}
