@@ -33,9 +33,10 @@ declare namespace __next_route_internal_types__ {
     | `/dashboard`
     | `/ui-showcase`
     | `/ui-showcase/animations`
-    | `/ui-showcase/typography`
     | `/ui-showcase/components`
-  type DynamicRoutes<T extends string = string> = never
+    | `/ui-showcase/typography`
+  type DynamicRoutes<T extends string = string> = 
+    | `/api/auth/${CatchAllSlug<T>}`
 
   type RouteImpl<T> = 
     | StaticRoutes
