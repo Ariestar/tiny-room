@@ -2,7 +2,6 @@
 
 import React from "react";
 import { motion, HTMLMotionProps, Variants } from "framer-motion";
-import { cn } from "@/lib/utils";
 import { containerVariants, itemVariants, durations, easings } from "@/lib/animations";
 
 // 列表动画预设类型
@@ -142,7 +141,46 @@ export const AnimatedList = React.forwardRef<HTMLDivElement, AnimatedListProps>(
 		},
 		ref
 	) => {
-		// 如果禁用动画，返回普通div
+		const listVariants: Variants = React.useMemo(() => {
+			if (disableAnimation) return {};
+
+			const variantsMap = {
+				stagger: {
+					visible: {
+						transition: {
+							staggerChildren: staggerDelay,
+						},
+					},
+				},
+				cascade: {
+					visible: {
+						transition: {
+							staggerChildren: staggerDelay,
+							delayChildren: delayChildren,
+						},
+					},
+				},
+				wave: {
+					visible: {
+						transition: {
+							staggerChildren: staggerDelay,
+							when: "beforeChildren",
+						},
+					},
+				},
+				scale: {
+					visible: {
+						transition: {
+							staggerChildren: staggerDelay,
+						},
+					},
+				},
+				rotate: {},
+			};
+
+			return variantsMap[animationType] || {};
+		}, [animationType, staggerDelay, delayChildren, disableAnimation]);
+
 		if (disableAnimation) {
 			return (
 				<div ref={ref} className={className} {...(props as any)}>
@@ -151,34 +189,17 @@ export const AnimatedList = React.forwardRef<HTMLDivElement, AnimatedListProps>(
 			);
 		}
 
-		// 获取动画变体
-		const { container, item } = React.useMemo(() => {
-			if (customContainerVariants && customItemVariants) {
-				return {
-					container: customContainerVariants,
-					item: customItemVariants,
-				};
-			}
-			return createListVariants(animationType, staggerDelay, delayChildren);
-		}, [
-			animationType,
-			staggerDelay,
-			delayChildren,
-			customContainerVariants,
-			customItemVariants,
-		]);
-
 		return (
 			<motion.div
 				ref={ref}
-				variants={container}
 				initial='hidden'
 				animate='visible'
+				variants={listVariants}
 				className={className}
 				{...props}
 			>
 				{React.Children.map(children, (child, index) => (
-					<motion.div key={index} variants={item} custom={index}>
+					<motion.div key={index} custom={index}>
 						{child}
 					</motion.div>
 				))}

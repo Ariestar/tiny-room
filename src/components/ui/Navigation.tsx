@@ -11,6 +11,8 @@ export interface NavigationItem {
 	label: string;
 	/** 链接地址 */
 	href?: string;
+	/** 点击事件处理器 */
+	onClick?: () => void;
 	/** 图标 */
 	icon?: React.ReactNode;
 	/** 是否为活跃状态 */
@@ -222,6 +224,19 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
 					)}
 				</>
 			);
+
+			if (item.onClick) {
+				return (
+					<button
+						key={item.id}
+						className={itemClasses}
+						onClick={item.onClick}
+						disabled={item.disabled}
+					>
+						{content}
+					</button>
+				);
+			}
 
 			if (item.href) {
 				return (

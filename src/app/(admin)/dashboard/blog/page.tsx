@@ -1,16 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import { getSortedPostsData } from "@/lib/posts";
 import { Card, Button } from "@/components/ui";
 import Link from "next/link";
 import { PlusCircle } from "lucide-react";
 
-const prisma = new PrismaClient();
-
 const BlogPage = async () => {
-	const posts = await prisma.post.findMany({
-		orderBy: {
-			createdAt: "desc",
-		},
-	});
+	const posts = getSortedPostsData();
 
 	return (
 		<div>
@@ -31,14 +25,8 @@ const BlogPage = async () => {
 							<div className='p-6'>
 								<h2 className='text-xl font-semibold mb-2'>{post.title}</h2>
 								<p className='text-sm text-gray-400 mb-4'>
-									{new Date(post.createdAt).toLocaleDateString()}
+									{new Date(post.date).toLocaleDateString()}
 								</p>
-								<div
-									className='prose prose-invert max-h-24 overflow-hidden'
-									dangerouslySetInnerHTML={{
-										__html: post.content?.substring(0, 150) + "..." || "",
-									}}
-								/>
 								<div className='mt-4 flex justify-end'>
 									<Link href={{ pathname: `/dashboard/blog/edit/${post.id}` }}>
 										<Button variant='outline' size='sm'>

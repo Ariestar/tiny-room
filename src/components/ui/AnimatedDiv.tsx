@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
-import { motion, HTMLMotionProps, Variants } from "framer-motion";
-import { cn } from "@/lib/utils";
+import React, { useRef, useMemo } from "react";
+import { motion, HTMLMotionProps, Variants, useInView } from "framer-motion";
 import { animationPresets } from "@/lib/animations";
 
 // 动画预设类型
@@ -51,20 +50,10 @@ export const AnimatedDiv = React.forwardRef<HTMLDivElement, AnimatedDivProps>(
 		},
 		ref
 	) => {
-		// 如果禁用动画，返回普通div
-		if (disableAnimation) {
-			return (
-				<div ref={ref} className={className} {...(props as any)}>
-					{children}
-				</div>
-			);
-		}
-
-		// 获取动画变体
-		const animationVariants = variants || animationPresets[animation];
-
-		// 创建带延迟和持续时间的变体
 		const customVariants: Variants = React.useMemo(() => {
+			if (disableAnimation) return {};
+			const animationVariants = variants || animationPresets[animation];
+
 			if (!animationVariants) return {};
 
 			const newVariants: Variants = {};
@@ -75,6 +64,7 @@ export const AnimatedDiv = React.forwardRef<HTMLDivElement, AnimatedDivProps>(
 					newVariants[key] = {
 						...variant,
 						transition: {
+							// @ts-ignore
 							...((variant as any).transition || {}),
 							...(delay && { delay }),
 							...(duration && { duration }),
@@ -86,7 +76,16 @@ export const AnimatedDiv = React.forwardRef<HTMLDivElement, AnimatedDivProps>(
 			});
 
 			return newVariants;
-		}, [animationVariants, delay, duration]);
+		}, [animation, variants, delay, duration, disableAnimation]);
+
+		if (disableAnimation) {
+			return (
+				// @ts-ignore
+				<div ref={ref} className={className} {...props}>
+					{children}
+				</div>
+			);
+		}
 
 		return (
 			<motion.div

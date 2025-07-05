@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import { motion, HTMLMotionProps, Variants } from "framer-motion";
+import { motion, HTMLMotionProps, Variants, useAnimation } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { hoverVariants, tapVariants, durations, easings } from "@/lib/animations";
+import Loading from "./Loading";
 
 export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "size"> {
 	/** 按钮变体 */
@@ -48,13 +49,19 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 			shadow = false,
 			disableAnimation = false,
 			variants: customVariants,
-			disabled,
+			disabled = false,
 			className = "",
 			children,
 			...props
 		},
 		ref
 	) => {
+		const controls = useAnimation();
+
+		const handleMouseEnter = () => {
+			// ... existing code ...
+		};
+
 		// 基础样式
 		const baseStyles = [
 			"inline-flex items-center justify-center",
@@ -287,9 +294,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 				disabled={disabled || loading}
 				variants={buttonVariants}
 				initial='rest'
-				animate={loading ? "loading" : "rest"}
-				whileHover={!disabled && !loading ? "hover" : undefined}
-				whileTap={!disabled && !loading ? "tap" : undefined}
+				animate={controls}
+				whileHover='hover'
+				whileTap='tap'
 				{...props}
 			>
 				{/* 渐变背景动画效果 */}

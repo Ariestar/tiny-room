@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, HTMLMotionProps, Variants } from "framer-motion";
+import { motion, HTMLMotionProps, Variants, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { pageVariants, pageTransition, durations, easings } from "@/lib/animations";
 
@@ -125,19 +125,21 @@ export const PageTransition = React.forwardRef<HTMLDivElement, PageTransitionPro
 		};
 
 		return (
-			<motion.div
-				ref={ref}
-				key={transitionType} // 确保类型变化时重新挂载
-				variants={animationVariants}
-				initial='initial'
-				animate='in'
-				exit='out'
-				transition={transition}
-				className={cn("w-full", className)}
-				{...props}
-			>
-				{children}
-			</motion.div>
+			<AnimatePresence mode='wait'>
+				<motion.div
+					ref={ref}
+					key={transitionType}
+					initial='initial'
+					animate='in'
+					exit='out'
+					variants={animationVariants}
+					transition={transition}
+					className={cn("w-full", className)}
+					{...props}
+				>
+					{children}
+				</motion.div>
+			</AnimatePresence>
 		);
 	}
 );

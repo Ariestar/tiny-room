@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 import { BarChart, PenSquare, Eye, Users } from "lucide-react";
+import { auth } from "@/auth";
 
 const stats = [
 	{
@@ -33,15 +34,19 @@ const stats = [
 	},
 ];
 
-export default function DashboardPage() {
+const DashboardPage = async () => {
+	const session = await auth();
+
 	return (
 		<div className='p-8 space-y-8'>
-			<header>
-				<h1 className='text-4xl font-bold tracking-tight text-gray-800'>
-					欢迎回来, Admin!
-				</h1>
-				<p className='mt-2 text-lg text-gray-500'>这是您的控制中心，祝您有美好的一天。</p>
-			</header>
+			<Card className='mb-6'>
+				<div className='p-6'>
+					<h1 className='text-2xl font-semibold'>
+						欢迎回来, {session?.user?.name ?? "Admin"}!
+					</h1>
+					<p className='text-gray-400 mt-2'>这是您的控制中心，祝您有美好的一天。</p>
+				</div>
+			</Card>
 
 			<div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
 				{stats.map(stat => (
@@ -113,4 +118,6 @@ export default function DashboardPage() {
 			</div>
 		</div>
 	);
-}
+};
+
+export default DashboardPage;

@@ -4,9 +4,15 @@ import React from "react";
 import { usePathname } from "next/navigation";
 import Navigation, { NavigationItem } from "@/components/ui/Navigation";
 import { LayoutDashboard, Pencil, Briefcase, ImageIcon, Settings, LogOut } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
+
+	// If on the login page, render children directly without the layout
+	if (pathname === "/dashboard/login") {
+		return <>{children}</>;
+	}
 
 	const navigationItems: NavigationItem[] = [
 		{
@@ -48,9 +54,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
 	const logoutItem: NavigationItem = {
 		id: "logout",
-		label: "Logout",
-		href: "/api/auth/signout",
-		icon: <LogOut />,
+		label: "",
+		onClick: () => signOut({ callbackUrl: "/dashboard/login" }),
+		icon: (
+			<span className='flex items-center'>
+				<LogOut className='mr-2 h-4 w-4' />
+				Logout
+			</span>
+		),
 	};
 
 	return (
