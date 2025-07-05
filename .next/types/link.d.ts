@@ -31,11 +31,14 @@ declare namespace __next_route_internal_types__ {
   type StaticRoutes = 
     | `/`
     | `/dashboard`
+    | `/dashboard/blog`
     | `/dashboard/login`
+    | `/dashboard/settings`
     | `/ui-showcase`
     | `/ui-showcase/animations`
     | `/ui-showcase/components`
     | `/ui-showcase/typography`
+    | `/login`
   type DynamicRoutes<T extends string = string> = 
     | `/api/auth/${CatchAllSlug<T>}`
 

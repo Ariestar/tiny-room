@@ -1,58 +1,65 @@
+"use client";
+
 import React from "react";
+import { usePathname } from "next/navigation";
 import Navigation, { NavigationItem } from "@/components/ui/Navigation";
-import { LayoutGrid, FileText, ImageIcon, Briefcase, Settings, LogOut } from "lucide-react";
-
-const navigationItems: NavigationItem[] = [
-	{
-		id: "dashboard",
-		label: "仪表盘",
-		href: "/dashboard",
-		icon: <LayoutGrid />,
-		active: true,
-	},
-	{
-		id: "projects",
-		label: "项目管理",
-		href: "/dashboard/projects",
-		icon: <Briefcase />,
-	},
-	{
-		id: "blog",
-		label: "博客管理",
-		href: "/dashboard/blog",
-		icon: <FileText />,
-		badge: 5,
-	},
-	{
-		id: "gallery",
-		label: "图库管理",
-		href: "/dashboard/gallery",
-		icon: <ImageIcon />,
-	},
-];
-
-const settingsItem: NavigationItem = {
-	id: "settings",
-	label: "设置",
-	href: "/dashboard/settings",
-	icon: <Settings />,
-};
-
-const logoutItem: NavigationItem = {
-	id: "logout",
-	label: "登出",
-	href: "/api/auth/signout",
-	icon: <LogOut />,
-};
+import { LayoutDashboard, Pencil, Briefcase, ImageIcon, Settings, LogOut } from "lucide-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+	const pathname = usePathname();
+
+	const navigationItems: NavigationItem[] = [
+		{
+			id: "dashboard",
+			label: "Dashboard",
+			href: "/dashboard",
+			icon: <LayoutDashboard />,
+			active: pathname === "/dashboard",
+		},
+		{
+			id: "blog",
+			label: "Blog",
+			href: "/dashboard/blog",
+			icon: <Pencil />,
+			active: pathname.startsWith("/dashboard/blog"),
+		},
+		{
+			id: "projects",
+			label: "Projects",
+			href: "/dashboard/projects",
+			icon: <Briefcase />,
+			active: pathname.startsWith("/dashboard/projects"),
+		},
+		{
+			id: "gallery",
+			label: "Gallery",
+			href: "/dashboard/gallery",
+			icon: <ImageIcon />,
+			active: pathname.startsWith("/dashboard/gallery"),
+		},
+		{
+			id: "settings",
+			label: "Settings",
+			href: "/dashboard/settings",
+			icon: <Settings />,
+			active: pathname.startsWith("/dashboard/settings"),
+		},
+	];
+
+	const logoutItem: NavigationItem = {
+		id: "logout",
+		label: "Logout",
+		href: "/api/auth/signout",
+		icon: <LogOut />,
+	};
+
 	return (
-		<div className='flex h-screen bg-gray-50/50'>
-			<aside className='flex flex-col w-64 bg-white border-r border-gray-100'>
-				<div className='h-16 flex items-center px-6 border-b border-gray-100'>
-					<h1 className='text-xl font-bold text-gray-800'>Tiny Room</h1>
+		<div className='flex h-screen bg-gray-50 text-gray-800'>
+			<aside className='flex flex-col w-64 bg-white border-r border-gray-200'>
+				<div className='h-16 flex items-center px-6 border-b border-gray-200'>
+					<h1 className='text-xl font-bold text-gray-900'>Tiny Room</h1>
 				</div>
-				<div className='flex-1 p-4'>
+				<div className='flex-1 p-4 overflow-y-auto'>
 					<Navigation
 						items={navigationItems}
 						variant='vertical'
@@ -60,16 +67,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 						className='space-y-1'
 					/>
 				</div>
-				<div className='p-4 border-t border-gray-100'>
+				<div className='p-4 border-t border-gray-200'>
 					<Navigation
-						items={[settingsItem, logoutItem]}
+						items={[logoutItem]}
 						variant='vertical'
 						size='md'
 						className='space-y-1'
 					/>
 				</div>
 			</aside>
-			<main className='flex-1 overflow-y-auto'>{children}</main>
+			<main className='flex-1 p-6 overflow-auto'>{children}</main>
 		</div>
 	);
 }

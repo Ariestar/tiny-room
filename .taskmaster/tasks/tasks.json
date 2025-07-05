@@ -89,7 +89,7 @@
         "dependencies": [
           1
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -130,7 +130,7 @@
               3
             ],
             "details": "Create a `middleware.js` file to check user authentication status before accessing the dashboard routes. Redirect unauthenticated users to the login page.",
-            "status": "in-progress",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -141,7 +141,7 @@
               4
             ],
             "details": "Create login and logout components using React. Implement form validation for email/password login. Integrate with `signIn` and `signOut` functions from `next-auth/react`.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -157,7 +157,7 @@
           2,
           3
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -165,7 +165,7 @@
             "description": "Develop the `DashboardLayout` component with a consistent structure including navigation, header, and footer sections. This will serve as the base layout for the dashboard pages.",
             "dependencies": [],
             "details": "Implement responsive design for different screen sizes. Include placeholders for content areas.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -176,7 +176,7 @@
               1
             ],
             "details": "Design visually appealing cards with relevant icons and labels. Ensure data is clearly presented.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -187,7 +187,7 @@
               1
             ],
             "details": "Implement a visually clear timeline with timestamps and descriptions of each activity. Consider adding filtering options.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -198,7 +198,7 @@
               1
             ],
             "details": "Design clear and informative status indicators (e.g., color-coded icons). Include details about each component's status.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -214,8 +214,51 @@
           2,
           3
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create `/dashboard/settings` Page Structure",
+            "description": "Set up the basic HTML structure and routing for the `/dashboard/settings` page.",
+            "dependencies": [],
+            "details": "Define the main layout and navigation elements for the settings page.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Personal Information and Theme Settings Forms",
+            "description": "Develop forms for users to update their personal information (e.g., name, email) and configure theme preferences (e.g., color scheme, font size).",
+            "dependencies": [
+              1
+            ],
+            "details": "Create form fields, validation logic, and data binding for personal information and theme settings.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implement API Key Configuration Management",
+            "description": "Develop functionality for users to generate, view, and revoke API keys.",
+            "dependencies": [
+              1
+            ],
+            "details": "Implement API endpoints for key management and secure storage of API keys.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Add System Maintenance Tools",
+            "description": "Implement tools for system maintenance, such as cache clearing and database optimization.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create UI elements and backend logic for triggering maintenance tasks.",
+            "status": "done",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 6,
@@ -227,7 +270,7 @@
         "dependencies": [
           3
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -470,7 +513,7 @@
     ],
     "metadata": {
       "created": "2025-07-01T17:41:17.110Z",
-      "updated": "2025-07-02T05:54:49.688Z",
+      "updated": "2025-07-05T14:04:53.742Z",
       "description": "Tasks for master context"
     }
   }

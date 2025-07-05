@@ -78,3 +78,10 @@ export * from "@/lib/animations";
 
 // 导航组件
 export { default as TopNavigation } from "./TopNavigation";
+
+// 表单组件
+export * from "./SettingsForm";
+
+// 新增卡片组件
+export * from "./ApiKeyCard";
+export * from "./MaintenanceCard";

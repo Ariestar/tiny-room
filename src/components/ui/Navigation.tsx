@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 export interface NavigationItem {
@@ -190,14 +191,8 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
 				</span>
 			);
 
-			return (
-				<button
-					key={item.id}
-					className={itemClasses}
-					onClick={() => handleItemClick(item)}
-					disabled={item.disabled}
-					aria-current={isActive ? "page" : undefined}
-				>
+			const content = (
+				<>
 					{/* 图标 */}
 					{item.icon && (
 						<span className={cn("flex-shrink-0", iconSizes[size])}>{item.icon}</span>
@@ -225,6 +220,30 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
 							/>
 						</svg>
 					)}
+				</>
+			);
+
+			if (item.href) {
+				return (
+					<Link
+						href={{ pathname: item.href }}
+						className={itemClasses}
+						aria-current={isActive ? "page" : undefined}
+					>
+						{content}
+					</Link>
+				);
+			}
+
+			return (
+				<button
+					key={item.id}
+					className={itemClasses}
+					onClick={() => handleItemClick(item)}
+					disabled={item.disabled}
+					aria-current={isActive ? "page" : undefined}
+				>
+					{content}
 				</button>
 			);
 		};
