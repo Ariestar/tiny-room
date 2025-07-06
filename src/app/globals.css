@@ -68,6 +68,9 @@
 
         --radius: 0.5rem;
 
+        --prose-body-color: 0 0% 25%;
+        /* Slightly lighter than foreground for body text */
+
         /* Vercel 风格配色方案 */
         --gray-50: #fafafa;
         /* 页面背景 */
@@ -145,6 +148,9 @@
         --ring: 0 0% 83.1%;
         /* gray-300 */
 
+        --prose-body-color: 0 0% 90%;
+        /* Slightly darker than foreground for body text */
+
         /* Vercel 风格配色方案 */
         --gray-50: #111111;
         /* 深色页面背景 */
@@ -164,91 +170,6 @@
         @apply antialiased scroll-smooth;
         font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
         font-variant-ligatures: common-ligatures;
-    }
-
-    body {
-        @apply bg-background text-foreground antialiased;
-        font-feature-settings: "rlig" 1, "calt" 1;
-    }
-
-    /* 现代化标题系统 - 响应式设计 */
-    h1 {
-        @apply text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight leading-none;
-        font-family: 'Cal Sans', 'Inter', system-ui, sans-serif;
-        letter-spacing: -0.02em;
-    }
-
-    h2 {
-        @apply text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight leading-tight;
-        font-family: 'Cal Sans', 'Inter', system-ui, sans-serif;
-        letter-spacing: -0.015em;
-    }
-
-    h3 {
-        @apply text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 tracking-tight leading-tight;
-        letter-spacing: -0.01em;
-    }
-
-    h4 {
-        @apply text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900 tracking-tight leading-snug;
-        letter-spacing: -0.005em;
-    }
-
-    h5 {
-        @apply text-lg md:text-xl lg:text-2xl font-medium text-gray-900 leading-snug;
-    }
-
-    h6 {
-        @apply text-base md:text-lg lg:text-xl font-medium text-gray-900 leading-snug;
-    }
-
-    /* 段落和文本样式 */
-    p {
-        @apply text-base md:text-lg text-gray-600 leading-relaxed;
-        max-width: 65ch;
-        /* 优化阅读体验的行长度 */
-    }
-
-    /* 链接样式 */
-    a {
-        @apply text-brand-600 hover:text-brand-700 transition-colors duration-200;
-        text-decoration: none;
-    }
-
-    a:hover {
-        text-decoration: underline;
-        text-decoration-thickness: 2px;
-        text-underline-offset: 4px;
-    }
-
-    /* 代码块样式 */
-    code {
-        @apply font-mono text-sm bg-gray-100 text-gray-800 px-2 py-1 rounded-md;
-        font-feature-settings: 'calt' 1;
-    }
-
-    pre {
-        @apply font-mono text-sm bg-gray-900 text-gray-100 p-4 rounded-xl overflow-x-auto;
-        font-feature-settings: 'calt' 1;
-    }
-
-    pre code {
-        @apply bg-transparent text-gray-100 px-0 py-0;
-    }
-
-    /* 引用样式 */
-    blockquote {
-        @apply border-l-4 border-brand-200 pl-6 py-2 italic text-gray-700 bg-gray-50 rounded-r-lg;
-    }
-
-    /* 列表样式 */
-    ul,
-    ol {
-        @apply text-gray-600 leading-relaxed;
-    }
-
-    li {
-        @apply mb-2;
     }
 
     /* 分隔线 */
@@ -571,4 +492,9 @@ body {
 html.dark {
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--muted)) hsl(var(--background));
+}
+
+/* This styles the callout box */
+.prose .callout {
+    @apply mt-6 flex items-start rounded-lg border p-4;
 }

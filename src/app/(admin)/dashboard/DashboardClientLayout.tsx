@@ -13,63 +13,53 @@ export default function DashboardClientLayout({ children }: { children: React.Re
 	if (pathname === "/dashboard/login") {
 		return <>{children}</>;
 	}
-
 	const navigationItems: NavigationItem[] = [
 		{
 			id: "dashboard",
-			label: "Dashboard",
 			href: "/dashboard",
+			label: "仪表盘",
 			icon: <LayoutDashboard />,
 			active: pathname === "/dashboard",
 		},
 		{
 			id: "blog",
-			label: "Blog",
 			href: "/dashboard/blog",
+			label: "博客管理",
 			icon: <Pencil />,
 			active: pathname.startsWith("/dashboard/blog"),
 		},
 		{
 			id: "projects",
-			label: "Projects",
 			href: "/dashboard/projects",
+			label: "项目管理",
 			icon: <Briefcase />,
 			active: pathname.startsWith("/dashboard/projects"),
 		},
 		{
 			id: "gallery",
-			label: "Gallery",
 			href: "/dashboard/gallery",
+			label: "图库管理",
 			icon: <ImageIcon />,
 			active: pathname.startsWith("/dashboard/gallery"),
 		},
 		{
 			id: "settings",
-			label: "Settings",
 			href: "/dashboard/settings",
+			label: "设置",
 			icon: <Settings />,
 			active: pathname.startsWith("/dashboard/settings"),
 		},
 	];
-
 	const logoutItem: NavigationItem = {
 		id: "logout",
-		label: "",
+		href: "#",
+		label: "登出",
+		icon: <LogOut />,
 		onClick: () => signOut({ callbackUrl: "/dashboard/login" }),
-		icon: (
-			<span className='flex items-center'>
-				<LogOut className='mr-2 h-4 w-4' />
-				Logout
-			</span>
-		),
 	};
-
 	return (
-		<div className='flex h-screen bg-gray-50 text-gray-800'>
-			<aside className='flex flex-col w-64 bg-white border-r border-gray-200'>
-				<div className='h-16 flex items-center px-6 border-b border-gray-200'>
-					<h1 className='text-xl font-bold text-gray-900'>Tiny Room</h1>
-				</div>
+		<div className='flex h-screen bg-background text-foreground'>
+			<aside className='flex flex-col w-64 bg-card border-r border-border'>
 				<div className='flex-1 p-4 overflow-y-auto'>
 					<Navigation
 						items={navigationItems}
@@ -78,7 +68,7 @@ export default function DashboardClientLayout({ children }: { children: React.Re
 						className='space-y-1'
 					/>
 				</div>
-				<div className='p-4 border-t border-gray-200'>
+				<div className='p-4 border-t border-border'>
 					<Navigation
 						items={[logoutItem]}
 						variant='vertical'

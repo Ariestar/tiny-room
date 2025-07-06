@@ -30,19 +30,19 @@ declare namespace __next_route_internal_types__ {
 
   type StaticRoutes = 
     | `/`
+    | `/blog`
     | `/dashboard`
     | `/dashboard/blog`
     | `/dashboard/login`
-    | `/dashboard/projects`
     | `/dashboard/settings`
-    | `/blog`
+    | `/dashboard/projects`
     | `/ui-showcase`
     | `/ui-showcase/animations`
-    | `/ui-showcase/typography`
     | `/ui-showcase/components`
+    | `/ui-showcase/typography`
   type DynamicRoutes<T extends string = string> = 
-    | `/dashboard/blog/edit/${SafeSlug<T>}`
     | `/blog/${SafeSlug<T>}`
+    | `/dashboard/blog/edit/${SafeSlug<T>}`
     | `/api/auth/${CatchAllSlug<T>}`
     | `/api/posts/${SafeSlug<T>}`
     | `/api/posts/${SafeSlug<T>}/status`

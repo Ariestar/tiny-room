@@ -2,27 +2,27 @@
 
 import { signIn } from "next-auth/react";
 import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
+import Card, { CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
 import { Github } from "lucide-react";
 
 export default function LoginPage() {
 	return (
-		<div className='flex items-center justify-center min-h-screen bg-gray-50'>
+		<div className='flex items-center justify-center min-h-screen bg-background'>
 			<Card className='w-full max-w-sm'>
-				<div className='p-8 text-center'>
-					<h1 className='text-2xl font-bold mb-2'>Welcome Back</h1>
-					<p className='text-gray-500 mb-6'>Sign in to access your dashboard.</p>
+				<CardHeader className='text-center'>
+					<CardTitle>欢迎回来</CardTitle>
+					<CardDescription>登录以访问您的仪表盘。</CardDescription>
+				</CardHeader>
+				<CardContent>
 					<Button
-						fullWidth
+						className='w-full'
 						size='lg'
 						onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
 					>
-						<span className='flex items-center justify-center'>
-							<Github className='mr-2 h-5 w-5' />
-							Sign In with GitHub
-						</span>
+						<Github className='mr-2 h-5 w-5' />
+						使用 GitHub 登录
 					</Button>
-				</div>
+				</CardContent>
 			</Card>
 		</div>
 	);

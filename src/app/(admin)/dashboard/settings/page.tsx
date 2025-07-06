@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
-import Card from "@/components/ui/Card";
 import { SettingsForm } from "@/components/feature/settings/SettingsForm";
 import { ApiKeyCard } from "@/components/feature/settings/ApiKeyCard";
+import Card, { CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { MaintenanceCard } from "@/components/feature/dashboard/MaintenanceCard";
 
 const SettingsPage = async () => {
@@ -11,10 +11,12 @@ const SettingsPage = async () => {
 		return (
 			<div className='p-6'>
 				<Card>
-					<div className='p-6'>
-						<h2 className='text-xl font-semibold mb-2'>Unauthorized</h2>
-						<p className='text-gray-400'>You need to be signed in to view this page.</p>
-					</div>
+					<CardHeader>
+						<CardTitle>访问受限</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<p className='text-muted-foreground'>您需要登录后才能访问此页面。</p>
+					</CardContent>
 				</Card>
 			</div>
 		);

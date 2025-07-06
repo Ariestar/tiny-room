@@ -71,6 +71,7 @@ export const getPostBySlug = cache(async (slug: string) => {
 		return null;
 	}
 
+	const stats = fs.statSync(fullPath);
 	const fileContents = fs.readFileSync(fullPath, "utf8");
 	const matterResult = matter(fileContents);
 	const { data, content } = matterResult;
@@ -96,7 +97,9 @@ export const getPostBySlug = cache(async (slug: string) => {
 
 	return {
 		slug,
-		...(data as { title: string; date: string; tags: string[] }),
+		title: (data.title as string) || slug,
+		date: (data.date as string) || stats.birthtime.toISOString(),
+		tags: (data.tags as string[]) || [],
 		contentHtml: contentHtml.toString(),
 	};
 });

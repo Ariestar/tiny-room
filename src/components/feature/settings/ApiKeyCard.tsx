@@ -1,6 +1,6 @@
 "use client";
 
-import { Card } from "@/components/ui";
+import { Card, CardContent } from "@/components/ui";
 import { Button } from "@/components/ui";
 
 export const ApiKeyCard = () => {
@@ -26,23 +26,24 @@ export const ApiKeyCard = () => {
 				</div>
 				<div className='space-y-4'>
 					{fakeApiKeys.map(apiKey => (
-						<div
-							key={apiKey.key}
-							className='flex items-center justify-between p-3 bg-gray-800/50 rounded-lg'
-						>
-							<div>
-								<p className='font-mono text-sm text-white'>{apiKey.name}</p>
-								<p className='font-mono text-xs text-gray-400'>{apiKey.key}</p>
+						<CardContent key={apiKey.key} className='p-3 bg-muted rounded-lg'>
+							<div className='flex items-center justify-between'>
+								<div>
+									<p className='font-semibold text-foreground'>{apiKey.name}</p>
+									<p className='font-mono text-xs text-muted-foreground'>
+										key_...{apiKey.key.slice(-4)}
+									</p>
+								</div>
+								<div className='flex items-center space-x-2'>
+									<Button variant='secondary' size='sm'>
+										复制
+									</Button>
+									<Button variant='destructive' size='sm'>
+										删除
+									</Button>
+								</div>
 							</div>
-							<div className='text-right'>
-								<p className='text-xs text-gray-500'>
-									Created on {apiKey.createdAt}
-								</p>
-								<Button variant='ghost' size='sm' className='text-red-500'>
-									Revoke
-								</Button>
-							</div>
-						</div>
+						</CardContent>
 					))}
 				</div>
 			</div>

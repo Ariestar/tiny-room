@@ -25,7 +25,7 @@ export const SettingsForm = ({ user }: SettingsFormProps) => {
 					<div>
 						<label
 							htmlFor='name'
-							className='block text-sm font-medium text-gray-300 mb-1'
+							className='block text-sm font-medium text-muted-foreground mb-1'
 						>
 							Name
 						</label>
@@ -42,7 +42,7 @@ export const SettingsForm = ({ user }: SettingsFormProps) => {
 					<div>
 						<label
 							htmlFor='email'
-							className='block text-sm font-medium text-gray-300 mb-1'
+							className='block text-sm font-medium text-muted-foreground mb-1'
 						>
 							Email
 						</label>

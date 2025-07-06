@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useTheme } from "next-themes";
+import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
 
 function SunIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -51,16 +52,43 @@ function MoonIcon(props: React.SVGProps<SVGSVGElement>) {
 }
 
 export function ThemeSwitcher() {
+	const [mounted, setMounted] = React.useState(false);
 	const { theme, setTheme } = useTheme();
 
+	React.useEffect(() => {
+		setMounted(true);
+	}, []);
+
+	const toggleTheme = () => {
+		setTheme(theme === "dark" ? "light" : "dark");
+	};
+
+	if (!mounted) {
+		return (
+			<Button variant='ghost' size='icon'>
+				<SunIcon className='h-[1.2rem] w-[1.2rem]' />
+			</Button>
+		);
+	}
+
 	return (
-		<Button
-			variant='ghost'
-			size='icon'
-			onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-		>
-			<SunIcon className='col-start-1 row-start-1 h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0' />
-			<MoonIcon className='col-start-1 row-start-1 h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100' />
+		<Button variant='ghost' size='icon' onClick={toggleTheme}>
+			<AnimatePresence initial={false} mode='wait'>
+				<motion.div
+					key={theme === "dark" ? "moon" : "sun"}
+					initial={{ rotate: -90, scale: 0, opacity: 0 }}
+					animate={{ rotate: 0, scale: 1, opacity: 1 }}
+					exit={{ rotate: 90, scale: 0, opacity: 0 }}
+					transition={{ duration: 0.2 }}
+					className='flex items-center justify-center'
+				>
+					{theme === "dark" ? (
+						<SunIcon className='h-[1.2rem] w-[1.2rem]' />
+					) : (
+						<MoonIcon className='h-[1.2rem] w-[1.2rem]' />
+					)}
+				</motion.div>
+			</AnimatePresence>
 			<span className='sr-only'>Toggle theme</span>
 		</Button>
 	);

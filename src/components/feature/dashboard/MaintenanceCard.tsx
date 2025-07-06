@@ -1,25 +1,23 @@
 "use client";
 
-import { Card } from "@/components/ui";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui";
 import { Button } from "@/components/ui";
+import { TriangleAlert } from "lucide-react";
 
 export const MaintenanceCard = () => {
 	return (
-		<Card>
-			<div className='p-6'>
-				<h2 className='text-xl font-semibold mb-4'>System Maintenance</h2>
-				<div className='flex items-center justify-between p-3 bg-gray-800/50 rounded-lg'>
-					<div>
-						<p className='font-mono text-sm text-white'>Clear Cache</p>
-						<p className='font-mono text-xs text-gray-400'>
-							This will clear the application cache.
-						</p>
-					</div>
-					<Button variant='destructive' onClick={() => console.log("Clearing cache...")}>
-						Clear Cache
-					</Button>
-				</div>
-			</div>
+		<Card className='bg-yellow-500/10 border-yellow-500/30'>
+			<CardHeader>
+				<CardTitle className='flex items-center space-x-2 text-yellow-300'>
+					<TriangleAlert className='w-5 h-5' />
+					<span>系统维护中</span>
+				</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<p className='font-mono text-xs text-muted-foreground'>
+					我们的工程师正在努力工作，预计很快恢复。
+				</p>
+			</CardContent>
 		</Card>
 	);
 };

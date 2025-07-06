@@ -2,35 +2,59 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 import { BarChart, PenSquare, Eye, Users } from "lucide-react";
 import { auth } from "@/auth";
+import { Button } from "@/components/ui";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const stats = [
 	{
-		title: "总访问量",
+		name: "总访问量",
 		value: "12,345",
-		icon: <Eye className='w-6 h-6 text-gray-400' />,
-		change: "+5.2%",
+		change: "+5.4%",
 		changeType: "positive",
+		icon: <Eye className='w-6 h-6 text-muted-foreground' />,
 	},
 	{
-		title: "项目数量",
-		value: "18",
-		icon: <BarChart className='w-6 h-6 text-gray-400' />,
-		change: "+2",
+		name: "总收入",
+		value: "¥8,765",
+		change: "+12.1%",
 		changeType: "positive",
+		icon: <BarChart className='w-6 h-6 text-muted-foreground' />,
 	},
 	{
-		title: "博客文章",
-		value: "32",
-		icon: <PenSquare className='w-6 h-6 text-gray-400' />,
-		change: "-1.8%",
+		name: "新文章",
+		value: "3",
+		change: " ",
+		changeType: "neutral",
+		icon: <PenSquare className='w-6 h-6 text-muted-foreground' />,
+	},
+	{
+		name: "新用户",
+		value: "21",
+		change: "-2.3%",
 		changeType: "negative",
+		icon: <Users className='w-6 h-6 text-muted-foreground' />,
+	},
+];
+
+const recentActivities = [
+	{
+		id: 1,
+		icon: <Eye className='w-4 h-4' />,
+		description: '用户 "Alex" 评论了您的文章 "Next.js 15 新特性"',
+		time: "2小时前",
 	},
 	{
-		title: "订阅用户",
-		value: "1,204",
-		icon: <Users className='w-6 h-6 text-gray-400' />,
-		change: "+150",
-		changeType: "positive",
+		id: 2,
+		icon: <Eye className='w-4 h-4' />,
+		description: '用户 "Jane" 评论了您的文章 "Framer Motion 深度指南"',
+		time: "3小时前",
+	},
+	{
+		id: 3,
+		icon: <Eye className='w-4 h-4' />,
+		description: '用户 "Bob" 评论了您的文章 "Tailwind CSS 深度指南"',
+		time: "4小时前",
 	},
 ];
 
@@ -38,31 +62,33 @@ const DashboardPage = async () => {
 	const session = await auth();
 
 	return (
-		<div className='p-8 space-y-8'>
-			<Card className='mb-6'>
-				<div className='p-6'>
-					<h1 className='text-2xl font-semibold'>
-						欢迎回来, {session?.user?.name ?? "Admin"}!
-					</h1>
-					<p className='text-gray-400 mt-2'>这是您的控制中心，祝您有美好的一天。</p>
+		<div className='p-6'>
+			<div className='flex justify-between items-center mb-6'>
+				<div>
+					<h1 className='text-3xl font-bold text-foreground'>仪表盘</h1>
+					<p className='text-muted-foreground mt-2'>
+						这是您的控制中心，祝您有美好的一天。
+					</p>
 				</div>
-			</Card>
+				<Button>添加组件</Button>
+			</div>
 
-			<div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
+			{/* Stats Cards */}
+			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6'>
 				{stats.map(stat => (
-					<Card key={stat.title} variant='elevated' hoverable>
+					<Card key={stat.name}>
 						<CardHeader className='flex flex-row items-center justify-between pb-2'>
-							<CardTitle level={5}>{stat.title}</CardTitle>
+							<CardTitle className='text-sm font-medium'>{stat.name}</CardTitle>
 							{stat.icon}
 						</CardHeader>
 						<CardContent>
-							<div className='text-3xl font-bold text-gray-900'>{stat.value}</div>
+							<div className='text-3xl font-bold text-foreground'>{stat.value}</div>
 							<p
-								className={`text-sm mt-1 ${
-									stat.changeType === "positive"
-										? "text-green-600"
-										: "text-red-600"
-								}`}
+								className={cn(
+									"text-xs text-muted-foreground",
+									stat.changeType === "positive" && "text-accent-green",
+									stat.changeType === "negative" && "text-destructive"
+								)}
 							>
 								{stat.change}
 							</p>
@@ -71,46 +97,62 @@ const DashboardPage = async () => {
 				))}
 			</div>
 
-			<div className='grid grid-cols-1 gap-8 lg:grid-cols-3'>
-				<Card variant='minimal' className='lg:col-span-2'>
+			{/* Recent Activities & Quick Links */}
+			<div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+				<Card className='lg:col-span-2'>
 					<CardHeader>
-						<CardTitle>近期活动</CardTitle>
-						<CardDescription>最近在您的网站上发生的事情。</CardDescription>
+						<CardTitle>最近动态</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<div className='space-y-4'>
-							{[1, 2, 3, 4, 5].map(i => (
-								<div key={i} className='flex items-center'>
-									<div className='flex-1'>
-										<p className='font-medium text-gray-800'>
-											用户 "Alex" 评论了您的文章 "Next.js 15 新特性".
-										</p>
-										<p className='text-sm text-gray-500'>2小时前</p>
+						<ul className='space-y-4'>
+							{recentActivities.map(activity => (
+								<li key={activity.id} className='flex items-center space-x-4'>
+									<div className='p-2 bg-secondary rounded-full'>
+										{activity.icon}
 									</div>
-									<button className='text-sm font-medium text-brand-600 hover:text-brand-800'>
-										查看
-									</button>
-								</div>
+									<div>
+										<p className='font-medium text-foreground'>
+											{activity.description}
+										</p>
+										<p className='text-sm text-muted-foreground'>
+											{activity.time}
+										</p>
+									</div>
+								</li>
 							))}
-						</div>
+						</ul>
 					</CardContent>
 				</Card>
 
-				<Card variant='minimal'>
+				<Card>
 					<CardHeader>
-						<CardTitle>热门内容</CardTitle>
-						<CardDescription>您最受欢迎的文章和项目。</CardDescription>
+						<CardTitle>快捷链接</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<ul className='space-y-3'>
-							<li className='font-medium text-gray-700 hover:text-brand-600 cursor-pointer'>
-								1. 如何用 Framer Motion 制作动画
+							<li>
+								<Link
+									href='#'
+									className='font-medium text-foreground hover:text-primary transition-colors'
+								>
+									写新文章
+								</Link>
 							</li>
-							<li className='font-medium text-gray-700 hover:text-brand-600 cursor-pointer'>
-								2. 我的个人摄影作品集
+							<li>
+								<Link
+									href='#'
+									className='font-medium text-foreground hover:text-primary transition-colors'
+								>
+									管理评论
+								</Link>
 							</li>
-							<li className='font-medium text-gray-700 hover:text-brand-600 cursor-pointer'>
-								3. Tailwind CSS 深度指南
+							<li>
+								<Link
+									href='#'
+									className='font-medium text-foreground hover:text-primary transition-colors'
+								>
+									查看分析
+								</Link>
 							</li>
 						</ul>
 					</CardContent>

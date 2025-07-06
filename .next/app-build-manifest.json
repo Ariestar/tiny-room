@@ -6,15 +6,16 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/(dev)/ui-showcase/components/page": [
+    "/not-found": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(dev)/ui-showcase/components/page.js"
+      "static/chunks/app/not-found.js"
     ],
-    "/(dev)/ui-showcase/page": [
+    "/(public)/blog/[slug]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(dev)/ui-showcase/page.js"
+      "static/css/app/(public)/blog/[slug]/page.css",
+      "static/chunks/app/(public)/blog/[slug]/page.js"
     ],
     "/(public)/blog/page": [
       "static/chunks/webpack.js",

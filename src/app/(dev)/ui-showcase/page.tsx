@@ -1,3 +1,5 @@
+import { ArrowRight, Component, Type, Sparkles } from "lucide-react";
+
 export default function Home() {
 	return (
 		<main className='min-h-screen bg-gradient-to-br from-gray-50 to-gray-100'>
@@ -30,48 +32,30 @@ export default function Home() {
 						</h1>
 
 						<p
-							className='text-xl text-gray-600 max-w-2xl mx-auto mb-12 leading-relaxed opacity-0 animate-fade-in'
+							className='text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed opacity-0 animate-fade-in'
 							style={{ animationDelay: "0.5s", animationFillMode: "forwards" }}
 						>
-							现代化个人网站，采用{" "}
-							<span className='text-brand-600 font-semibold'>Vercel 风格设计</span>，
-							融合{" "}
-							<span className='text-accent-purple-600 font-semibold'>创意美学</span>{" "}
-							与<span className='text-accent-green-600 font-semibold'>技术创新</span>
+							一个集展示、管理、分析于一体的现代个人网站。
 						</p>
 
 						{/* CTA 按钮组 */}
-						<div
-							className='flex flex-col sm:flex-row gap-4 justify-center opacity-0 animate-slide-up'
-							style={{ animationDelay: "0.7s", animationFillMode: "forwards" }}
-						>
+						<div className='flex justify-center mt-8 space-x-4 animate-fade-in'>
 							<a
 								href='/ui-showcase/components'
-								className='group px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white rounded-2xl font-semibold transition-all duration-300 shadow-soft hover:shadow-medium hover:scale-[0.98] active:scale-95 no-underline'
+								className='group px-8 py-4 bg-primary text-primary-foreground rounded-2xl font-semibold transition-all duration-300 shadow-soft hover:shadow-medium animate-button-press active:animate-button-press no-underline'
 							>
 								<span className='flex items-center'>
-									查看组件展示
-									<svg
-										className='w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300'
-										fill='none'
-										stroke='currentColor'
-										viewBox='0 0 24 24'
-									>
-										<path
-											strokeLinecap='round'
-											strokeLinejoin='round'
-											strokeWidth={2}
-											d='M17 8l4 4m0 0l-4 4m4-4H3'
-										/>
-									</svg>
+									查看组件
+									<ArrowRight className='w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300' />
 								</span>
 							</a>
-
 							<a
-								href='/ui-showcase/animations'
-								className='px-8 py-4 border-2 border-gray-200 hover:border-gray-300 text-gray-700 hover:text-gray-900 rounded-2xl font-semibold transition-all duration-300 hover:bg-gray-50 hover:scale-[0.98] no-underline'
+								href='https://github.com'
+								target='_blank'
+								rel='noopener noreferrer'
+								className='px-8 py-4 border-2 border-border hover:border-primary text-foreground hover:text-primary-foreground rounded-2xl font-semibold transition-all duration-300 hover:bg-primary hover:scale-[0.98] no-underline'
 							>
-								查看动画效果
+								GitHub
 							</a>
 						</div>
 					</div>
@@ -92,7 +76,7 @@ export default function Home() {
 						{/* 组件展示卡片 */}
 						<a
 							href='/ui-showcase/components'
-							className='group bg-white rounded-3xl p-8 shadow-soft hover:shadow-medium transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.02] no-underline border border-gray-150 opacity-0 animate-slide-up'
+							className='group bg-white rounded-3xl p-8 shadow-soft hover:shadow-medium transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.02] no-underline border border-border opacity-0 animate-slide-up'
 							style={{ animationDelay: "0.9s", animationFillMode: "forwards" }}
 						>
 							<div className='w-16 h-16 bg-gradient-primary rounded-2xl mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300'>
@@ -121,7 +105,7 @@ export default function Home() {
 						{/* 动画效果卡片 */}
 						<a
 							href='/ui-showcase/animations'
-							className='group bg-white rounded-3xl p-8 shadow-soft hover:shadow-medium transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.02] no-underline border border-gray-150 opacity-0 animate-slide-up'
+							className='group bg-white rounded-3xl p-8 shadow-soft hover:shadow-medium transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.02] no-underline border border-border opacity-0 animate-slide-up'
 							style={{ animationDelay: "1.1s", animationFillMode: "forwards" }}
 						>
 							<div className='w-16 h-16 bg-gradient-accent rounded-2xl mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300'>
@@ -150,7 +134,7 @@ export default function Home() {
 						{/* 字体系统卡片 */}
 						<a
 							href='/ui-showcase/typography'
-							className='group bg-white rounded-3xl p-8 shadow-soft hover:shadow-medium transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.02] no-underline border border-gray-150 opacity-0 animate-slide-up'
+							className='group bg-white rounded-3xl p-8 shadow-soft hover:shadow-medium transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.02] no-underline border border-border opacity-0 animate-slide-up'
 							style={{ animationDelay: "1.3s", animationFillMode: "forwards" }}
 						>
 							<div className='w-16 h-16 bg-accent-green-500 rounded-2xl mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300'>
@@ -200,7 +184,7 @@ export default function Home() {
 								{[50, 100, 200, 400, 600, 900].map(shade => (
 									<div key={shade} className='flex items-center space-x-3'>
 										<div
-											className={`w-8 h-8 rounded-lg bg-gray-${shade} border border-gray-200`}
+											className={`w-8 h-8 rounded-lg bg-gray-${shade} border border-border`}
 										></div>
 										<span className='text-sm font-mono text-gray-600'>
 											gray-{shade}
@@ -217,7 +201,7 @@ export default function Home() {
 								{[100, 300, 500, 700, 900].map(shade => (
 									<div key={shade} className='flex items-center space-x-3'>
 										<div
-											className={`w-8 h-8 rounded-lg bg-brand-${shade}`}
+											className={`w-8 h-8 rounded-lg bg-brand-${shade} border border-border`}
 										></div>
 										<span className='text-sm font-mono text-gray-600'>
 											brand-{shade}
@@ -234,7 +218,7 @@ export default function Home() {
 								{[100, 300, 500, 700, 900].map(shade => (
 									<div key={shade} className='flex items-center space-x-3'>
 										<div
-											className={`w-8 h-8 rounded-lg bg-accent-purple-${shade}`}
+											className={`w-8 h-8 rounded-lg bg-accent-purple-${shade} border border-border`}
 										></div>
 										<span className='text-sm font-mono text-gray-600'>
 											purple-{shade}
@@ -251,7 +235,7 @@ export default function Home() {
 								{[100, 300, 500, 700, 900].map(shade => (
 									<div key={shade} className='flex items-center space-x-3'>
 										<div
-											className={`w-8 h-8 rounded-lg bg-accent-pink-${shade}`}
+											className={`w-8 h-8 rounded-lg bg-accent-pink-${shade} border border-border`}
 										></div>
 										<span className='text-sm font-mono text-gray-600'>
 											pink-{shade}
@@ -265,7 +249,7 @@ export default function Home() {
 					{/* 组件演示区 */}
 					<div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
 						{/* 卡片组件演示 */}
-						<div className='bg-white rounded-3xl p-6 shadow-soft hover:shadow-medium transition-all duration-300 animate-card-hover cursor-pointer border border-gray-150'>
+						<div className='bg-white rounded-3xl p-6 shadow-soft hover:shadow-medium transition-all duration-300 animate-card-hover cursor-pointer border border-border'>
 							<div className='w-12 h-12 bg-gradient-primary rounded-2xl mb-4 flex items-center justify-center'>
 								<svg
 									className='w-6 h-6 text-white'
@@ -285,7 +269,7 @@ export default function Home() {
 							<p className='text-gray-600'>展示文章列表和内容管理功能</p>
 						</div>
 
-						<div className='bg-white rounded-3xl p-6 shadow-soft hover:shadow-medium transition-all duration-300 animate-card-hover cursor-pointer border border-gray-150'>
+						<div className='bg-white rounded-3xl p-6 shadow-soft hover:shadow-medium transition-all duration-300 animate-card-hover cursor-pointer border border-border'>
 							<div className='w-12 h-12 bg-gradient-accent rounded-2xl mb-4 flex items-center justify-center'>
 								<svg
 									className='w-6 h-6 text-white'
@@ -305,7 +289,7 @@ export default function Home() {
 							<p className='text-gray-600'>GitHub 项目集成和技术栈展示</p>
 						</div>
 
-						<div className='bg-white rounded-3xl p-6 shadow-soft hover:shadow-medium transition-all duration-300 animate-card-hover cursor-pointer border border-gray-150'>
+						<div className='bg-white rounded-3xl p-6 shadow-soft hover:shadow-medium transition-all duration-300 animate-card-hover cursor-pointer border border-border'>
 							<div className='w-12 h-12 bg-accent-green-500 rounded-2xl mb-4 flex items-center justify-center'>
 								<svg
 									className='w-6 h-6 text-white'

@@ -174,6 +174,46 @@ module.exports = {
 				"gradient-accent-start": "var(--gradient-accent-start)",
 				"gradient-accent-end": "var(--gradient-accent-end)",
 			},
+			typography: ({ theme }) => ({
+				DEFAULT: {
+					css: {
+						"--tw-prose-body": "hsl(var(--prose-body-color))",
+						"--tw-prose-headings": "hsl(var(--foreground))",
+						"--tw-prose-lead": "hsl(var(--muted-foreground))",
+						"--tw-prose-links": "hsl(var(--primary))",
+						"--tw-prose-bold": "hsl(var(--foreground))",
+						"--tw-prose-counters": "hsl(var(--muted-foreground))",
+						"--tw-prose-bullets": "hsl(var(--muted-foreground))",
+						"--tw-prose-hr": "hsl(var(--border))",
+						"--tw-prose-quotes": "hsl(var(--foreground))",
+						"--tw-prose-quote-borders": "hsl(var(--border))",
+						"--tw-prose-captions": "hsl(var(--muted-foreground))",
+						"--tw-prose-code": "hsl(var(--primary))",
+						"--tw-prose-pre-code": "hsl(var(--muted-foreground))",
+						"--tw-prose-pre-bg": "hsl(var(--muted))",
+						"--tw-prose-th-borders": "hsl(var(--border))",
+						"--tw-prose-td-borders": "hsl(var(--border))",
+						// Invert styles are for dark mode. We are using the same variables
+						// because our root variables already handle the theme switch.
+						"--tw-prose-invert-body": "hsl(var(--prose-body-color))",
+						"--tw-prose-invert-headings": "hsl(var(--foreground))",
+						"--tw-prose-invert-lead": "hsl(var(--muted-foreground))",
+						"--tw-prose-invert-links": "hsl(var(--primary))",
+						"--tw-prose-invert-bold": "hsl(var(--foreground))",
+						"--tw-prose-invert-counters": "hsl(var(--muted-foreground))",
+						"--tw-prose-invert-bullets": "hsl(var(--muted-foreground))",
+						"--tw-prose-invert-hr": "hsl(var(--border))",
+						"--tw-prose-invert-quotes": "hsl(var(--foreground))",
+						"--tw-prose-invert-quote-borders": "hsl(var(--border))",
+						"--tw-prose-invert-captions": "hsl(var(--muted-foreground))",
+						"--tw-prose-invert-code": "hsl(var(--primary))",
+						"--tw-prose-invert-pre-code": "hsl(var(--muted-foreground))",
+						"--tw-prose-invert-pre-bg": "hsl(var(--muted))",
+						"--tw-prose-invert-th-borders": "hsl(var(--border))",
+						"--tw-prose-invert-td-borders": "hsl(var(--border))",
+					},
+				},
+			}),
 
 			// 现代化字体系统
 			fontFamily: {
@@ -337,5 +377,5 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [],
+	plugins: [require("@tailwindcss/typography")],
 };
