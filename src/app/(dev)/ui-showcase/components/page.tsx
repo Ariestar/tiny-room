@@ -116,17 +116,17 @@ export default function ComponentsPage() {
 	];
 
 	return (
-		<div className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50'>
+		<div className='min-h-screen bg-background'>
 			<TopNavigation currentPage='components' />
 
 			{/* 页面标题 */}
-			<div className='bg-white border-b border-gray-100'>
+			<div className='bg-card border-b border-border'>
 				<div className='container mx-auto px-6 py-12'>
 					<div className='text-center'>
-						<h1 className='text-5xl font-bold bg-gradient-to-r from-brand-600 to-brand-800 bg-clip-text text-transparent mb-4'>
+						<h1 className='text-5xl font-bold text-foreground mb-4'>
 							Tiny Room UI 组件库
 						</h1>
-						<p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
+						<p className='text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed'>
 							现代化、可访问、美观的 React UI 组件库，基于 Tailwind CSS 构建，
 							支持多种变体和状态，让你的应用界面更加精美
 						</p>
@@ -134,10 +134,10 @@ export default function ComponentsPage() {
 							<Badge variant='primary' size='lg'>
 								✨ 现代化设计
 							</Badge>
-							<Badge variant='success' size='lg'>
+							<Badge variant='primary' size='lg'>
 								♿ 无障碍支持
 							</Badge>
-							<Badge variant='info' size='lg'>
+							<Badge variant='primary' size='lg'>
 								🎨 丰富变体
 							</Badge>
 						</div>
@@ -153,13 +153,15 @@ export default function ComponentsPage() {
 							<CardTitle level={2} gradient>
 								🧭 Navigation 导航组件
 							</CardTitle>
-							<p className='text-gray-600'>支持多种布局和样式的现代导航组件</p>
+							<p className='text-muted-foreground'>
+								支持多种布局和样式的现代导航组件
+							</p>
 						</CardHeader>
 						<CardContent>
 							<div className='space-y-8'>
 								{/* 水平导航 */}
 								<div className='space-y-4'>
-									<h4 className='text-lg font-semibold text-gray-900'>
+									<h4 className='text-lg font-semibold text-foreground'>
 										水平导航 (Horizontal)
 									</h4>
 									<Navigation
@@ -171,7 +173,7 @@ export default function ComponentsPage() {
 
 								{/* 标签页导航 */}
 								<div className='space-y-4'>
-									<h4 className='text-lg font-semibold text-gray-900'>
+									<h4 className='text-lg font-semibold text-foreground'>
 										标签页导航 (Tabs)
 									</h4>
 									<Navigation items={navigationItems} variant='tabs' size='md' />
@@ -179,7 +181,7 @@ export default function ComponentsPage() {
 
 								{/* 药丸导航 */}
 								<div className='space-y-4'>
-									<h4 className='text-lg font-semibold text-gray-900'>
+									<h4 className='text-lg font-semibold text-foreground'>
 										药丸导航 (Pills)
 									</h4>
 									<Navigation items={navigationItems} variant='pills' size='md' />
@@ -187,7 +189,7 @@ export default function ComponentsPage() {
 
 								{/* 垂直导航 */}
 								<div className='space-y-4'>
-									<h4 className='text-lg font-semibold text-gray-900'>
+									<h4 className='text-lg font-semibold text-foreground'>
 										垂直导航 (Vertical)
 									</h4>
 									<div className='max-w-xs'>
@@ -208,7 +210,7 @@ export default function ComponentsPage() {
 							<CardTitle level={2} gradient>
 								🔘 Button 按钮组件
 							</CardTitle>
-							<p className='text-gray-600'>
+							<p className='text-muted-foreground'>
 								现代化按钮组件，支持多种变体、尺寸和状态
 							</p>
 						</CardHeader>
@@ -216,7 +218,7 @@ export default function ComponentsPage() {
 							<div className='space-y-8'>
 								{/* 按钮变体 */}
 								<div className='space-y-4'>
-									<h4 className='text-lg font-semibold text-gray-900'>
+									<h4 className='text-lg font-semibold text-foreground'>
 										按钮变体
 									</h4>
 									<div className='flex flex-wrap gap-3'>
@@ -225,7 +227,6 @@ export default function ComponentsPage() {
 										<Button variant='outline'>轮廓按钮</Button>
 										<Button variant='ghost'>幽灵按钮</Button>
 										<Button variant='destructive'>危险按钮</Button>
-										<Button variant='success'>成功按钮</Button>
 										<Button variant='gradient'>渐变按钮</Button>
 										<Button variant='minimal'>极简按钮</Button>
 									</div>
@@ -233,7 +234,7 @@ export default function ComponentsPage() {
 
 								{/* 按钮尺寸 */}
 								<div className='space-y-4'>
-									<h4 className='text-lg font-semibold text-gray-900'>
+									<h4 className='text-lg font-semibold text-foreground'>
 										按钮尺寸
 									</h4>
 									<div className='flex flex-wrap items-center gap-3'>
@@ -246,58 +247,63 @@ export default function ComponentsPage() {
 
 								{/* 带图标的按钮 */}
 								<div className='space-y-4'>
-									<h4 className='text-lg font-semibold text-gray-900'>
+									<h4 className='text-lg font-semibold text-foreground'>
 										带图标按钮
 									</h4>
-									<div className='flex flex-wrap gap-3'>
+									<div className='flex flex-wrap items-center gap-3'>
 										<Button
+											variant='primary'
 											leftIcon={
 												<svg
-													className='w-4 h-4'
-													fill='currentColor'
-													viewBox='0 0 20 20'
+													className='w-5 h-5'
+													fill='none'
+													stroke='currentColor'
+													viewBox='0 0 24 24'
 												>
 													<path
-														fillRule='evenodd'
-														d='M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z'
-														clipRule='evenodd'
+														strokeLinecap='round'
+														strokeLinejoin='round'
+														strokeWidth='2'
+														d='M12 6v6m0 0v6m0-6h6m-6 0H6'
 													/>
 												</svg>
 											}
-											variant='primary'
 										>
-											新增
+											添加内容
 										</Button>
 										<Button
-											rightIcon={
-												<svg
-													className='w-4 h-4'
-													fill='currentColor'
-													viewBox='0 0 20 20'
-												>
-													<path
-														fillRule='evenodd'
-														d='M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z'
-														clipRule='evenodd'
-													/>
-												</svg>
-											}
-											variant='outline'
+											variant='destructive'
+											rightIcon={<Loading size='sm' />}
 										>
-											下一步
+											正在删除
+										</Button>
+										<Button variant='outline' size='icon'>
+											<svg
+												className='w-5 h-5'
+												fill='none'
+												stroke='currentColor'
+												viewBox='0 0 24 24'
+											>
+												<path
+													strokeLinecap='round'
+													strokeLinejoin='round'
+													strokeWidth='2'
+													d='M4 6h16M4 12h16M4 18h16'
+												/>
+											</svg>
 										</Button>
 									</div>
 								</div>
 
 								{/* 按钮状态 */}
 								<div className='space-y-4'>
-									<h4 className='text-lg font-semibold text-gray-900'>
+									<h4 className='text-lg font-semibold text-foreground'>
 										按钮状态
 									</h4>
-									<div className='flex flex-wrap gap-3'>
-										<Button disabled>禁用状态</Button>
-										<Button loading>加载中...</Button>
-										<Button fullWidth>全宽按钮</Button>
+									<div className='flex flex-wrap items-center gap-3'>
+										<Button loading>加载中</Button>
+										<Button disabled>禁用</Button>
+										<Button fullWidth>块级按钮</Button>
 									</div>
 								</div>
 							</div>
@@ -310,139 +316,133 @@ export default function ComponentsPage() {
 							<CardTitle level={2} gradient>
 								📝 Input 输入框组件
 							</CardTitle>
-							<p className='text-gray-600'>多样化的输入组件，支持各种状态和样式</p>
+							<p className='text-muted-foreground'>
+								多样化的输入组件，支持各种状态和样式
+							</p>
 						</CardHeader>
 						<CardContent>
 							<div className='space-y-8'>
 								{/* 输入框变体 */}
 								<div className='space-y-4'>
-									<h4 className='text-lg font-semibold text-gray-900'>
+									<h4 className='text-lg font-semibold text-foreground'>
 										输入框变体
 									</h4>
-									<div className='space-y-4'>
+									<div className='grid md:grid-cols-2 gap-6'>
 										<Input
 											variant='default'
-											placeholder='默认样式输入框'
-											label='Default'
+											placeholder='默认输入框'
+											label='默认样式'
 										/>
 										<Input
 											variant='filled'
-											placeholder='填充样式输入框'
-											label='Filled'
+											placeholder='填充输入框'
+											label='填充样式'
 										/>
 										<Input
 											variant='underlined'
-											placeholder='下划线样式输入框'
-											label='Underlined'
+											placeholder='下划线输入框'
+											label='下划线样式'
 										/>
 										<Input
 											variant='minimal'
-											placeholder='极简样式输入框'
-											label='Minimal'
+											placeholder='极简输入框'
+											label='极简样式'
 										/>
 									</div>
 								</div>
-
 								{/* 输入框功能 */}
 								<div className='space-y-4'>
-									<h4 className='text-lg font-semibold text-gray-900'>
+									<h4 className='text-lg font-semibold text-foreground'>
 										输入框功能
 									</h4>
-									<div className='space-y-4'>
+									<div className='max-w-md space-y-4'>
 										<Input
-											type='password'
-											placeholder='请输入密码'
-											label='密码输入'
-											isPassword
-											value={inputValues.password}
-											onChange={e =>
-												setInputValues(prev => ({
-													...prev,
-													password: e.target.value,
-												}))
-											}
-										/>
-										<Input
-											placeholder='搜索...'
-											label='搜索框'
+											placeholder='带左侧图标'
 											leftIcon={
 												<svg
-													className='w-4 h-4'
-													fill='currentColor'
-													viewBox='0 0 20 20'
+													className='w-5 h-5'
+													fill='none'
+													stroke='currentColor'
+													viewBox='0 0 24 24'
 												>
 													<path
-														fillRule='evenodd'
-														d='M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z'
-														clipRule='evenodd'
+														strokeLinecap='round'
+														strokeLinejoin='round'
+														strokeWidth='2'
+														d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'
 													/>
 												</svg>
 											}
-											value={inputValues.search}
-											onChange={e =>
-												setInputValues(prev => ({
-													...prev,
-													search: e.target.value,
-												}))
-											}
 										/>
+										<Input placeholder='带右侧图标' rightIcon={<Loading />} />
+										<Input isPassword placeholder='密码输入框' />
+										<Input isSearch placeholder='搜索...' />
 									</div>
 								</div>
 
 								{/* 输入框状态 */}
 								<div className='space-y-4'>
-									<h4 className='text-lg font-semibold text-gray-900'>
+									<h4 className='text-lg font-semibold text-foreground'>
 										输入框状态
 									</h4>
-									<div className='space-y-4'>
-										<Input
-											label='成功状态'
-											value={inputValues.success}
-											state='success'
-											helpText='验证通过！'
-											onChange={e =>
-												setInputValues(prev => ({
-													...prev,
-													success: e.target.value,
-												}))
-											}
-										/>
-										<Input
-											label='警告状态'
-											value={inputValues.warning}
-											state='warning'
-											helpText='请检查输入内容'
-											onChange={e =>
-												setInputValues(prev => ({
-													...prev,
-													warning: e.target.value,
-												}))
-											}
-										/>
-										<Input
-											label='错误状态'
-											value={inputValues.error}
-											state='error'
-											error='这是错误信息'
-											onChange={e =>
-												setInputValues(prev => ({
-													...prev,
-													error: e.target.value,
-												}))
-											}
-										/>
+									<div className='max-w-md space-y-4'>
+										<div>
+											<Input
+												value={inputValues.success}
+												state='success'
+												onChange={e =>
+													setInputValues({
+														...inputValues,
+														success: e.target.value,
+													})
+												}
+											/>
+											<p className='mt-2 text-sm text-muted-foreground'>
+												成功状态
+											</p>
+										</div>
+										<div>
+											<Input
+												value={inputValues.warning}
+												state='warning'
+												onChange={e =>
+													setInputValues({
+														...inputValues,
+														warning: e.target.value,
+													})
+												}
+											/>
+											<p className='mt-2 text-sm text-muted-foreground'>
+												警告状态
+											</p>
+										</div>
+										<div>
+											<Input
+												value={inputValues.error}
+												state='error'
+												onChange={e =>
+													setInputValues({
+														...inputValues,
+														error: e.target.value,
+													})
+												}
+											/>
+											<p className='mt-2 text-sm text-muted-foreground'>
+												错误状态
+											</p>
+										</div>
 									</div>
 								</div>
 
 								{/* 输入框尺寸 */}
 								<div className='space-y-4'>
-									<h4 className='text-lg font-semibold text-gray-900'>
+									<h4 className='text-lg font-semibold text-foreground'>
 										输入框尺寸
 									</h4>
-									<div className='space-y-4'>
-										<Input size='sm' placeholder='小号输入框' label='Small' />
-										<Input size='md' placeholder='中号输入框' label='Medium' />
-										<Input size='lg' placeholder='大号输入框' label='Large' />
+									<div className='max-w-md space-y-4'>
+										<Input size='sm' placeholder='小号输入框' />
+										<Input size='md' placeholder='中号输入框' />
+										<Input size='lg' placeholder='大号输入框' />
 									</div>
 								</div>
 							</div>
@@ -455,102 +455,129 @@ export default function ComponentsPage() {
 							<CardTitle level={2} gradient>
 								🃏 Card 卡片组件
 							</CardTitle>
-							<p className='text-gray-600'>灵活多变的卡片容器，支持多种布局和样式</p>
+							<p className='text-muted-foreground'>
+								灵活多变的卡片容器，支持多种布局和样式
+							</p>
 						</CardHeader>
 						<CardContent>
-							<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-								{/* 默认卡片 */}
-								<Card variant='default' hoverable>
+							<div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+								<Card hoverable clickable>
 									<CardHeader>
 										<CardTitle level={4}>默认卡片</CardTitle>
-										<p className='text-sm text-gray-600'>基础样式的卡片</p>
+										<p className='text-sm text-foreground'>基础样式的卡片</p>
 									</CardHeader>
 									<CardContent padding='md'>
-										<p className='text-gray-700'>
+										<p className='text-foreground'>
 											这是默认样式的卡片内容，简洁明了。
 										</p>
 									</CardContent>
-									<CardFooter align='right'>
-										<Button size='sm' variant='outline'>
+									<CardFooter>
+										<Button size='sm'>查看详情</Button>
+									</CardFooter>
+								</Card>
+
+								<Card variant='elevated' hoverable clickable>
+									<CardHeader>
+										<CardTitle level={4}>浮动卡片</CardTitle>
+										<p className='text-sm text-foreground'>带阴影的浮动效果</p>
+									</CardHeader>
+									<CardContent padding='md'>
+										<p className='text-foreground'>
+											这种卡片有优雅的阴影效果，显得更加立体。
+										</p>
+									</CardContent>
+									<CardFooter>
+										<Button variant='secondary' size='sm'>
 											了解更多
 										</Button>
 									</CardFooter>
 								</Card>
 
-								{/* 浮动卡片 */}
-								<Card variant='elevated' hoverable>
+								<Card variant='gradient' hoverable clickable>
 									<CardHeader>
-										<CardTitle level={4}>浮动卡片</CardTitle>
-										<p className='text-sm text-gray-600'>带阴影的浮动效果</p>
+										<CardTitle level={4}>渐变卡片</CardTitle>
+										<p className='text-sm text-foreground'>炫彩渐变背景</p>
 									</CardHeader>
 									<CardContent padding='md'>
-										<p className='text-gray-700'>
-											这种卡片有优雅的阴影效果，显得更加立体。
+										<p className='text-foreground'>
+											渐变背景让卡片更加生动有趣。
 										</p>
 									</CardContent>
-									<CardFooter align='right'>
-										<Button size='sm' variant='primary'>
+									<CardFooter>
+										<Button variant='minimal' size='sm'>
 											立即体验
 										</Button>
 									</CardFooter>
 								</Card>
+							</div>
 
-								{/* 渐变卡片 */}
-								<Card variant='gradient' hoverable>
-									<CardHeader>
-										<CardTitle level={4} gradient>
-											渐变卡片
-										</CardTitle>
-										<p className='text-sm text-gray-600'>炫彩渐变背景</p>
-									</CardHeader>
-									<CardContent padding='md'>
-										<p className='text-gray-700'>
-											渐变背景让卡片更加生动有趣。
-										</p>
+							<div className='mt-8 grid gap-6'>
+								<Card variant='outlined'>
+									<CardContent>
+										<div className='flex items-center justify-between'>
+											<div>
+												<CardTitle level={5}>轮廓卡片</CardTitle>
+												<p className='text-muted-foreground'>
+													只保留边框，适合简约设计
+												</p>
+											</div>
+											<Button variant='outline' size='sm'>
+												操作
+											</Button>
+										</div>
 									</CardContent>
-									<CardFooter align='right'>
-										<Button size='sm' variant='secondary'>
-											查看详情
-										</Button>
-									</CardFooter>
+								</Card>
+								<Card variant='minimal'>
+									<CardContent>
+										<div className='flex items-center justify-between'>
+											<div>
+												<CardTitle level={5}>极简卡片</CardTitle>
+												<p className='text-muted-foreground'>
+													无背景和边框，内容区域更加突出
+												</p>
+											</div>
+											<Button variant='minimal' size='sm'>
+												操作
+											</Button>
+										</div>
+									</CardContent>
 								</Card>
 							</div>
 						</CardContent>
 					</Card>
 
 					{/* 其他组件 */}
-					<div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
+					<div className='grid md:grid-cols-2 gap-12'>
 						{/* Badge 徽章组件 */}
-						<Card variant='elevated' hoverable>
+						<Card variant='elevated'>
 							<CardHeader divider>
 								<CardTitle level={3} gradient>
 									🏷️ Badge 徽章
 								</CardTitle>
-								<p className='text-gray-600'>状态指示和标签组件</p>
+								<p className='text-muted-foreground'>状态指示和标签组件</p>
 							</CardHeader>
 							<CardContent>
 								<div className='space-y-6'>
 									<div className='space-y-3'>
-										<h5 className='font-medium text-gray-900'>颜色变体</h5>
+										<h5 className='font-medium text-foreground'>颜色变体</h5>
 										<div className='flex flex-wrap gap-2'>
-											<Badge variant='default'>Default</Badge>
-											<Badge variant='primary'>Primary</Badge>
-											<Badge variant='success'>Success</Badge>
-											<Badge variant='warning'>Warning</Badge>
-											<Badge variant='danger'>Danger</Badge>
-											<Badge variant='info'>Info</Badge>
-											<Badge variant='purple'>Purple</Badge>
-											<Badge variant='pink'>Pink</Badge>
+											<Badge variant='primary'>主要</Badge>
+											<Badge variant='info'>信息</Badge>
+											<Badge variant='warning'>警告</Badge>
+											<Badge variant='destructive'>危险</Badge>
+											<Badge variant='success'>成功</Badge>
+											<Badge variant='secondary'>次要</Badge>
+											<Badge variant='outline'>轮廓</Badge>
 										</div>
 									</div>
 									<div className='space-y-3'>
-										<h5 className='font-medium text-gray-900'>尺寸和样式</h5>
+										<h5 className='font-medium text-foreground'>尺寸和样式</h5>
 										<div className='flex flex-wrap items-center gap-2'>
 											<Badge size='sm'>小号</Badge>
 											<Badge size='md'>中号</Badge>
 											<Badge size='lg'>大号</Badge>
-											<Badge rounded>圆形</Badge>
-											<Badge dot>有圆点</Badge>
+											<Badge rounded>圆角</Badge>
+											<Badge dot>带点</Badge>
 										</div>
 									</div>
 								</div>
@@ -558,43 +585,43 @@ export default function ComponentsPage() {
 						</Card>
 
 						{/* Alert 警告组件 */}
-						<Card variant='elevated' hoverable>
+						<Card variant='elevated'>
 							<CardHeader divider>
 								<CardTitle level={3} gradient>
 									⚠️ Alert 警告框
 								</CardTitle>
-								<p className='text-gray-600'>消息通知和状态提示</p>
+								<p className='text-muted-foreground'>消息通知和状态提示</p>
 							</CardHeader>
 							<CardContent>
 								<div className='space-y-4'>
-									<Alert variant='info' title='信息提示'>
+									<Alert variant='info' title='提示信息' dismissible>
 										这是一条普通的信息提示。
 									</Alert>
-									<Alert variant='success' title='操作成功'>
-										您的操作已成功完成！
+									<Alert variant='success' title='操作成功' dismissible>
+										你的操作已成功完成。
 									</Alert>
-									<Alert variant='warning' title='注意事项'>
-										请注意检查相关设置。
+									<Alert variant='warning' title='需要注意' dismissible>
+										请注意，这个操作可能产生意外结果。
 									</Alert>
-									<Alert variant='danger' title='错误警告' dismissible>
-										发生了错误，请稍后重试。
+									<Alert variant='destructive' title='发生错误' dismissible>
+										抱歉，处理您的请求时发生错误。
 									</Alert>
 								</div>
 							</CardContent>
 						</Card>
 
 						{/* Loading 加载组件 */}
-						<Card variant='elevated' hoverable>
+						<Card variant='elevated'>
 							<CardHeader divider>
 								<CardTitle level={3} gradient>
 									⏳ Loading 加载
 								</CardTitle>
-								<p className='text-gray-600'>多种加载动画效果</p>
+								<p className='text-muted-foreground'>多种加载动画效果</p>
 							</CardHeader>
 							<CardContent>
 								<div className='space-y-6'>
 									<div className='space-y-3'>
-										<h5 className='font-medium text-gray-900'>加载类型</h5>
+										<h5 className='font-medium text-foreground'>加载类型</h5>
 										<div className='flex flex-wrap items-center gap-6'>
 											<Loading variant='spinner' />
 											<Loading variant='dots' />
@@ -604,13 +631,13 @@ export default function ComponentsPage() {
 										</div>
 									</div>
 									<div className='space-y-3'>
-										<h5 className='font-medium text-gray-900'>尺寸和颜色</h5>
+										<h5 className='font-medium text-foreground'>尺寸和颜色</h5>
 										<div className='flex flex-wrap items-center gap-6'>
 											<Loading variant='spinner' size='sm' />
-											<Loading variant='spinner' size='md' />
-											<Loading variant='spinner' size='lg' />
-											<Loading variant='spinner' color='primary' />
-											<Loading variant='spinner' color='secondary' />
+											<Loading variant='dots' size='md' />
+											<Loading variant='pulse' size='lg' />
+											<Loading variant='bars' size='xl' />
+											<Loading variant='ring' color='primary' />
 										</div>
 									</div>
 								</div>
@@ -618,31 +645,52 @@ export default function ComponentsPage() {
 						</Card>
 
 						{/* Checkbox 复选框组件 */}
-						<Card variant='elevated' hoverable>
+						<Card variant='elevated'>
 							<CardHeader divider>
 								<CardTitle level={3} gradient>
 									☑️ Checkbox 复选框
 								</CardTitle>
-								<p className='text-gray-600'>选择和确认操作</p>
+								<p className='text-muted-foreground'>选择和确认操作</p>
 							</CardHeader>
 							<CardContent>
 								<div className='space-y-6'>
 									<div className='space-y-3'>
-										<h5 className='font-medium text-gray-900'>基础复选框</h5>
+										<h5 className='font-medium text-foreground'>基础复选框</h5>
 										<div className='space-y-3'>
 											<Checkbox
-												label='我同意服务条款'
-												description='请仔细阅读我们的服务条款和隐私政策'
+												id='terms'
 												checked={isChecked}
 												onChange={e => setIsChecked(e.target.checked)}
+												label='我同意服务条款和隐私政策。'
 											/>
 											<Checkbox
+												id='uncertain'
+												checked={isUncertain}
+												onChange={e => setIsUncertain(e.target.checked)}
 												label='不确定状态'
 												indeterminate={isUncertain}
-												onChange={e => setIsUncertain(e.target.checked)}
 											/>
-											<Checkbox label='禁用状态' disabled />
-											<Checkbox label='错误状态' error='请勾选此项以继续' />
+										</div>
+									</div>
+									<div className='space-y-3'>
+										<h5 className='font-medium text-foreground'>禁用状态</h5>
+										<div className='flex items-center space-x-3'>
+											<Checkbox id='disabled' checked disabled />
+											<label
+												htmlFor='disabled'
+												className='text-sm text-foreground'
+											>
+												已选中并禁用
+											</label>
+										</div>
+										<div className='flex items-center space-x-3'>
+											<Checkbox id='unchecked-disabled' disabled />
+											<label
+												htmlFor='unchecked-disabled'
+												className='text-sm text-foreground'
+											>
+												未选中并禁用
+											</label>
 										</div>
 									</div>
 								</div>
@@ -653,13 +701,9 @@ export default function ComponentsPage() {
 					{/* 页脚信息 */}
 					<Card variant='minimal' className='text-center'>
 						<CardContent>
-							<div className='flex justify-center items-center gap-2 text-gray-600'>
+							<div className='flex justify-center items-center gap-2 text-foreground'>
 								<span>🎨</span>
 								<span>由 Tiny Room 团队精心设计</span>
-								<span>•</span>
-								<span>基于 React + Tailwind CSS</span>
-								<span>•</span>
-								<span>现代化 UI 组件库</span>
 							</div>
 						</CardContent>
 					</Card>

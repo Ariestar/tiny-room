@@ -12,6 +12,7 @@ import rehypeStringify from "rehype-stringify";
 import { cache } from "react";
 import rehypeRaw from "rehype-raw";
 import remarkWikiLink from "remark-wiki-link";
+import remarkCallout from "@r4ai/remark-callout";
 
 const postsDirectory = path.join(process.cwd(), "posts");
 
@@ -82,6 +83,7 @@ export const getPostBySlug = cache(async (slug: string) => {
 			aliasDivider: "|",
 		})
 		.use(remarkGfm)
+		.use(remarkCallout)
 		.use(remarkMath)
 		.use(remarkRehype, { allowDangerousHtml: true })
 		.use(rehypeRaw)

@@ -1,4 +1,5 @@
 import React from "react";
+import { cn } from "@/lib/utils";
 
 export interface LoadingProps extends React.HTMLAttributes<HTMLDivElement> {
 	/** 加载动画类型 */
@@ -6,7 +7,7 @@ export interface LoadingProps extends React.HTMLAttributes<HTMLDivElement> {
 	/** 加载器尺寸 */
 	size?: "sm" | "md" | "lg" | "xl";
 	/** 加载器颜色 */
-	color?: "primary" | "secondary" | "white" | "gray";
+	color?: "primary" | "secondary" | "foreground" | "background";
 	/** 显示加载文本 */
 	text?: string;
 	/** 是否居中显示 */
@@ -18,7 +19,7 @@ const Loading = React.forwardRef<HTMLDivElement, LoadingProps>(
 		{
 			variant = "spinner",
 			size = "md",
-			color = "primary",
+			color = "secondary",
 			text,
 			center = false,
 			className = "",
@@ -36,10 +37,10 @@ const Loading = React.forwardRef<HTMLDivElement, LoadingProps>(
 
 		// 颜色样式
 		const colorStyles = {
-			primary: "text-brand-500",
-			secondary: "text-gray-500",
-			white: "text-white",
-			gray: "text-gray-400",
+			primary: "text-primary",
+			secondary: "text-secondary-foreground",
+			foreground: "text-foreground",
+			background: "text-background",
 		};
 
 		// 文本尺寸
@@ -60,7 +61,7 @@ const Loading = React.forwardRef<HTMLDivElement, LoadingProps>(
 			.join(" ");
 
 		// 加载器样式
-		const loaderClasses = [sizeStyles[size], colorStyles[color]].join(" ");
+		const loaderClasses = cn(sizeStyles[size], colorStyles[color]);
 
 		// 旋转器组件
 		const Spinner = () => (
@@ -113,11 +114,11 @@ const Loading = React.forwardRef<HTMLDivElement, LoadingProps>(
 
 		// 条形动画组件
 		const Bars = () => (
-			<div className='flex items-end space-x-1'>
+			<div className={cn("flex items-end space-x-1", loaderClasses)}>
 				{[0, 1, 2, 3].map(index => (
 					<div
 						key={index}
-						className={`w-1 bg-current ${colorStyles[color]} animate-pulse`}
+						className='w-1 animate-pulse'
 						style={{
 							height:
 								size === "sm"
@@ -129,6 +130,7 @@ const Loading = React.forwardRef<HTMLDivElement, LoadingProps>(
 									: "24px",
 							animationDelay: `${index * 0.15}s`,
 							animationDuration: "1.2s",
+							backgroundColor: "currentColor",
 						}}
 					/>
 				))}
@@ -162,10 +164,16 @@ const Loading = React.forwardRef<HTMLDivElement, LoadingProps>(
 		};
 
 		return (
-			<div ref={ref} className={containerClasses} role='status' aria-live='polite' {...props}>
+			<div
+				ref={ref}
+				className={cn(containerClasses, className)}
+				role='status'
+				aria-live='polite'
+				{...props}
+			>
 				{renderLoader()}
 				{text && (
-					<span className={`${textSizeStyles[size]} ${colorStyles[color]} font-medium`}>
+					<span className={cn(textSizeStyles[size], colorStyles[color], "font-medium")}>
 						{text}
 					</span>
 				)}

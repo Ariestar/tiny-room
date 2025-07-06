@@ -74,44 +74,42 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
 		// 基础样式
 		const baseStyles = [
-			"w-full transition-all duration-200",
+			"w-full transition-all duration-200 ease-in-out",
 			"focus:outline-none",
-			"disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50",
-			"placeholder:text-gray-400",
+			"disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-muted",
+			"placeholder:text-muted-foreground",
 		];
 
 		// 变体样式
 		const variantStyles = {
 			default: [
-				"bg-white border border-gray-200",
-				"focus:border-brand-300 focus:ring-2 focus:ring-brand-100",
-				"hover:border-gray-300",
+				"bg-transparent border border-input",
+				"focus:ring-2 focus:ring-ring",
+				"hover:border-input/80",
 			],
 			filled: [
-				"bg-gray-50 border border-transparent",
-				"focus:bg-white focus:border-brand-300 focus:ring-2 focus:ring-brand-100",
-				"hover:bg-gray-100",
+				"bg-muted border border-transparent",
+				"focus:bg-card focus:ring-2 focus:ring-ring",
+				"hover:bg-muted/80",
 			],
 			underlined: [
-				"bg-transparent border-0 border-b-2 border-gray-200",
-				"focus:border-brand-500 rounded-none px-0",
-				"hover:border-gray-300",
+				"bg-transparent border-0 border-b-2 border-input",
+				"focus:border-primary rounded-none px-0",
+				"hover:border-input/80",
 			],
 			minimal: [
 				"bg-transparent border border-transparent",
-				"focus:border-gray-200 focus:bg-gray-50",
-				"hover:bg-gray-50",
+				"focus:border-input focus:bg-accent",
+				"hover:bg-accent",
 			],
 		};
 
 		// 状态样式
 		const stateStyles = {
 			default: "",
-			success:
-				"border-accent-green-300 focus:border-accent-green-500 focus:ring-accent-green-100",
-			warning:
-				"border-accent-orange-300 focus:border-accent-orange-500 focus:ring-accent-orange-100",
-			error: "border-red-300 focus:border-red-500 focus:ring-red-100",
+			success: "border-success focus:border-success focus:ring-success/20",
+			warning: "border-warning focus:border-warning focus:ring-warning/20",
+			error: "border-destructive focus:border-destructive focus:ring-destructive/20",
 		};
 
 		// 尺寸样式
@@ -163,27 +161,27 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 		// 标签样式
 		const labelClasses = cn([
 			"block text-sm font-medium mb-2",
-			hasError ? "text-red-700" : "text-gray-700",
-			disabled ? "text-gray-400" : "",
+			hasError ? "text-destructive-foreground" : "text-foreground",
+			disabled ? "text-muted-foreground" : "",
 		]);
 
 		// 帮助文本样式
 		const helpTextClasses = cn([
 			"mt-2 text-sm",
 			hasError
-				? "text-red-600"
+				? "text-destructive-foreground"
 				: hasSuccess
-				? "text-accent-green-600"
+				? "text-success-foreground"
 				: hasWarning
-				? "text-accent-orange-600"
-				: "text-gray-500",
+				? "text-warning-foreground"
+				: "text-muted-foreground",
 		]);
 
 		// 图标容器样式
 		const iconContainerClasses = cn([
 			"absolute top-1/2 transform -translate-y-1/2 pointer-events-none",
-			"text-gray-400",
-			isFocused ? "text-gray-600" : "",
+			"text-muted-foreground",
+			isFocused ? "text-foreground" : "",
 		]);
 
 		// 左侧图标位置
@@ -207,8 +205,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 				onClick={() => setShowPassword(!showPassword)}
 				className={cn([
 					"absolute top-1/2 transform -translate-y-1/2",
-					"text-gray-400 hover:text-gray-600",
-					"focus:outline-none focus:text-gray-600",
+					"text-muted-foreground hover:text-foreground",
+					"focus:outline-none focus:text-foreground",
 					"p-1 rounded transition-colors",
 					rightIconPosition[size],
 				])}
@@ -254,7 +252,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
 		// 搜索图标
 		const SearchIcon = () => (
-			<div className={cn([iconContainerClasses, rightIconPosition[size]])}>
+			<div
+				className={cn(
+					iconContainerClasses,
+					rightIconPosition[size],
+					"text-muted-foreground"
+				)}
+			>
 				<svg
 					className={iconSizes[size]}
 					fill='none'

@@ -78,26 +78,26 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 		// 变体样式
 		const variantStyles = {
 			default: [
-				"bg-white border border-gray-150",
-				hoverable || clickable ? "hover:border-gray-200" : "",
+				"bg-card border border-border",
+				hoverable || clickable ? "hover:border-border/80" : "",
 			],
 			elevated: [
-				"bg-white border-0",
+				"bg-card border-0",
 				"shadow-soft",
 				hoverable || clickable ? "hover:shadow-medium" : "",
 			],
 			outlined: [
-				"bg-transparent border-2 border-gray-200",
-				hoverable || clickable ? "hover:border-gray-300 hover:bg-gray-50" : "",
+				"bg-transparent border-2 border-border",
+				hoverable || clickable ? "hover:border-border/80 hover:bg-accent" : "",
 			],
 			minimal: [
-				"bg-gray-50 border border-transparent",
-				hoverable || clickable ? "hover:bg-gray-100 hover:border-gray-200" : "",
+				"bg-muted border border-transparent",
+				hoverable || clickable ? "hover:bg-accent hover:border-border" : "",
 			],
 			gradient: [
-				"bg-gradient-to-br from-brand-50 to-accent-purple-50",
-				"border border-brand-100",
-				hoverable || clickable ? "hover:from-brand-100 hover:to-accent-purple-100" : "",
+				"bg-gradient-to-br from-accent-blue/20 to-accent-purple/20",
+				"dark:from-accent-blue/10 dark:to-accent-purple/10",
+				"border-0",
 			],
 		};
 
@@ -140,7 +140,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
 	({ divider = false, className = "", children, ...props }, ref) => {
 		const headerClasses = cn([
 			"flex flex-col space-y-1.5",
-			divider ? "border-b border-gray-100 pb-4 mb-4" : "",
+			divider ? "border-b border-border pb-4 mb-4" : "",
 			className,
 		]);
 
@@ -157,11 +157,9 @@ CardHeader.displayName = "CardHeader";
 // CardTitle 组件
 const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
 	({ level = 3, gradient = false, className = "", children, ...props }, ref) => {
-		const Component = `h${level}` as keyof JSX.IntrinsicElements;
-
 		const titleClasses = cn([
 			"font-semibold leading-none tracking-tight",
-			gradient ? "text-gradient" : "text-gray-900",
+			gradient ? "text-foreground" : "text-card-foreground",
 			// 根据级别设置尺寸
 			level === 1 ? "text-3xl" : "",
 			level === 2 ? "text-2xl" : "",
@@ -172,11 +170,45 @@ const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
 			className,
 		]);
 
-		return (
-			<Component ref={ref} className={titleClasses} {...props}>
-				{children}
-			</Component>
-		);
+		switch (level) {
+			case 1:
+				return (
+					<h1 ref={ref} className={titleClasses} {...props}>
+						{children}
+					</h1>
+				);
+			case 2:
+				return (
+					<h2 ref={ref} className={titleClasses} {...props}>
+						{children}
+					</h2>
+				);
+			case 4:
+				return (
+					<h4 ref={ref} className={titleClasses} {...props}>
+						{children}
+					</h4>
+				);
+			case 5:
+				return (
+					<h5 ref={ref} className={titleClasses} {...props}>
+						{children}
+					</h5>
+				);
+			case 6:
+				return (
+					<h6 ref={ref} className={titleClasses} {...props}>
+						{children}
+					</h6>
+				);
+			case 3:
+			default:
+				return (
+					<h3 ref={ref} className={titleClasses} {...props}>
+						{children}
+					</h3>
+				);
+		}
 	}
 );
 
@@ -185,7 +217,7 @@ CardTitle.displayName = "CardTitle";
 // CardDescription 组件
 const CardDescription = React.forwardRef<HTMLParagraphElement, CardDescriptionProps>(
 	({ className = "", children, ...props }, ref) => {
-		const descriptionClasses = cn(["text-sm text-gray-600 leading-relaxed", className]);
+		const descriptionClasses = cn(["text-sm text-muted-foreground leading-relaxed", className]);
 
 		return (
 			<p ref={ref} className={descriptionClasses} {...props}>
@@ -234,7 +266,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
 		const footerClasses = cn([
 			"flex items-center",
 			alignStyles[align],
-			divider ? "border-t border-gray-100 pt-4 mt-4" : "",
+			divider ? "border-t border-border pt-4 mt-4" : "",
 			className,
 		]);
 

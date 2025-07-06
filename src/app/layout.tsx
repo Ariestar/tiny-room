@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ReactNode } from "react";
+import { ThemeRegistry } from "@/components/layout/ThemeRegistry";
+import { Header } from "@/components/layout/Header";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -12,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang='en'>
+		<html lang='en' suppressHydrationWarning>
 			<head>
 				<link
 					rel='stylesheet'
@@ -21,7 +23,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					crossOrigin='anonymous'
 				/>
 			</head>
-			<body className={inter.className}>{children}</body>
+			<body className={`${inter.className} bg-background text-foreground antialiased`}>
+				<ThemeRegistry attribute='class' defaultTheme='system' enableSystem>
+					<div className='relative flex min-h-dvh flex-col'>
+						<Header />
+						<main className='flex-1'>{children}</main>
+					</div>
+				</ThemeRegistry>
+			</body>
 		</html>
 	);
 }

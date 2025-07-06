@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
 	/** 警告框变体 */
-	variant?: "info" | "success" | "warning" | "danger";
+	variant?: "info" | "success" | "warning" | "destructive";
 	/** 警告框标题 */
 	title?: string;
 	/** 是否可关闭 */
@@ -45,18 +46,18 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
 		// 如果已关闭则不渲染
 		if (!isVisible) return null;
 
-		// 基础样式
-		const baseStyles = "relative rounded-xl border p-4 transition-all duration-200";
+		const baseStyles =
+			"relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground";
 
-		// 变体样式
 		const variantStyles = {
-			info: "bg-blue-50 border-blue-200 text-blue-800",
-			success: "bg-accent-green-50 border-accent-green-200 text-accent-green-800",
-			warning: "bg-accent-orange-50 border-accent-orange-200 text-accent-orange-800",
-			danger: "bg-red-50 border-red-200 text-red-800",
+			info: "bg-card text-card-foreground border-info/50 text-info-foreground [&>svg]:text-info-foreground",
+			success:
+				"bg-card text-card-foreground border-success/50 text-success-foreground [&>svg]:text-success-foreground",
+			warning:
+				"bg-card text-card-foreground border-warning/50 text-warning-foreground [&>svg]:text-warning-foreground",
+			destructive: "bg-card border-destructive/50 text-destructive [&>svg]:text-destructive",
 		};
 
-		// 默认图标
 		const defaultIcons = {
 			info: (
 				<svg className='h-5 w-5' viewBox='0 0 20 20' fill='currentColor' aria-hidden='true'>
@@ -85,7 +86,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
 					/>
 				</svg>
 			),
-			danger: (
+			destructive: (
 				<svg className='h-5 w-5' viewBox='0 0 20 20' fill='currentColor' aria-hidden='true'>
 					<path
 						fillRule='evenodd'
@@ -103,44 +104,35 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
 			</svg>
 		);
 
-		// 合并所有样式
-		const alertClasses = [baseStyles, variantStyles[variant], className]
-			.filter(Boolean)
-			.join(" ");
-
 		return (
-			<div ref={ref} className={alertClasses} role='alert' {...props}>
-				<div className='flex'>
-					{/* 图标 */}
-					{showIcon && (
-						<div className='flex-shrink-0'>{icon || defaultIcons[variant]}</div>
+			<div
+				ref={ref}
+				className={cn(baseStyles, variantStyles[variant], className)}
+				role='alert'
+				{...props}
+			>
+				{showIcon && (icon || defaultIcons[variant])}
+
+				<div className='flex-1'>
+					{title && (
+						<h5 className='mb-1 font-medium leading-none tracking-tight text-foreground'>
+							{title}
+						</h5>
 					)}
-
-					{/* 内容 */}
-					<div className={showIcon ? "ml-3 flex-1" : "flex-1"}>
-						{/* 标题 */}
-						{title && <h3 className='text-sm font-medium mb-1'>{title}</h3>}
-
-						{/* 内容 */}
-						<div className='text-sm'>{children}</div>
-					</div>
-
-					{/* 关闭按钮 */}
-					{dismissible && (
-						<div className='ml-auto pl-3'>
-							<div className='-mx-1.5 -my-1.5'>
-								<button
-									type='button'
-									className='inline-flex rounded-md p-1.5 hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-current'
-									onClick={handleDismiss}
-									aria-label='关闭警告'
-								>
-									{closeIcon}
-								</button>
-							</div>
-						</div>
-					)}
+					<div className='text-sm [&_p]:leading-relaxed'>{children}</div>
 				</div>
+
+				{dismissible && (
+					<button
+						type='button'
+						className='absolute right-4 top-4 rounded-sm p-1.5 opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2'
+						onClick={handleDismiss}
+						aria-label='关闭警告'
+					>
+						{closeIcon}
+						<span className='sr-only'>关闭</span>
+					</button>
+				)}
 			</div>
 		);
 	}

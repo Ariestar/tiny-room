@@ -1,4 +1,5 @@
 import React from "react";
+import { cn } from "@/lib/utils";
 
 export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
 	/** 复选框标签 */
@@ -106,9 +107,12 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
 						{label && (
 							<label
 								htmlFor={checkboxId}
-								className={`block font-medium ${
-									disabled ? "text-gray-400" : "text-gray-900"
-								} ${sizeStyles[size].text} cursor-pointer`}
+								className={cn(
+									"block font-medium",
+									disabled ? "text-muted-foreground" : "text-foreground",
+									sizeStyles[size].text,
+									"cursor-pointer"
+								)}
 							>
 								{label}
 							</label>
@@ -118,9 +122,11 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
 						{description && !error && (
 							<p
 								id={descriptionId}
-								className={`mt-1 ${disabled ? "text-gray-400" : "text-gray-500"} ${
+								className={cn(
+									"mt-1",
+									disabled ? "text-muted-foreground/80" : "text-muted-foreground",
 									sizeStyles[size].description
-								}`}
+								)}
 							>
 								{description}
 							</p>

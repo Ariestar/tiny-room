@@ -15,7 +15,6 @@ export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "size"> {
 		| "ghost"
 		| "outline"
 		| "destructive"
-		| "success"
 		| "gradient"
 		| "minimal";
 	/** 按钮尺寸 */
@@ -61,7 +60,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 		ref
 	) => {
 		const controls = useAnimation();
-		const Comp = asChild ? Slot : motion.button;
+		const Comp: any = asChild ? Slot : motion.button;
 
 		const handleMouseEnter = () => {
 			// ... existing code ...
@@ -69,9 +68,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
 		// 基础样式
 		const baseStyles = [
-			"inline-flex items-center justify-center",
-			"font-medium transition-colors duration-200",
-			"focus:outline-none focus:ring-2 focus:ring-offset-2",
+			"font-medium transition-all duration-200 ease-in-out",
+			"focus:outline-none",
 			"disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
 			"relative overflow-hidden",
 		];
@@ -79,49 +77,41 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 		// 变体样式
 		const variantStyles = {
 			primary: [
-				"bg-brand-500 hover:bg-brand-600 text-white",
-				"border border-brand-500 hover:border-brand-600",
-				"focus:ring-brand-300",
-				"shadow-soft hover:shadow-medium",
+				"bg-primary text-primary-foreground hover:bg-primary/90",
+				"border border-transparent",
+				"focus:ring-2 focus:ring-offset-2 focus:ring-primary",
 			],
 			secondary: [
-				"bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900",
-				"border border-gray-200 hover:border-gray-300",
-				"focus:ring-gray-300",
-				"shadow-soft hover:shadow-medium",
+				"bg-secondary text-secondary-foreground hover:bg-secondary/80",
+				"border border-border",
+				"focus:ring-2 focus:ring-offset-2 focus:ring-ring",
 			],
 			ghost: [
-				"bg-transparent hover:bg-gray-100 text-gray-600 hover:text-gray-900",
-				"border border-transparent hover:border-gray-200",
-				"focus:ring-gray-300",
+				"text-primary hover:bg-primary/10",
+				"border border-transparent",
+				"focus:ring-2 focus:ring-offset-2 focus:ring-ring",
 			],
 			outline: [
-				"bg-transparent hover:bg-brand-50 text-brand-600 hover:text-brand-700",
-				"border border-brand-300 hover:border-brand-400",
-				"focus:ring-brand-300",
+				"text-primary border border-primary",
+				"hover:bg-primary hover:text-primary-foreground",
+				"focus:ring-2 focus:ring-offset-2 focus:ring-primary",
 			],
 			destructive: [
-				"bg-red-500 hover:bg-red-600 text-white",
-				"border border-red-500 hover:border-red-600",
-				"focus:ring-red-300",
-				"shadow-soft hover:shadow-medium",
-			],
-			success: [
-				"bg-accent-green-500 hover:bg-accent-green-600 text-white",
-				"border border-accent-green-500 hover:border-accent-green-600",
-				"focus:ring-accent-green-300",
-				"shadow-soft hover:shadow-medium",
+				"bg-destructive text-destructive-foreground hover:bg-destructive/90",
+				"border border-transparent",
+				"focus:ring-2 focus:ring-offset-2 focus:ring-destructive",
 			],
 			gradient: [
 				"bg-gradient-to-r from-gradient-start to-gradient-end text-white",
 				"border border-transparent",
-				"focus:ring-brand-300",
+				"focus:ring-2 focus:ring-offset-2 focus:ring-brand-300",
 				"shadow-soft hover:shadow-medium",
 			],
 			minimal: [
-				"bg-transparent hover:bg-gray-50 text-gray-500 hover:text-gray-700",
+				"bg-muted text-muted-foreground",
+				"hover:bg-accent hover:text-accent-foreground",
 				"border border-transparent",
-				"focus:ring-gray-300",
+				"focus:ring-2 focus:ring-offset-2 focus:ring-ring",
 			],
 		};
 
@@ -145,8 +135,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
 		// 组合样式类
 		const buttonClasses = cn([
+			size === "icon" ? "grid place-items-center" : "inline-flex items-center justify-center",
 			...baseStyles,
-			...variantStyles[variant],
+			variantStyles[variant],
 			sizeStyles[size],
 			fullWidth ? "w-full" : "",
 			shadow ? "shadow-strong" : "",
@@ -166,10 +157,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 			},
 			hover: {
 				scale: variant === "gradient" ? 1.05 : 1.02,
-				y:
-					variant === "primary" || variant === "destructive" || variant === "success"
-						? -1
-						: 0,
+				y: variant === "primary" || variant === "destructive" ? -1 : 0,
 				boxShadow:
 					variant === "primary"
 						? "0 10px 25px rgba(0, 112, 243, 0.15)"
@@ -268,28 +256,38 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 				onMouseEnter={handleMouseEnter}
 				{...props}
 			>
-				{variant === "gradient" && (
-					<motion.div
-						className='absolute inset-0 bg-gradient-to-r from-gradient-end to-gradient-start'
-						variants={gradientOverlayVariants}
-						initial='rest'
-					/>
-				)}
+				{size === "icon" ? (
+					loading ? (
+						<LoadingSpinner />
+					) : (
+						children
+					)
+				) : (
+					<>
+						{variant === "gradient" && (
+							<motion.div
+								className='absolute inset-0 bg-gradient-to-r from-gradient-end to-gradient-start'
+								variants={gradientOverlayVariants}
+								initial='rest'
+							/>
+						)}
 
-				<motion.div
-					className='relative z-10 flex items-center justify-center'
-					animate={loading ? "loading" : "rest"}
-					variants={contentVariants}
-				>
-					{loading && <LoadingSpinner />}
-					{!loading && leftIcon && (
-						<span className={cn("mr-2", iconSizes[size])}>{leftIcon}</span>
-					)}
-					<span className='truncate'>{children}</span>
-					{!loading && rightIcon && (
-						<span className={cn("ml-2", iconSizes[size])}>{rightIcon}</span>
-					)}
-				</motion.div>
+						<motion.div
+							className='relative z-10 flex items-center justify-center'
+							animate={loading ? "loading" : "rest"}
+							variants={contentVariants}
+						>
+							{loading && <LoadingSpinner />}
+							{!loading && leftIcon && (
+								<span className={cn("mr-2", iconSizes[size])}>{leftIcon}</span>
+							)}
+							<span className='truncate'>{children}</span>
+							{!loading && rightIcon && (
+								<span className={cn("ml-2", iconSizes[size])}>{rightIcon}</span>
+							)}
+						</motion.div>
+					</>
+				)}
 			</Comp>
 		);
 	}

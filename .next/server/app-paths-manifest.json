@@ -1,5 +1,5 @@
 {
-  "/(public)/blog/[slug]/page": "app/(public)/blog/[slug]/page.js",
-  "/page": "app/page.js",
-  "/(public)/blog/page": "app/(public)/blog/page.js"
+  "/(dev)/ui-showcase/components/page": "app/(dev)/ui-showcase/components/page.js",
+  "/(public)/blog/page": "app/(public)/blog/page.js",
+  "/(dev)/ui-showcase/page": "app/(dev)/ui-showcase/page.js"
 }

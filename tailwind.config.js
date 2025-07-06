@@ -8,6 +8,47 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
+				border: "hsl(var(--border))",
+				input: "hsl(var(--input))",
+				ring: "hsl(var(--ring))",
+				background: "hsl(var(--background))",
+				foreground: "hsl(var(--foreground))",
+				primary: {
+					DEFAULT: "hsl(var(--primary))",
+					foreground: "hsl(var(--primary-foreground))",
+				},
+				secondary: {
+					DEFAULT: "hsl(var(--secondary))",
+					foreground: "hsl(var(--secondary-foreground))",
+				},
+				destructive: {
+					DEFAULT: "hsl(var(--destructive))",
+					foreground: "hsl(var(--destructive-foreground))",
+				},
+				muted: {
+					DEFAULT: "hsl(var(--muted))",
+					foreground: "hsl(var(--muted-foreground))",
+				},
+				accent: {
+					DEFAULT: "hsl(var(--accent))",
+					foreground: "hsl(var(--accent-foreground))",
+				},
+				popover: {
+					DEFAULT: "hsl(var(--popover))",
+					foreground: "hsl(var(--popover-foreground))",
+				},
+				card: {
+					DEFAULT: "hsl(var(--card))",
+					foreground: "hsl(var(--card-foreground))",
+				},
+
+				// Vercel风格功能色
+				"accent-blue": "var(--accent-blue)",
+				"accent-purple": "var(--accent-purple)",
+				"accent-pink": "var(--accent-pink)",
+				"accent-green": "var(--accent-green)",
+				"accent-orange": "var(--accent-orange)",
+
 				// Vercel风格灰度系统 - 精细渐进的灰度层次
 				gray: {
 					50: "#fafafa", // 页面背景 - 最浅
@@ -128,10 +169,10 @@ module.exports = {
 				info: "#525252", // 改为灰色
 
 				// 可切换的渐变背景色
-				"gradient-start": "#525252", // 灰色渐变起始
-				"gradient-end": "#171717", // 灰色渐变结束
-				"gradient-accent-start": "#f093fb", // 可选的彩色渐变
-				"gradient-accent-end": "#f5576c", // 可选的彩色渐变
+				"gradient-start": "var(--gradient-start)",
+				"gradient-end": "var(--gradient-end)",
+				"gradient-accent-start": "var(--gradient-accent-start)",
+				"gradient-accent-end": "var(--gradient-accent-end)",
 			},
 
 			// 现代化字体系统

@@ -63,7 +63,9 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
 		// 基础样式
 		const baseStyles = [
 			"flex transition-all duration-200",
-			sticky ? "sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100" : "",
+			sticky
+				? "sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border"
+				: "",
 		];
 
 		// 变体样式
@@ -78,12 +80,12 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
 			vertical: ["flex-col", "gap-1"],
 			tabs: [
 				"flex-row",
-				"border-b border-gray-200",
+				"border-b border-border",
 				align === "center" ? "justify-center" : "",
 				align === "right" ? "justify-end" : "",
 				"gap-0",
 			],
-			pills: ["flex-row flex-wrap", "bg-gray-100 rounded-xl p-1", "gap-1"],
+			pills: ["flex-row flex-wrap", "bg-muted rounded-xl p-1", "gap-1"],
 			minimal: [
 				"flex-row",
 				align === "center" ? "justify-center" : "",
@@ -96,7 +98,7 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
 		const containerClasses = cn([
 			...baseStyles,
 			...variantStyles[variant],
-			divider && variant !== "tabs" ? "border-b border-gray-100 pb-4" : "",
+			divider && variant !== "tabs" ? "border-b border-border pb-4" : "",
 			className,
 		]);
 
@@ -131,30 +133,32 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
 				horizontal: [
 					"rounded-xl",
 					isActive
-						? "bg-brand-50 text-brand-700 font-medium"
-						: "text-gray-600 hover:text-gray-900 hover:bg-gray-50",
+						? "bg-accent text-accent-foreground font-semibold"
+						: "text-muted-foreground hover:text-foreground hover:bg-accent",
 				],
 				vertical: [
 					"rounded-xl w-full",
 					isActive
-						? "bg-brand-50 text-brand-700 font-medium border-l-2 border-brand-500"
-						: "text-gray-600 hover:text-gray-900 hover:bg-gray-50",
+						? "bg-accent text-accent-foreground font-semibold"
+						: "text-muted-foreground hover:text-foreground hover:bg-accent",
 				],
 				tabs: [
 					"border-b-2 rounded-none",
 					isActive
-						? "border-brand-500 text-brand-700 font-medium"
-						: "border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300",
+						? "border-primary text-primary font-semibold"
+						: "border-transparent text-muted-foreground hover:text-foreground hover:border-border",
 				],
 				pills: [
 					"rounded-lg",
 					isActive
-						? "bg-white text-gray-900 font-medium shadow-sm"
-						: "text-gray-600 hover:text-gray-900 hover:bg-white/60",
+						? "bg-background text-foreground font-medium shadow-sm"
+						: "text-muted-foreground hover:text-foreground hover:bg-background/60",
 				],
 				minimal: [
 					"border-none bg-transparent",
-					isActive ? "text-brand-700 font-medium" : "text-gray-600 hover:text-gray-900",
+					isActive
+						? "text-primary font-semibold"
+						: "text-muted-foreground hover:text-foreground",
 				],
 			};
 
@@ -178,8 +182,8 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
 					className={cn([
 						"inline-flex items-center justify-center",
 						"min-w-[1.25rem] h-5 px-1.5",
-						"text-xs font-medium text-white",
-						"bg-red-500 rounded-full",
+						"text-xs font-medium text-destructive-foreground",
+						"bg-destructive rounded-full",
 						typeof count === "number" && count > 99 ? "px-1" : "",
 					])}
 				>

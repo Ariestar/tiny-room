@@ -1,8 +1,9 @@
 import React from "react";
+import { cn } from "@/lib/utils";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 	/** 徽章变体 */
-	variant?: "default" | "primary" | "success" | "warning" | "danger" | "info" | "purple" | "pink";
+	variant?: "primary" | "secondary" | "destructive" | "success" | "warning" | "info" | "outline";
 	/** 徽章尺寸 */
 	size?: "sm" | "md" | "lg";
 	/** 是否为圆形徽章 */
@@ -16,7 +17,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
 	(
 		{
-			variant = "default",
+			variant = "secondary",
 			size = "md",
 			rounded = false,
 			dot = false,
@@ -28,18 +29,19 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
 	) => {
 		// 基础样式
 		const baseStyles =
-			"inline-flex items-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2";
+			"inline-flex items-center font-medium border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2";
 
 		// 变体样式
 		const variantStyles = {
-			default: "bg-gray-100 text-gray-800 focus:ring-gray-300",
-			primary: "bg-brand-100 text-brand-800 focus:ring-brand-300",
-			success: "bg-accent-green-100 text-accent-green-800 focus:ring-accent-green-300",
-			warning: "bg-accent-orange-100 text-accent-orange-800 focus:ring-accent-orange-300",
-			danger: "bg-red-100 text-red-800 focus:ring-red-300",
-			info: "bg-blue-100 text-blue-800 focus:ring-blue-300",
-			purple: "bg-accent-purple-100 text-accent-purple-800 focus:ring-accent-purple-300",
-			pink: "bg-accent-pink-100 text-accent-pink-800 focus:ring-accent-pink-300",
+			primary: "border-transparent bg-primary text-primary-foreground focus:ring-primary",
+			secondary: "border-transparent bg-secondary text-secondary-foreground focus:ring-ring",
+			destructive:
+				"border-transparent bg-destructive text-destructive-foreground focus:ring-destructive",
+			success:
+				"border-transparent bg-emerald-500 text-primary-foreground focus:ring-emerald-300",
+			warning: "border-transparent bg-amber-500 text-black focus:ring-amber-300",
+			info: "border-transparent bg-sky-500 text-primary-foreground focus:ring-sky-300",
+			outline: "text-foreground border-input focus:ring-ring",
 		};
 
 		// 尺寸样式
@@ -53,15 +55,13 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
 		const roundedStyles = rounded ? "rounded-full" : "rounded-md";
 
 		// 合并所有样式
-		const badgeClasses = [
+		const badgeClasses = cn(
 			baseStyles,
-			variantStyles[variant],
+			variantStyles[variant ?? "secondary"],
 			sizeStyles[size],
 			roundedStyles,
-			className,
-		]
-			.filter(Boolean)
-			.join(" ");
+			className
+		);
 
 		return (
 			<span ref={ref} className={badgeClasses} {...props}>
