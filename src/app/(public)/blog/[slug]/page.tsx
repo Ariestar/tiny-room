@@ -9,8 +9,8 @@ export async function generateStaticParams() {
 	return paths.map(p => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-	const decodedSlug = decodeURIComponent(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+	const decodedSlug = decodeURIComponent((await params).slug);
 	const post = await getPostBySlug(decodedSlug);
 
 	if (!post) {
@@ -24,8 +24,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 	};
 }
 
-export default async function PostPage({ params }: { params: { slug: string } }) {
-	const decodedSlug = decodeURIComponent(params.slug);
+export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
+	const decodedSlug = decodeURIComponent((await params).slug);
 	const post = await getPostBySlug(decodedSlug);
 
 	if (!post) {

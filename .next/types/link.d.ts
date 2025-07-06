@@ -32,14 +32,14 @@ declare namespace __next_route_internal_types__ {
     | `/`
     | `/dashboard`
     | `/dashboard/blog`
+    | `/dashboard/login`
     | `/dashboard/projects`
     | `/dashboard/settings`
-    | `/dashboard/login`
+    | `/blog`
     | `/ui-showcase`
-    | `/ui-showcase/components`
     | `/ui-showcase/animations`
     | `/ui-showcase/typography`
-    | `/blog`
+    | `/ui-showcase/components`
   type DynamicRoutes<T extends string = string> = 
     | `/dashboard/blog/edit/${SafeSlug<T>}`
     | `/blog/${SafeSlug<T>}`
