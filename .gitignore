@@ -30,6 +30,14 @@ node_modules/
 /generated/prisma
 .vercel
 
-.next/
+/.next/
+/out/
 
-Learn.md
+/build
+
+# TypeScript 缓存
+*.tsbuildinfo
+next-env.d.ts
+
+# Vercel 平台相关
+.vercel
