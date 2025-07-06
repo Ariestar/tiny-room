@@ -1,0 +1,71 @@
+# Task ID: 7
+# Title: Implement Blog Management Functionality
+# Status: in-progress
+# Dependencies: 6
+# Priority: medium
+# Description: Implement the Blog management functionality, including Obsidian file synchronization, article list management, content editing, and publishing status control.
+# Details:
+1. Create a `/dashboard/blog` page.
+2. Implement Obsidian file synchronization using a file system watcher.
+3. Implement article list management with pagination and filtering.
+4. Integrate a Markdown editor for content editing.
+5. Implement publishing status control.
+
+# Test Strategy:
+Verify that the Blog management functionality is working correctly. Test Obsidian file synchronization, article list management, content editing, and publishing status control.
+
+# Subtasks:
+## 1. Set up `/dashboard/blog` page structure [done]
+### Dependencies: None
+### Description: Create the basic file structure and routing for the `/dashboard/blog` page.
+### Details:
+Create the necessary directories and files for the blog dashboard page. Implement basic routing to access the page.
+
+## 2. Implement Obsidian file system watcher [done]
+### Dependencies: 7.1
+### Description: Set up a file system watcher to detect changes in the Obsidian vault.
+### Details:
+Configure a file system watcher to monitor the Obsidian vault directory for file changes (creation, modification, deletion).
+
+## 3. Implement article list management with pagination and filtering [done]
+### Dependencies: 7.2
+### Description: Develop the UI and logic for displaying and managing articles with pagination and filtering options.
+### Details:
+Create a table or list view to display articles. Implement pagination to handle a large number of articles. Add filtering options based on title, date, or other relevant criteria.
+
+## 4. Integrate Markdown editor for content editing [done]
+### Dependencies: 7.3
+### Description: Integrate a Markdown editor component into the blog dashboard for editing article content.
+### Details:
+Choose and integrate a suitable Markdown editor component (e.g., CodeMirror, TinyMCE with Markdown plugin). Configure the editor to allow users to create and edit article content.
+
+## 5. Implement publishing status control [done]
+### Dependencies: 7.4
+### Description: Add functionality to control the publishing status (draft, published, archived) of articles.
+### Details:
+Implement a UI element (e.g., dropdown, toggle) to allow users to set the publishing status of an article. Update the database or file metadata to reflect the selected status.
+
+## 6. 博客文章渲染增强 [pending]
+### Dependencies: None
+### Description: 升级Markdown渲染引擎，使其不仅支持标准语法，还能支持类似Obsidian的扩展功能和代码高亮，提供极致的内容阅读体验。
+### Details:
+核心渲染: 调研并集成remark和rehype插件生态，以支持GFM（GitHub Flavored Markdown）。<br/>代码高亮: 集成 rehype-pretty-code 或 shiki 库，为代码块提供高质量、带主题的语法高亮。<br/>Obsidian Callouts: 实现对 >[!NOTE] 这种Obsidian风格的callout/admonition块的支持。<br/>Obsidian Wikilinks: (可选) 支持 [[内部链接]]。
+
+## 7. 博客页面UI与布局设计 [pending]
+### Dependencies: None
+### Description: 为博客文章页面设计并实现一个美观、易读、响应式的布局，优化用户在各种设备上的阅读体验。
+### Details:
+整体布局: 创建一个PostLayout.tsx组件，定义文章页面的整体结构。<br/>文章头部 (Post Header): 精心设计文章标题、发布日期、作者、预计阅读时间等元素的样式和布局。<br/>正文排版: 利用 @tailwindcss/typography (prose类) 来确保文章正文具有出色的可读性。<br/>响应式设计: 重点调整在移动设备上的字体大小、间距和图片展示。<br/>目录(TOC): 在文章侧边或顶部生成一个可交互的目录。
+
+## 8. SEO与社交分享优化 [pending]
+### Dependencies: None
+### Description: 为每篇博客文章动态生成优化的元数据（Metadata），以提升搜索引擎排名（SEO）并在社交媒体上获得丰富的分享预览。
+### Details:
+使用Next.js 15的 generateMetadata 函数。<br/>为每篇文章动态生成 <title> 和 <meta name="description">。<br/>实现Open Graph协议，添加 og:title, og:description, og:image 等标签。
+
+## 9. 评论系统集成 (可选) [pending]
+### Dependencies: None
+### Description: 为博客文章页面下方添加一个评论区，增加读者互动性。
+### Details:
+选择一个评论系统，例如 Giscus (它利用GitHub Discussions，对开发者非常友好，免费且无广告)。<br/>在文章页面底部创建一个Comments.tsx组件，并根据所选服务的文档进行集成。
+

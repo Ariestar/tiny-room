@@ -1,4 +1,4 @@
 {
-  "/(admin)/dashboard/page": "app/(admin)/dashboard/page.js",
-  "/(admin)/dashboard/blog/page": "app/(admin)/dashboard/blog/page.js"
+  "/(public)/blog/page": "app/(public)/blog/page.js",
+  "/(public)/blog/[slug]/page": "app/(public)/blog/[slug]/page.js"
 }

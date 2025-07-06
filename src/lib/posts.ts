@@ -1,8 +1,15 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import { remark } from "remark";
-import html from "remark-html";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import remarkRehype from "remark-rehype";
+import rehypeKatex from "rehype-katex";
+import rehypePrettyCode from "rehype-pretty-code";
+import rehypeStringify from "rehype-stringify";
+import { cache } from "react";
 
 const postsDirectory = path.join(process.cwd(), "posts");
 
@@ -43,49 +50,65 @@ export function getSortedPostsData() {
 
 export function getAllPostSlugs() {
 	const fileNames = fs.readdirSync(postsDirectory);
-
-	// Returns an array that looks like:
-	// [
-	//   {
-	//     params: {
-	//       slug: 'ssg-ssr'
-	//     }
-	//   },
-	//   {
-	//     params: {
-	//       slug: 'pre-rendering'
-	//     }
-	//   }
-	// ]
 	return fileNames.map(fileName => {
 		return {
-			params: {
-				slug: decodeURIComponent(fileName).replace(/\.md$/, ""),
-			},
+			slug: fileName.replace(/\.md$/, ""),
 		};
 	});
 }
 
-export async function getPostDataBySlug(slug: string) {
-	const decodedSlug = decodeURIComponent(slug);
-	const fullPath = path.join(postsDirectory, `${decodedSlug}.md`);
-	const stats = fs.statSync(fullPath); // Get file stats
+export async function getAllPosts() {
+	const slugs = getAllPostSlugs();
+	const allPostsData = await Promise.all(slugs.map(s => getPostData(s.slug)));
+	return allPostsData.sort((a, b) => {
+		if (a.date < b.date) {
+			return 1;
+		} else {
+			return -1;
+		}
+	});
+}
+
+export const getPostData = cache(async (slug: string) => {
+	const fullPath = path.join(postsDirectory, `${slug}.md`);
+
+	if (!fs.existsSync(fullPath)) {
+		// In a real app, you might want to throw an error or return a specific object.
+		// For now, we'll log a warning and return a "not found" state.
+		console.warn(`Post not found for slug: ${slug}`);
+		return {
+			slug,
+			title: "Post Not Found",
+			date: new Date().toISOString(),
+			tags: [],
+			content: "This post could not be found.",
+		};
+	}
+
 	const fileContents = fs.readFileSync(fullPath, "utf8");
 
-	// Use gray-matter to parse the post metadata section
 	const matterResult = matter(fileContents);
 
-	// Use remark to convert markdown into HTML string
-	const processedContent = await remark().use(html).process(matterResult.content);
-	const contentHtml = processedContent.toString();
+	const { data, content } = matterResult;
 
-	// Combine the data with the id and contentHtml
 	return {
-		slug: decodedSlug,
-		title: decodedSlug, // Use filename as title
-		date: stats.birthtime.toISOString(), // Use file creation date
-		contentHtml,
-		content: matterResult.content,
-		status: (matterResult.data as { status?: string }).status || "draft",
+		slug,
+		...(data as { title: string; date: string; tags: string[] }),
+		content,
 	};
-}
+});
+
+export const markdownToHtml = async (markdown: string) => {
+	const result = await unified()
+		.use(remarkParse)
+		.use(remarkGfm)
+		.use(remarkMath)
+		.use(remarkRehype)
+		.use(rehypeKatex)
+		.use(rehypePrettyCode, {
+			theme: "github-dark",
+		})
+		.use(rehypeStringify)
+		.process(markdown);
+	return result.toString();
+};

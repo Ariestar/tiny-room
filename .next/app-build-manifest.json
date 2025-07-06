@@ -6,20 +6,15 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/(admin)/dashboard/layout": [
+    "/(public)/blog/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(admin)/dashboard/layout.js"
+      "static/chunks/app/(public)/blog/page.js"
     ],
-    "/(admin)/dashboard/page": [
+    "/(public)/blog/[slug]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(admin)/dashboard/page.js"
-    ],
-    "/(admin)/dashboard/blog/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(admin)/dashboard/blog/page.js"
+      "static/chunks/app/(public)/blog/[slug]/page.js"
     ]
   }
 }

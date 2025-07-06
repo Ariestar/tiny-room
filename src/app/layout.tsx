@@ -13,6 +13,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
 		<html lang='en'>
+			<head>
+				<link
+					rel='stylesheet'
+					href='https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css'
+					integrity='sha384-n8MVd4RsNIU0KOVEMcAgschVQEkY2zrOOvZpJn/iGu38AN2af5YWgJE27U2DHGQX'
+					crossOrigin='anonymous'
+				/>
+			</head>
 			<body className={inter.className}>{children}</body>
 		</html>
 	);
