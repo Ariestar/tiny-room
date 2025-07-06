@@ -3,11 +3,7 @@ import { Card } from "@/components/ui";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
-type Params = {
-	id: string;
-};
-
-const PostPage = async ({ params }: { params: Params }) => {
+const PostPage = async ({ params }: { params: { id: string } }) => {
 	const postData = await getPostData(params.id);
 
 	return (
