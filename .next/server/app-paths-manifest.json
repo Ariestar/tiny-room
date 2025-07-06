@@ -1,4 +1,6 @@
 {
-  "/(public)/blog/page": "app/(public)/blog/page.js",
-  "/(public)/blog/[slug]/page": "app/(public)/blog/[slug]/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/page": "app/page.js",
+  "/(public)/blog/[slug]/page": "app/(public)/blog/[slug]/page.js",
+  "/(public)/blog/page": "app/(public)/blog/page.js"
 }

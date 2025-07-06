@@ -29,3 +29,5 @@ node_modules/
 # tasks/ 
 /generated/prisma
 .vercel
+
+Learn.md

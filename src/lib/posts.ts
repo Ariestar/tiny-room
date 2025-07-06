@@ -10,6 +10,20 @@ import rehypeKatex from "rehype-katex";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeStringify from "rehype-stringify";
 import { cache } from "react";
+import rehypeRaw from "rehype-raw";
+import remarkWikiLink from "remark-wiki-link";
+
+// A simple slugify function to replace the external dependency.
+const customSlugify = (str: string) => {
+	return str
+		.toString()
+		.toLowerCase()
+		.trim()
+		.replace(/\s+/g, "-") // Replace spaces with -
+		.replace(/&/g, "-and-") // Replace & with 'and'
+		.replace(/[^\w\-]+/g, "") // Remove all non-word chars
+		.replace(/\-\-+/g, "-"); // Replace multiple - with single -
+};
 
 const postsDirectory = path.join(process.cwd(), "posts");
 
@@ -57,58 +71,55 @@ export function getAllPostSlugs() {
 	});
 }
 
-export async function getAllPosts() {
-	const slugs = getAllPostSlugs();
-	const allPostsData = await Promise.all(slugs.map(s => getPostData(s.slug)));
-	return allPostsData.sort((a, b) => {
-		if (a.date < b.date) {
-			return 1;
-		} else {
-			return -1;
-		}
-	});
-}
-
-export const getPostData = cache(async (slug: string) => {
+export const getPostBySlug = cache(async (slug: string) => {
 	const fullPath = path.join(postsDirectory, `${slug}.md`);
 
 	if (!fs.existsSync(fullPath)) {
-		// In a real app, you might want to throw an error or return a specific object.
-		// For now, we'll log a warning and return a "not found" state.
 		console.warn(`Post not found for slug: ${slug}`);
-		return {
-			slug,
-			title: "Post Not Found",
-			date: new Date().toISOString(),
-			tags: [],
-			content: "This post could not be found.",
-		};
+		return null;
 	}
 
 	const fileContents = fs.readFileSync(fullPath, "utf8");
-
 	const matterResult = matter(fileContents);
-
 	const { data, content } = matterResult;
 
-	return {
-		slug,
-		...(data as { title: string; date: string; tags: string[] }),
-		content,
-	};
-});
-
-export const markdownToHtml = async (markdown: string) => {
-	const result = await unified()
+	const contentHtml = await unified()
 		.use(remarkParse)
+		.use(remarkWikiLink, {
+			pageResolver: (name: string) => [customSlugify(name)],
+			hrefTemplate: (permalink: string) => `/blog/${permalink}`,
+			aliasDivider: "|",
+		})
 		.use(remarkGfm)
 		.use(remarkMath)
-		.use(remarkRehype)
+		.use(remarkRehype, { allowDangerousHtml: true })
+		.use(rehypeRaw)
 		.use(rehypeKatex)
 		.use(rehypePrettyCode, {
 			theme: "github-dark",
 		})
 		.use(rehypeStringify)
-		.process(markdown);
-	return result.toString();
-};
+		.process(content);
+
+	return {
+		slug,
+		...(data as { title: string; date: string; tags: string[] }),
+		contentHtml: contentHtml.toString(),
+	};
+});
+
+export async function getAllPosts() {
+	const slugs = fs.readdirSync(postsDirectory).map(file => file.replace(/\.md$/, ""));
+	const allPosts = await Promise.all(slugs.map(slug => getPostBySlug(slug)));
+
+	// Filter out null posts if any were not found
+	return allPosts
+		.filter(post => post !== null)
+		.sort((a, b) => {
+			if (a!.date < b!.date) {
+				return 1;
+			} else {
+				return -1;
+			}
+		});
+}

@@ -2959,6 +2959,13 @@ video {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+@media (prefers-color-scheme: dark) {
+
+  .dark\:text-gray-400 {
+    --tw-text-opacity: 1;
+    color: rgb(163 163 163 / var(--tw-text-opacity, 1));
+  }
+}
 .\[\&\:has\(\[role\=checkbox\]\)\]\:pr-0:has([role=checkbox]) {
   padding-right: 0px;
 }

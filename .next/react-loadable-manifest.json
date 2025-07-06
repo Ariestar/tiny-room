@@ -4,5 +4,17 @@
     "files": [
       "static/chunks/_app-pages-browser_node_modules_pnpm_next_15_3_4_react-dom_18_3_1_react_18_3_1__react_18_3_1_-147ddb.js"
     ]
+  },
+  "..\\node_modules\\.pnpm\\next@15.3.4_react-dom@18.3.1_react@18.3.1__react@18.3.1\\node_modules\\next\\dist\\client\\index.js -> ../pages/_app": {
+    "id": "..\\node_modules\\.pnpm\\next@15.3.4_react-dom@18.3.1_react@18.3.1__react@18.3.1\\node_modules\\next\\dist\\client\\index.js -> ../pages/_app",
+    "files": [
+      "static/chunks/_pages-dir-browser_node_modules_pnpm_next_15_3_4_react-dom_18_3_1_react_18_3_1__react_18_3_1_-1774d1.js"
+    ]
+  },
+  "..\\node_modules\\.pnpm\\next@15.3.4_react-dom@18.3.1_react@18.3.1__react@18.3.1\\node_modules\\next\\dist\\client\\index.js -> ../pages/_error": {
+    "id": "..\\node_modules\\.pnpm\\next@15.3.4_react-dom@18.3.1_react@18.3.1__react@18.3.1\\node_modules\\next\\dist\\client\\index.js -> ../pages/_error",
+    "files": [
+      "static/chunks/_pages-dir-browser_node_modules_pnpm_next_15_3_4_react-dom_18_3_1_react_18_3_1__react_18_3_1_-148311.js"
+    ]
   }
 }

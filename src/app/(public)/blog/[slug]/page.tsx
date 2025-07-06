@@ -1,5 +1,6 @@
-import { getAllPostSlugs, getPostData, markdownToHtml } from "@/lib/posts";
+import { getAllPostSlugs, getPostBySlug } from "@/lib/posts";
 import { notFound } from "next/navigation";
+import "katex/dist/katex.min.css";
 
 export async function generateStaticParams() {
 	const paths = getAllPostSlugs();
@@ -9,34 +10,35 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-	try {
-		const decodedSlug = decodeURIComponent(params.slug);
-		const postData = await getPostData(decodedSlug);
-		return {
-			title: postData.title,
-		};
-	} catch (error) {
+	const decodedSlug = decodeURIComponent(params.slug);
+	const post = await getPostBySlug(decodedSlug);
+
+	if (!post) {
 		return {
 			title: "Post Not Found",
 		};
 	}
+
+	return {
+		title: post.title,
+	};
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
 	const decodedSlug = decodeURIComponent(params.slug);
-	const postData = await getPostData(decodedSlug);
+	const post = await getPostBySlug(decodedSlug);
 
-	if (!postData || postData.title === "Post Not Found") {
+	if (!post) {
 		notFound();
 	}
 
-	const contentHtml = await markdownToHtml(postData.content);
-
 	return (
 		<article className='container mx-auto px-4 py-8 prose lg:prose-xl dark:prose-invert'>
-			<h1 className='text-4xl font-bold mb-2'>{postData.title}</h1>
-			<div className='text-gray-500 mb-8'>{new Date(postData.date).toLocaleDateString()}</div>
-			<div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+			<h1 className='text-4xl font-bold mb-2'>{post.title}</h1>
+			<div className='text-gray-500 dark:text-gray-400 mb-8'>
+				<time dateTime={post.date}>{new Date(post.date).toLocaleDateString()}</time>
+			</div>
+			<div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
 		</article>
 	);
 }
