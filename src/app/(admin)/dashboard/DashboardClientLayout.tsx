@@ -2,7 +2,7 @@
 
 import React from "react";
 import { usePathname } from "next/navigation";
-import Navigation, { NavigationItem } from "@/components/ui/Navigation";
+import Navigation, { NavigationItem } from "@/components/layout/Navigation";
 import { LayoutDashboard, Pencil, Briefcase, ImageIcon, Settings, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 

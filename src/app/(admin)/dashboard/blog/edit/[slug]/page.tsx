@@ -15,7 +15,7 @@ export default async function EditPostPage({ params }: { params: { slug: string 
 	return (
 		<div className='container mx-auto py-10'>
 			<h1 className='text-3xl font-bold mb-6'>Edit Post: {postData.title}</h1>
-			<EditForm initialContent={postData.content} slug={params.slug} />
+			<EditForm post={postData} />
 		</div>
 	);
 }

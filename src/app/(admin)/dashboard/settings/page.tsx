@@ -1,5 +1,8 @@
 import { auth } from "@/auth";
-import { SettingsForm, Card, ApiKeyCard, MaintenanceCard } from "@/components/ui";
+import Card from "@/components/ui/Card";
+import { SettingsForm } from "@/components/feature/settings/SettingsForm";
+import { ApiKeyCard } from "@/components/feature/settings/ApiKeyCard";
+import { MaintenanceCard } from "@/components/feature/dashboard/MaintenanceCard";
 
 const SettingsPage = async () => {
 	const session = await auth();

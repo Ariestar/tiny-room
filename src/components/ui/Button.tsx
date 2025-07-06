@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion, HTMLMotionProps, Variants, useAnimation } from "framer-motion";
+import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@/lib/utils";
 import { hoverVariants, tapVariants, durations, easings } from "@/lib/animations";
 import Loading from "./Loading";
@@ -35,6 +36,8 @@ export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "size"> {
 	variants?: Variants;
 	/** 子元素 */
 	children?: React.ReactNode;
+	/** 是否作为子组件渲染 */
+	asChild?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -52,11 +55,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 			disabled = false,
 			className = "",
 			children,
+			asChild = false,
 			...props
 		},
 		ref
 	) => {
 		const controls = useAnimation();
+		const Comp = asChild ? Slot : motion.button;
 
 		const handleMouseEnter = () => {
 			// ... existing code ...
@@ -250,109 +255,42 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 			},
 		};
 
-		// 如果禁用动画，返回普通button
-		if (disableAnimation) {
-			return (
-				<button
-					ref={ref}
-					className={buttonClasses}
-					disabled={disabled || loading}
-					{...(props as any)}
-				>
-					{/* 渐变背景效果 */}
-					{variant === "gradient" && (
-						<div className='absolute inset-0 bg-gradient-to-r from-gradient-accent-start to-gradient-accent-end opacity-0 hover:opacity-100 transition-opacity duration-300' />
-					)}
-
-					{/* 内容区域 */}
-					<span className='relative flex items-center justify-center gap-inherit'>
-						{/* 左侧图标或加载状态 */}
-						{loading ? (
-							<LoadingSpinner />
-						) : leftIcon ? (
-							<span className={cn("flex-shrink-0", iconSizes[size])}>{leftIcon}</span>
-						) : null}
-
-						{/* 按钮文本 */}
-						{children && <span className={loading ? "opacity-0" : ""}>{children}</span>}
-
-						{/* 右侧图标 */}
-						{rightIcon && !loading && (
-							<span className={cn("flex-shrink-0", iconSizes[size])}>
-								{rightIcon}
-							</span>
-						)}
-					</span>
-				</button>
-			);
-		}
-
 		return (
-			<motion.button
+			<Comp
 				ref={ref}
 				className={buttonClasses}
-				disabled={disabled || loading}
-				variants={buttonVariants}
-				initial='rest'
 				animate={controls}
-				whileHover='hover'
-				whileTap='tap'
+				initial='rest'
+				whileHover={!disableAnimation && !disabled ? "hover" : undefined}
+				whileTap={!disableAnimation && !disabled ? "tap" : undefined}
+				variants={buttonVariants}
+				disabled={disabled || loading}
+				onMouseEnter={handleMouseEnter}
 				{...props}
 			>
-				{/* 渐变背景动画效果 */}
 				{variant === "gradient" && (
 					<motion.div
-						className='absolute inset-0 bg-gradient-to-r from-gradient-accent-start to-gradient-accent-end rounded-[inherit]'
+						className='absolute inset-0 bg-gradient-to-r from-gradient-end to-gradient-start'
 						variants={gradientOverlayVariants}
 						initial='rest'
-						animate={!disabled && !loading ? "rest" : undefined}
 					/>
 				)}
 
-				{/* 内容区域 */}
-				<motion.span
-					className='relative flex items-center justify-center gap-inherit'
-					variants={contentVariants}
+				<motion.div
+					className='relative z-10 flex items-center justify-center'
 					animate={loading ? "loading" : "rest"}
+					variants={contentVariants}
 				>
-					{/* 左侧图标或加载状态 */}
-					{loading ? (
-						<LoadingSpinner />
-					) : leftIcon ? (
-						<motion.span
-							className={cn("flex-shrink-0", iconSizes[size])}
-							initial={{ opacity: 0, x: -10 }}
-							animate={{ opacity: 1, x: 0 }}
-							transition={{ duration: durations.fast, delay: 0.1 }}
-						>
-							{leftIcon}
-						</motion.span>
-					) : null}
-
-					{/* 按钮文本 */}
-					{children && (
-						<motion.span
-							initial={{ opacity: 0 }}
-							animate={{ opacity: 1 }}
-							transition={{ duration: durations.fast, delay: 0.05 }}
-						>
-							{children}
-						</motion.span>
+					{loading && <LoadingSpinner />}
+					{!loading && leftIcon && (
+						<span className={cn("mr-2", iconSizes[size])}>{leftIcon}</span>
 					)}
-
-					{/* 右侧图标 */}
-					{rightIcon && !loading && (
-						<motion.span
-							className={cn("flex-shrink-0", iconSizes[size])}
-							initial={{ opacity: 0, x: 10 }}
-							animate={{ opacity: 1, x: 0 }}
-							transition={{ duration: durations.fast, delay: 0.15 }}
-						>
-							{rightIcon}
-						</motion.span>
+					<span className='truncate'>{children}</span>
+					{!loading && rightIcon && (
+						<span className={cn("ml-2", iconSizes[size])}>{rightIcon}</span>
 					)}
-				</motion.span>
-			</motion.button>
+				</motion.div>
+			</Comp>
 		);
 	}
 );

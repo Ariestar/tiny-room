@@ -13,7 +13,7 @@ import {
 	getSortedRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -23,11 +23,7 @@ import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/DropdownMenu";
 import Input from "@/components/ui/Input";
 import {
 	Table,
@@ -37,22 +33,41 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import Badge from "@/components/ui/Badge";
 
 export type Post = {
 	slug: string;
 	title: string;
 	date: string;
-	status?: string;
 };
 
 export const columns: ColumnDef<Post>[] = [
+	{
+		id: "select",
+		header: ({ table }) => (
+			<Checkbox
+				checked={table.getIsAllPageRowsSelected()}
+				indeterminate={table.getIsSomePageRowsSelected()}
+				onChange={e => table.toggleAllPageRowsSelected(e.target.checked)}
+				aria-label='Select all'
+			/>
+		),
+		cell: ({ row }) => (
+			<Checkbox
+				checked={row.getIsSelected()}
+				onChange={e => row.toggleSelected(e.target.checked)}
+				aria-label='Select row'
+			/>
+		),
+		enableSorting: false,
+		enableHiding: false,
+	},
 	{
 		accessorKey: "title",
 		header: ({ column }) => {
 			return (
 				<Button
-					variant='ghost'
+					variant='outline'
+					size='sm'
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 				>
 					<div className='flex items-center'>
@@ -70,74 +85,22 @@ export const columns: ColumnDef<Post>[] = [
 		cell: ({ row }) => <div>{new Date(row.getValue("date")).toLocaleDateString()}</div>,
 	},
 	{
-		accessorKey: "status",
-		header: "Status",
-		cell: ({ row }) => {
-			const status = row.getValue("status") as string;
-			const variant = status === "publish" ? "default" : undefined;
-			return <Badge variant={variant}>{status || "draft"}</Badge>;
-		},
-	},
-	{
 		id: "actions",
 		enableHiding: false,
 		cell: ({ row }) => {
 			const post = row.original;
 			const router = useRouter();
 
-			const handleStatusChange = async (newStatus: "publish" | "draft") => {
-				try {
-					const response = await fetch(`/api/posts/${post.slug}/status`, {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify({ status: newStatus }),
-					});
-
-					if (!response.ok) {
-						throw new Error("Failed to update status");
-					}
-
-					// Refresh the page to see the updated status
-					router.refresh();
-				} catch (error) {
-					console.error("Error updating status:", error);
-					// Here you might want to show a toast notification to the user
-				}
-			};
-
 			return (
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button variant='ghost' className='h-8 w-8 p-0'>
-							<span className='sr-only'>Open menu</span>
-							<MoreHorizontal className='h-4 w-4' />
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align='end'>
-						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem onClick={() => navigator.clipboard.writeText(post.slug)}>
-							Copy post slug
-						</DropdownMenuItem>
-						<DropdownMenuItem>
-							<Link href={`/dashboard/blog/edit/${post.slug}`} className='w-full'>
-								Edit
-							</Link>
-						</DropdownMenuItem>
-						<DropdownMenuSeparator />
-						{post.status !== "publish" && (
-							<DropdownMenuItem onClick={() => handleStatusChange("publish")}>
-								Publish
-							</DropdownMenuItem>
-						)}
-						{post.status === "publish" && (
-							<DropdownMenuItem onClick={() => handleStatusChange("draft")}>
-								Unpublish
-							</DropdownMenuItem>
-						)}
-					</DropdownMenuContent>
-				</DropdownMenu>
+				<div className='text-right'>
+					<Button
+						variant='outline'
+						size='sm'
+						onClick={() => router.push(`/dashboard/blog/edit/${post.slug}`)}
+					>
+						Edit
+					</Button>
+				</div>
 			);
 		},
 	},
@@ -171,6 +134,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 			columnVisibility,
 			rowSelection,
 		},
+		enableRowSelection: true,
 	});
 
 	return (

@@ -1,6 +1,4 @@
 {
-  "/(dev)/ui-showcase/page": "app/(dev)/ui-showcase/page.js",
-  "/(admin)/dashboard/blog/page": "app/(admin)/dashboard/blog/page.js",
   "/(admin)/dashboard/page": "app/(admin)/dashboard/page.js",
-  "/(admin)/dashboard/blog/edit/[slug]/page": "app/(admin)/dashboard/blog/edit/[slug]/page.js"
+  "/(admin)/dashboard/blog/page": "app/(admin)/dashboard/blog/page.js"
 }

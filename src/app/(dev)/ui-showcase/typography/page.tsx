@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { TopNavigation } from "@/components/ui";
+import TopNavigation from "@/components/layout/TopNavigation";
+import { PageTransition } from "@/components/animation/PageTransition";
 
 export default function TypographyPage() {
 	return (

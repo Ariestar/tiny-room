@@ -34,8 +34,8 @@ export type { LoadingProps } from "./Loading";
 export { default as Checkbox } from "./Checkbox";
 export type { CheckboxProps } from "./Checkbox";
 
-export { default as Navigation } from "./Navigation";
-export type { NavigationProps, NavigationItem } from "./Navigation";
+export { default as Navigation } from "../layout/Navigation";
+export type { NavigationProps, NavigationItem } from "../layout/Navigation";
 
 // 动画组件
 export {
@@ -48,8 +48,8 @@ export {
 	ScaleIn,
 	BounceIn,
 	RotateIn,
-} from "./AnimatedDiv";
-export type { AnimatedDivProps, AnimationPreset } from "./AnimatedDiv";
+} from "../animation/AnimatedDiv";
+export type { AnimatedDivProps, AnimationPreset } from "../animation/AnimatedDiv";
 
 export {
 	AnimatedList,
@@ -58,8 +58,8 @@ export {
 	WaveList,
 	ScaleList,
 	RotateList,
-} from "./AnimatedList";
-export type { AnimatedListProps, ListAnimationType } from "./AnimatedList";
+} from "../animation/AnimatedList";
+export type { AnimatedListProps, ListAnimationType } from "../animation/AnimatedList";
 
 export {
 	PageTransition,
@@ -70,18 +70,18 @@ export {
 	SlideDownTransition,
 	RotateTransition,
 	FlipTransition,
-} from "./PageTransition";
-export type { PageTransitionProps, PageTransitionType } from "./PageTransition";
+} from "../animation/PageTransition";
+export type { PageTransitionProps, PageTransitionType } from "../animation/PageTransition";
 
 // 动画工具函数和预设
 export * from "@/lib/animations";
 
 // 导航组件
-export { default as TopNavigation } from "./TopNavigation";
+export { default as TopNavigation } from "../layout/TopNavigation";
 
 // 表单组件
-export * from "./SettingsForm";
+export * from "../feature/settings/SettingsForm";
 
 // 新增卡片组件
-export * from "./ApiKeyCard";
-export * from "./MaintenanceCard";
+export * from "../feature/settings/ApiKeyCard";
+export * from "../feature/dashboard/MaintenanceCard";
