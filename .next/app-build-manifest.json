@@ -6,35 +6,36 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
+    "/(dev)/ui-showcase/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(dev)/ui-showcase/page.js"
+    ],
+    "/(dev)/ui-showcase/components/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(dev)/ui-showcase/components/page.js"
+    ],
     "/(admin)/dashboard/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(admin)/dashboard/layout.js"
-    ],
-    "/(admin)/dashboard/blog/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(admin)/dashboard/blog/page.js"
     ],
     "/(admin)/dashboard/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(admin)/dashboard/page.js"
     ],
-    "/(admin)/dashboard/settings/page": [
+    "/(admin)/dashboard/blog/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(admin)/dashboard/settings/page.js"
+      "static/chunks/app/(admin)/dashboard/blog/page.js"
     ],
-    "/api/auth/[...nextauth]/route": [
+    "/(admin)/dashboard/blog/edit/[slug]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/auth/[...nextauth]/route.js"
-    ],
-    "/(admin)/dashboard/login/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(admin)/dashboard/login/page.js"
+      "static/css/app/(admin)/dashboard/blog/edit/[slug]/page.css",
+      "static/chunks/app/(admin)/dashboard/blog/edit/[slug]/page.js"
     ]
   }
 }

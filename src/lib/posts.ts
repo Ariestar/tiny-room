@@ -2,7 +2,6 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
-import gfm from "remark-gfm";
 import html from "remark-html";
 
 const postsDirectory = path.join(process.cwd(), "posts");
@@ -11,11 +10,14 @@ export function getSortedPostsData() {
 	// Get file names under /posts
 	const fileNames = fs.readdirSync(postsDirectory);
 	const allPostsData = fileNames.map(fileName => {
+		// Decode URI component to handle non-ASCII characters
+		const decodedFileName = decodeURIComponent(fileName);
 		// Remove ".md" from file name to get id
-		const id = fileName.replace(/\.md$/, "");
+		const slug = decodedFileName.replace(/\.md$/, "");
 
 		// Read markdown file as string
-		const fullPath = path.join(postsDirectory, fileName);
+		const fullPath = path.join(postsDirectory, decodedFileName);
+		const stats = fs.statSync(fullPath); // Get file stats
 		const fileContents = fs.readFileSync(fullPath, "utf8");
 
 		// Use gray-matter to parse the post metadata section
@@ -23,8 +25,10 @@ export function getSortedPostsData() {
 
 		// Combine the data with the id
 		return {
-			id,
-			...(matterResult.data as { date: string; title: string }),
+			slug,
+			title: slug, // Use filename as title
+			date: stats.birthtime.toISOString(), // Use file creation date
+			status: (matterResult.data as { status?: string }).status || "draft",
 		};
 	});
 	// Sort posts by date
@@ -37,32 +41,51 @@ export function getSortedPostsData() {
 	});
 }
 
-export function getAllPostIds() {
+export function getAllPostSlugs() {
 	const fileNames = fs.readdirSync(postsDirectory);
+
+	// Returns an array that looks like:
+	// [
+	//   {
+	//     params: {
+	//       slug: 'ssg-ssr'
+	//     }
+	//   },
+	//   {
+	//     params: {
+	//       slug: 'pre-rendering'
+	//     }
+	//   }
+	// ]
 	return fileNames.map(fileName => {
 		return {
 			params: {
-				id: fileName.replace(/\.md$/, ""),
+				slug: decodeURIComponent(fileName).replace(/\.md$/, ""),
 			},
 		};
 	});
 }
 
-export async function getPostData(id: string) {
-	const fullPath = path.join(postsDirectory, `${id}.md`);
+export async function getPostDataBySlug(slug: string) {
+	const decodedSlug = decodeURIComponent(slug);
+	const fullPath = path.join(postsDirectory, `${decodedSlug}.md`);
+	const stats = fs.statSync(fullPath); // Get file stats
 	const fileContents = fs.readFileSync(fullPath, "utf8");
 
 	// Use gray-matter to parse the post metadata section
 	const matterResult = matter(fileContents);
 
 	// Use remark to convert markdown into HTML string
-	const processedContent = await remark().use(gfm).use(html).process(matterResult.content);
+	const processedContent = await remark().use(html).process(matterResult.content);
 	const contentHtml = processedContent.toString();
 
 	// Combine the data with the id and contentHtml
 	return {
-		id,
+		slug: decodedSlug,
+		title: decodedSlug, // Use filename as title
+		date: stats.birthtime.toISOString(), // Use file creation date
 		contentHtml,
-		...(matterResult.data as { date: string; title: string }),
+		content: matterResult.content,
+		status: (matterResult.data as { status?: string }).status || "draft",
 	};
 }

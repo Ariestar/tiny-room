@@ -283,7 +283,7 @@
         "dependencies": [
           6
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -291,7 +291,7 @@
             "description": "Create the basic file structure and routing for the `/dashboard/blog` page.",
             "dependencies": [],
             "details": "Create the necessary directories and files for the blog dashboard page. Implement basic routing to access the page.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -302,7 +302,7 @@
               1
             ],
             "details": "Configure a file system watcher to monitor the Obsidian vault directory for file changes (creation, modification, deletion).",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -313,7 +313,7 @@
               2
             ],
             "details": "Create a table or list view to display articles. Implement pagination to handle a large number of articles. Add filtering options based on title, date, or other relevant criteria.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -324,7 +324,7 @@
               3
             ],
             "details": "Choose and integrate a suitable Markdown editor component (e.g., CodeMirror, TinyMCE with Markdown plugin). Configure the editor to allow users to create and edit article content.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -335,7 +335,7 @@
               4
             ],
             "details": "Implement a UI element (e.g., dropdown, toggle) to allow users to set the publishing status of an article. Update the database or file metadata to reflect the selected status.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -358,7 +358,7 @@
             "description": "Set up the basic HTML structure, CSS styling, and routing for the `/dashboard/projects` page. Include placeholders for project list, pagination, and filtering components.",
             "dependencies": [],
             "details": "Define the layout using HTML and CSS. Implement basic routing to access the page. Add placeholders for the project list, pagination controls, and filtering options.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -513,7 +513,7 @@
     ],
     "metadata": {
       "created": "2025-07-01T17:41:17.110Z",
-      "updated": "2025-07-05T14:04:53.742Z",
+      "updated": "2025-07-06T04:12:11.800Z",
       "description": "Tasks for master context"
     }
   }
