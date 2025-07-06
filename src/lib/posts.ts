@@ -66,18 +66,30 @@ export function getAllPostSlugs() {
 	const fileNames = fs.readdirSync(postsDirectory);
 	return fileNames.map(fileName => {
 		return {
-			slug: fileName.replace(/\.md$/, ""),
+			slug: customSlugify(fileName.replace(/\.md$/, "")),
 		};
 	});
 }
 
 export const getPostBySlug = cache(async (slug: string) => {
-	const fullPath = path.join(postsDirectory, `${slug}.md`);
+	const fileNames = fs.readdirSync(postsDirectory);
 
-	if (!fs.existsSync(fullPath)) {
+	// Create a set of all available slugs for quick lookups.
+	const allSlugs = new Set(
+		fileNames.map(fileName => customSlugify(fileName.replace(/\.md$/, "")))
+	);
+
+	const matchingFileName = fileNames.find(fileName => {
+		const slugFromFileName = customSlugify(fileName.replace(/\.md$/, ""));
+		return slugFromFileName === slug;
+	});
+
+	if (!matchingFileName) {
 		console.warn(`Post not found for slug: ${slug}`);
 		return null;
 	}
+
+	const fullPath = path.join(postsDirectory, matchingFileName);
 
 	const fileContents = fs.readFileSync(fullPath, "utf8");
 	const matterResult = matter(fileContents);
@@ -86,7 +98,13 @@ export const getPostBySlug = cache(async (slug: string) => {
 	const contentHtml = await unified()
 		.use(remarkParse)
 		.use(remarkWikiLink, {
-			pageResolver: (name: string) => [customSlugify(name)],
+			pageResolver: (name: string) => {
+				const potentialSlug = customSlugify(name);
+				if (allSlugs.has(potentialSlug)) {
+					return [potentialSlug];
+				}
+				return [];
+			},
 			hrefTemplate: (permalink: string) => `/blog/${permalink}`,
 			aliasDivider: "|",
 		})
