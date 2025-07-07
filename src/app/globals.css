@@ -566,3 +566,26 @@ html.dark {
 .prose .callout {
     @apply mt-6 flex items-start rounded-lg border p-4;
 }
+
+/* 代码块样式优化 */
+.prose code:not(pre code) {
+    background-color: var(--tw-prose-code-bg);
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+}
+
+.prose pre {
+    background-color: var(--tw-prose-pre-bg) !important;
+    border: 1px solid rgb(229, 231, 235);
+}
+
+/* 深色模式下的代码块样式 */
+.dark .prose code:not(pre code) {
+    background-color: var(--tw-prose-invert-code-bg);
+}
+
+.dark .prose pre {
+    background-color: var(--tw-prose-invert-pre-bg) !important;
+    border: 1px solid rgb(75, 85, 99);
+}

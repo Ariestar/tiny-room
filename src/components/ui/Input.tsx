@@ -74,7 +74,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
 		// 基础样式
 		const baseStyles = [
-			"w-full transition-all duration-fast ease-in-out",
+			"w-full ",
 			"focus:outline-none",
 			"disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-muted",
 			"placeholder:text-muted-foreground",
