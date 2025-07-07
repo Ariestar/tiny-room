@@ -90,7 +90,11 @@ export const getPostBySlug = cache(async (slug: string) => {
 		.use(rehypeRaw)
 		.use(rehypeKatex)
 		.use(rehypePrettyCode, {
-			theme: "github-dark",
+			theme: {
+				light: "github-light",
+				dark: "github-dark",
+			},
+			keepBackground: false,
 		})
 		.use(rehypeStringify)
 		.process(content);

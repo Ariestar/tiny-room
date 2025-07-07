@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+	darkMode: ["class"],
 	content: [
 		"./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
 		"./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -189,9 +190,8 @@ module.exports = {
 						"--tw-prose-quote-borders": "hsl(var(--border))",
 						"--tw-prose-captions": "hsl(var(--muted-foreground))",
 						"--tw-prose-code": "hsl(var(--primary))",
-						"--tw-prose-pre-code": "rgb(55, 65, 81)", // 浅色模式：深灰文字，确保足够对比度
-						"--tw-prose-pre-bg": "rgb(248, 249, 250)", // 浅色模式：浅灰背景
-						"--tw-prose-code-bg": "rgb(243, 244, 246)", // 行内代码背景
+						"--tw-prose-pre-code": "hsl(var(--muted-foreground))",
+						"--tw-prose-pre-bg": "hsl(var(--muted))",
 						"--tw-prose-th-borders": "hsl(var(--border))",
 						"--tw-prose-td-borders": "hsl(var(--border))",
 						// Invert styles are for dark mode. We are using the same variables
@@ -208,9 +208,8 @@ module.exports = {
 						"--tw-prose-invert-quote-borders": "hsl(var(--border))",
 						"--tw-prose-invert-captions": "hsl(var(--muted-foreground))",
 						"--tw-prose-invert-code": "hsl(var(--primary))",
-						"--tw-prose-invert-pre-code": "rgb(209, 213, 219)", // 深色模式：浅灰文字，确保足够对比度
-						"--tw-prose-invert-pre-bg": "rgb(31, 41, 55)", // 深色模式：深灰背景
-						"--tw-prose-invert-code-bg": "rgb(55, 65, 81)", // 深色模式行内代码背景
+						"--tw-prose-invert-pre-code": "hsl(var(--muted-foreground))",
+						"--tw-prose-invert-pre-bg": "hsl(var(--muted))",
 						"--tw-prose-invert-th-borders": "hsl(var(--border))",
 						"--tw-prose-invert-td-borders": "hsl(var(--border))",
 					},
@@ -270,6 +269,7 @@ module.exports = {
 				"button-press": "buttonPress 150ms ease-out",
 				"card-hover": "cardHover 300ms ease-out",
 				"glow-pulse": "glowPulse 2s ease-in-out infinite",
+				"accordion-up": "accordion-up 0.2s ease-out",
 			},
 
 			keyframes: {
@@ -387,5 +387,5 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [require("@tailwindcss/typography")],
+	plugins: [require("@tailwindcss/typography"), require("tailwind-scrollbar")],
 };
