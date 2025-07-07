@@ -58,7 +58,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
 
 		// 基础样式
 		const baseStyles =
-			"rounded border-2 text-brand-500 transition-all duration-200 focus:ring-2 focus:ring-brand-300 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
+			"rounded border-2 text-brand-500 transition-all duration-fast focus:ring-2 focus:ring-brand-300 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
 
 		// 状态样式
 		const stateStyles = error

@@ -68,7 +68,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
 		// 基础样式
 		const baseStyles = [
-			"font-medium transition-all duration-200 ease-in-out",
+			"font-medium transition-all duration-fast ease-in-out",
 			"focus:outline-none",
 			"disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
 			"relative overflow-hidden",

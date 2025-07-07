@@ -54,7 +54,7 @@ function FeaturesSection() {
 					</p>
 				</div>
 				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-					<div className='bg-card rounded-3xl p-6 shadow-soft hover:shadow-medium transition-all duration-300 animate-card-hover cursor-pointer border border-border'>
+					<div className='bg-card rounded-3xl p-6 shadow-soft hover:shadow-medium transition-all duration-normal animate-card-hover cursor-pointer border border-border'>
 						<div className='w-12 h-12 bg-primary rounded-2xl mb-4 flex items-center justify-center'>
 							<Component className='w-6 h-6 text-primary-foreground' />
 						</div>
@@ -64,7 +64,7 @@ function FeaturesSection() {
 						</p>
 					</div>
 
-					<div className='bg-card rounded-3xl p-6 shadow-soft hover:shadow-medium transition-all duration-300 animate-card-hover cursor-pointer border border-border'>
+					<div className='bg-card rounded-3xl p-6 shadow-soft hover:shadow-medium transition-all duration-normal animate-card-hover cursor-pointer border border-border'>
 						<div className='w-12 h-12 bg-accent-purple rounded-2xl mb-4 flex items-center justify-center'>
 							<Sparkles className='w-6 h-6 text-white' />
 						</div>
@@ -74,7 +74,7 @@ function FeaturesSection() {
 						</p>
 					</div>
 
-					<div className='bg-card rounded-3xl p-6 shadow-soft hover:shadow-medium transition-all duration-300 animate-card-hover cursor-pointer border border-border'>
+					<div className='bg-card rounded-3xl p-6 shadow-soft hover:shadow-medium transition-all duration-normal animate-card-hover cursor-pointer border border-border'>
 						<div className='w-12 h-12 bg-accent-pink rounded-2xl mb-4 flex items-center justify-center'>
 							<Type className='w-6 h-6 text-white' />
 						</div>

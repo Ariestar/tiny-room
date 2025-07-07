@@ -102,6 +102,25 @@
         --gradient-end: #764ba2;
         --gradient-accent-start: #f093fb;
         --gradient-accent-end: #f5576c;
+
+        /* 动画时间系统 - 统一管理所有动画速度 */
+        --animation-fast: 150ms;
+        /* 微交互、按钮状态 */
+        --animation-normal: 300ms;
+        /* 标准过渡、悬停效果 */
+        --animation-slow: 500ms;
+        /* 页面转场、复杂动画 */
+        --animation-very-slow: 800ms;
+        /* 大型动画、强调效果 */
+
+        /* 主题切换专用动画时间 */
+        --theme-transition: var(--animation-normal);
+
+        /* 缓动函数 */
+        --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        --ease-in: cubic-bezier(0.4, 0, 1, 1);
+        --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+        --ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
     .dark {
@@ -183,7 +202,8 @@
 
     /* 按钮基础样式 */
     .btn {
-        @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+        @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+        transition: all var(--animation-fast) var(--ease-out);
     }
 
     .btn-primary {
@@ -204,12 +224,14 @@
     }
 
     .card-hover {
-        @apply card hover:shadow-medium hover:-translate-y-1 transition-all duration-300;
+        @apply card hover:shadow-medium hover:-translate-y-1;
+        transition: all var(--animation-normal) var(--ease-out);
     }
 
     /* 输入框基础样式 */
     .input {
-        @apply w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-300 focus:ring-2 focus:ring-brand-100 outline-none transition-all duration-200 bg-white text-gray-900 placeholder-gray-400;
+        @apply w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-300 focus:ring-2 focus:ring-brand-100 outline-none bg-white text-gray-900 placeholder-gray-400;
+        transition: all var(--animation-fast) var(--ease-out);
     }
 
     /* 文本样式工具类 */
@@ -274,13 +296,59 @@
         @apply focus:outline-none focus:ring-2 focus:ring-accent-purple-300 focus:ring-offset-2;
     }
 
+    /* 统一动画系统 */
+    .transition-fast {
+        transition-duration: var(--animation-fast);
+        transition-timing-function: var(--ease-out);
+    }
+
+    .transition-normal {
+        transition-duration: var(--animation-normal);
+        transition-timing-function: var(--ease-out);
+    }
+
+    .transition-slow {
+        transition-duration: var(--animation-slow);
+        transition-timing-function: var(--ease-out);
+    }
+
+    .transition-very-slow {
+        transition-duration: var(--animation-very-slow);
+        transition-timing-function: var(--ease-out);
+    }
+
+    /* 主题切换专用过渡 */
+    .transition-theme {
+        transition: all var(--theme-transition) var(--ease-out);
+    }
+
+    /* 常用组合 */
+    .transition-colors-fast {
+        transition: color var(--animation-fast) var(--ease-out),
+            background-color var(--animation-fast) var(--ease-out),
+            border-color var(--animation-fast) var(--ease-out);
+    }
+
+    .transition-transform-normal {
+        transition: transform var(--animation-normal) var(--ease-out),
+            opacity var(--animation-normal) var(--ease-out);
+    }
+
+    .transition-all-normal {
+        transition: all var(--animation-normal) var(--ease-out);
+    }
+
     /* 动画增强 */
     .animate-on-scroll {
-        @apply opacity-0 translate-y-8 transition-all duration-700 ease-out;
+        opacity: 0;
+        transform: translateY(2rem);
+        transition: opacity var(--animation-very-slow) var(--ease-out),
+            transform var(--animation-very-slow) var(--ease-out);
     }
 
     .animate-on-scroll.in-view {
-        @apply opacity-100 translate-y-0;
+        opacity: 1;
+        transform: translateY(0);
     }
 
     /* 渐变文本效果 */

@@ -73,3 +73,34 @@ async function Page({ params }: { params: Promise<{ slug: string }> }) {
 
 -   **安全处理挂载状态**：为了避免 "hydration mismatch" 错误，必须使用 `useState` 和 `useEffect` 来创建一个 `mounted` 状态，确保依赖 `window` 或 `theme` 的逻辑只在组件挂载到客户端后执行。
 -   **优选动画库**：对于依赖状态变化的复杂动画（如旋转、淡入淡出），应优先使用 `framer-motion` 这样的专业动画库，而不是手写 CSS `transition`。它提供了更精细的控制，能更好地处理组件的进入和退出动画，代码也更健壮。
+
+## 2025-07-16: 动画系统统一化重构
+
+### 问题识别
+
+项目中动画速度不统一，存在大量硬编码的 `duration-200`、`duration-300` 等 Tailwind 类，以及 Framer Motion 中的 `duration: 0.2` 等写法。这导致用户体验不一致，特别是在主题切换时各组件的动画速度不同步。
+
+### 解决方案设计
+
+1. **CSS 变量统一管理**：在 `globals.css` 中定义标准动画时间变量
+
+    ```css
+    :root {
+    	--animation-fast: 150ms; /* 微交互、按钮状态 */
+    	--animation-normal: 300ms; /* 标准过渡、悬停效果 */
+    	--animation-slow: 500ms; /* 页面转场、复杂动画 */
+    	--animation-very-slow: 800ms; /* 大型动画、强调效果 */
+    	--theme-transition: var(--animation-normal);
+    }
+    ```
+
+2. **Tailwind 配置同步**：在 `tailwind.config.js` 中添加自定义 duration 类，对应标准时间值
+
+3. **工具类封装**：创建组合性的过渡类，如 `transition-theme`、`transition-all-normal` 等
+
+### 关键经验
+
+-   **动画时间语义化**：`fast/normal/slow/very-slow` 比数字更清晰，便于理解和维护
+-   **主题切换优化**：专门的 `--theme-transition` 变量确保主题切换时所有组件动画同步
+-   **渐进式替换**：先建立标准，再逐步替换硬编码值，避免一次性大面积修改引入风险
+-   **多技术栈统一**：确保 CSS transition、Tailwind 类、Framer Motion 都使用相同的时间标准

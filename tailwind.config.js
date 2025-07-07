@@ -239,26 +239,34 @@ module.exports = {
 				"glow-lg": "0 0 40px rgba(82, 82, 82, 0.15)", // 改为灰色光晕
 			},
 
+			// 统一动画时间系统
+			transitionDuration: {
+				fast: "150ms", // 微交互、按钮状态
+				normal: "300ms", // 标准过渡、悬停效果
+				slow: "500ms", // 页面转场、复杂动画
+				"very-slow": "800ms", // 大型动画、强调效果
+			},
+
 			// 现代化动画系统
 			animation: {
-				// 基础动画
-				"fade-in": "fadeIn 0.6s ease-out",
-				"fade-out": "fadeOut 0.4s ease-in",
-				"slide-up": "slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
-				"slide-down": "slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
-				"slide-left": "slideLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
-				"slide-right": "slideRight 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+				// 基础动画 - 使用统一时间
+				"fade-in": "fadeIn 500ms ease-out",
+				"fade-out": "fadeOut 300ms ease-in",
+				"slide-up": "slideUp 500ms cubic-bezier(0.16, 1, 0.3, 1)",
+				"slide-down": "slideDown 500ms cubic-bezier(0.16, 1, 0.3, 1)",
+				"slide-left": "slideLeft 500ms cubic-bezier(0.16, 1, 0.3, 1)",
+				"slide-right": "slideRight 500ms cubic-bezier(0.16, 1, 0.3, 1)",
 
 				// 高级动画
-				"scale-in": "scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
-				"scale-out": "scaleOut 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-				"bounce-soft": "bounceSoft 1s ease-in-out",
+				"scale-in": "scaleIn 500ms cubic-bezier(0.16, 1, 0.3, 1)",
+				"scale-out": "scaleOut 300ms cubic-bezier(0.16, 1, 0.3, 1)",
+				"bounce-soft": "bounceSoft 800ms ease-in-out",
 				float: "float 3s ease-in-out infinite",
 				"gradient-shift": "gradientShift 8s ease-in-out infinite",
 
 				// 微交互动画
-				"button-press": "buttonPress 0.1s ease-out",
-				"card-hover": "cardHover 0.3s ease-out",
+				"button-press": "buttonPress 150ms ease-out",
+				"card-hover": "cardHover 300ms ease-out",
 				"glow-pulse": "glowPulse 2s ease-in-out infinite",
 			},
 

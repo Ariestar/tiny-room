@@ -10,12 +10,12 @@ export const easings = {
 	springBouncy: { type: "spring", damping: 15, stiffness: 200 },
 } as const;
 
-// 持续时间预设
+// 持续时间预设 - 与CSS变量保持一致
 export const durations = {
-	fast: 0.15,
-	normal: 0.3,
-	slow: 0.5,
-	verySlow: 0.8,
+	fast: 0.15, // 150ms - 微交互、按钮状态
+	normal: 0.3, // 300ms - 标准过渡、悬停效果
+	slow: 0.5, // 500ms - 页面转场、复杂动画
+	verySlow: 0.8, // 800ms - 大型动画、强调效果
 } as const;
 
 // 基础动画变体

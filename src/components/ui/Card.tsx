@@ -71,7 +71,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 	) => {
 		// 基础样式
 		const baseStyles = [
-			"rounded-2xl overflow-hidden transition-all duration-300",
+			"rounded-2xl overflow-hidden transition-all duration-normal",
 			clickable ? "cursor-pointer" : "",
 		];
 

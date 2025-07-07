@@ -79,7 +79,7 @@ export function ThemeSwitcher() {
 					initial={{ rotate: -90, scale: 0, opacity: 0 }}
 					animate={{ rotate: 0, scale: 1, opacity: 1 }}
 					exit={{ rotate: 90, scale: 0, opacity: 0 }}
-					transition={{ duration: 0.2 }}
+					transition={{ duration: 0.15 }}
 					className='flex items-center justify-center'
 				>
 					{theme === "dark" ? (

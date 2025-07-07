@@ -62,7 +62,7 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
 	) => {
 		// 基础样式
 		const baseStyles = [
-			"flex transition-all duration-200",
+			"flex transition-all duration-fast",
 			sticky
 				? "sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border"
 				: "",
@@ -114,7 +114,7 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
 
 			// 项目基础样式
 			const itemBaseStyles = [
-				"inline-flex items-center gap-2 transition-all duration-200",
+				"inline-flex items-center gap-2 transition-all duration-fast",
 				"focus:outline-none focus:ring-2 focus:ring-brand-300 focus:ring-offset-2",
 				item.disabled
 					? "opacity-50 cursor-not-allowed pointer-events-none"
