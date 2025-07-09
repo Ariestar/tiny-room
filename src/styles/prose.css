@@ -1,3 +1,7 @@
+.prose {
+    font-family: var(--font-lora), var(--font-lxgw-wenkai), sans-serif;
+}
+
 .prose pre {
     @apply scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 dark:scrollbar-track-gray-800 dark:scrollbar-thumb-gray-600;
 }
