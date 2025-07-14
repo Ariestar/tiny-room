@@ -7,6 +7,7 @@ import { BentoCard, BentoGrid } from "@/components/ui/BentoGrid";
 import Badge from "@/components/ui/Badge";
 import { useState } from "react";
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
+import { useScrollAnimation } from "@/lib/useScrollAnimation";
 
 type Post = ReturnType<typeof getSortedPostsData>[number];
 
@@ -26,7 +27,7 @@ const PostCard = ({ post }: { post: Post }) => (
 		<div className='flex-grow flex flex-col p-1'>
 			<h2 className='text-xl font-semibold mb-2 flex-grow'>{post.title}</h2>
 			<div className='flex flex-wrap gap-2 mb-3'>
-				{post.tags.map(tag => (
+				{post.tags.map((tag: string) => (
 					<Badge key={tag} variant='secondary'>
 						{tag}
 					</Badge>
@@ -74,7 +75,7 @@ const FeaturedPostCard = ({ post }: { post: Post }) => (
 				{post.title}
 			</h2>
 			<div className='flex flex-wrap gap-2 mb-3'>
-				{post.tags.map(tag => (
+				{post.tags.map((tag: string) => (
 					<Badge key={tag} variant={post.coverImage ? "default" : "secondary"}>
 						{tag}
 					</Badge>
@@ -103,19 +104,7 @@ export default function BlogPageClient({ posts }: { posts: Post[] }) {
 	const featuredPost = posts[0];
 	const otherPosts = posts.slice(1);
 
-	const [isScrolled, setIsScrolled] = useState(false);
-	const { scrollY } = useScroll();
-
-	useMotionValueEvent(scrollY, "change", latest => {
-		setIsScrolled(latest > 150);
-	});
-
-	const scrollToTop = () => {
-		window.scrollTo({
-			top: 0,
-			behavior: "smooth",
-		});
-	};
+	const { isScrolled, scrollToTop } = useScrollAnimation();
 
 	const gridVariants = {
 		hidden: { opacity: 0 },

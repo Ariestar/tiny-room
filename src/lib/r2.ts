@@ -2,6 +2,7 @@
 
 import { S3Client, ListObjectsV2Command, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { imageSize } from "image-size";
 
 const s3Client = new S3Client({
 	region: "auto",
@@ -36,10 +37,17 @@ export async function listImages() {
 				});
 				// Generate a pre-signed URL valid for 1 hour
 				const url = await getSignedUrl(s3Client, getCommand, { expiresIn: 3600 });
+
+				// Fetch image buffer and determine dimensions
+				const imageBuffer = await fetch(url).then(res => res.arrayBuffer());
+				const dimensions = imageSize(Buffer.from(imageBuffer));
+
 				return {
 					key: image.Key,
 					url: url,
 					uploadedAt: image.LastModified,
+					width: dimensions.width,
+					height: dimensions.height,
 				};
 			})
 		);

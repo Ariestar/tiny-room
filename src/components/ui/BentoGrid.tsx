@@ -11,7 +11,7 @@ export const BentoGrid = ({
 	return (
 		<motion.div
 			className={cn(
-				"grid md:auto-rows-[minmax(18rem,auto)] grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto ",
+				"grid md:auto-rows-[minmax(18rem,auto)] grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto grid-flow-row-dense",
 				className
 			)}
 			{...props}
