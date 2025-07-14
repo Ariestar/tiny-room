@@ -9,6 +9,7 @@ export function Header() {
 			<Link href='/' className='font-bold text-lg text-foreground'>
 				Tiny Room
 			</Link>
+
 			<ThemeSwitcher />
 		</header>
 	);

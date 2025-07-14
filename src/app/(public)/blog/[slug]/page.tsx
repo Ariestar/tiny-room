@@ -1,6 +1,7 @@
 import { getAllPostSlugs, getPostBySlug } from "@/lib/posts";
 import { notFound } from "next/navigation";
 import "katex/dist/katex.min.css";
+import "@/styles/prose.css";
 
 export async function generateStaticParams() {
 	const paths = getAllPostSlugs();
@@ -33,12 +34,18 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 	}
 
 	return (
-		<article className='container mx-auto px-4 py-8 prose lg:prose-xl dark:prose-invert'>
-			<h1>{post.title}</h1>
-			<div className='text-muted-foreground mb-8'>
-				<time dateTime={post.date}>{new Date(post.date).toLocaleDateString()}</time>
-			</div>
-			<div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
-		</article>
+		<div>
+			<article className='container mx-auto px-4 py-8 prose lg:prose-xl dark:prose-invert'>
+				<div className='not-prose mb-8'></div>
+				<h1 className='text-center text-6xl'>{post.title}</h1>
+				<div className='text-muted-foreground mb-8'>
+					<time dateTime={post.date}>{new Date(post.date).toLocaleDateString()}</time>
+				</div>
+				<div
+					className='font-lxgw text-xl'
+					dangerouslySetInnerHTML={{ __html: post.contentHtml }}
+				/>
+			</article>
+		</div>
 	);
 }

@@ -70,10 +70,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 		ref
 	) => {
 		// 基础样式
-		const baseStyles = [
-			"rounded-2xl overflow-hidden transition-all duration-fast",
-			clickable ? "cursor-pointer" : "",
-		];
+		const baseStyles = ["rounded-2xl overflow-hidden", clickable ? "cursor-pointer" : ""];
 
 		// 变体样式
 		const variantStyles = {

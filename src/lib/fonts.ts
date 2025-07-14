@@ -1,11 +1,4 @@
-import { Lora } from "next/font/google";
 import localFont from "next/font/local";
-
-export const lora = Lora({
-	subsets: ["latin"],
-	display: "swap",
-	variable: "--font-lora",
-});
 
 export const lxgwWenkai = localFont({
 	src: [

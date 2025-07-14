@@ -3,7 +3,8 @@ import { Inter } from "next/font/google";
 import { ReactNode } from "react";
 import { ThemeRegistry } from "@/components/layout/ThemeRegistry";
 import { Header } from "@/components/layout/Header";
-import "./globals.css";
+import "@/styles/globals.css";
+import { lxgwWenkai } from "@/lib/fonts";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					crossOrigin='anonymous'
 				/>
 			</head>
-			<body className={`${inter.className} bg-background text-foreground antialiased`}>
+			<body
+				className={`${inter.className} ${lxgwWenkai.variable} bg-background text-foreground antialiased`}
+			>
 				<ThemeRegistry attribute='class' defaultTheme='system' enableSystem>
 					<div className='relative flex min-h-dvh flex-col'>
 						<Header />

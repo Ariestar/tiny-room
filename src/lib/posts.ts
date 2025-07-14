@@ -13,8 +13,18 @@ import { cache } from "react";
 import rehypeRaw from "rehype-raw";
 import remarkWikiLink from "remark-wiki-link";
 import remarkCallout from "@r4ai/remark-callout";
+import readingTime from "reading-time";
+import remarkFlexibleMarkers from "remark-flexible-markers";
 
 const postsDirectory = path.join(process.cwd(), "posts");
+
+export type PostData = {
+	slug: string;
+	title: string;
+	date: string;
+	tags: string[];
+	contentHtml: string;
+};
 
 export function getSortedPostsData() {
 	// Get file names under /posts
@@ -36,9 +46,13 @@ export function getSortedPostsData() {
 		// Combine the data with the id
 		return {
 			slug,
-			title: slug, // Use filename as title
-			date: stats.birthtime.toISOString(), // Use file creation date
+			title: (matterResult.data as { title?: string }).title || slug,
+			date: (matterResult.data as { date?: string }).date || stats.birthtime.toISOString(),
 			status: (matterResult.data as { status?: string }).status || "draft",
+			description: (matterResult.data as { description?: string }).description || "",
+			tags: (matterResult.data as { tags?: string[] }).tags || [],
+			coverImage: (matterResult.data as { coverImage?: string }).coverImage || null,
+			readingTime: readingTime(fileContents).text,
 		};
 	});
 	// Sort posts by date
@@ -63,7 +77,7 @@ export function getAllPostSlugs() {
 	});
 }
 
-export const getPostBySlug = cache(async (slug: string) => {
+export const getPostBySlug = cache(async (slug: string): Promise<PostData | null> => {
 	const fullPath = path.join(postsDirectory, `${slug}.md`);
 
 	if (!fs.existsSync(fullPath)) {
@@ -84,6 +98,7 @@ export const getPostBySlug = cache(async (slug: string) => {
 			aliasDivider: "|",
 		})
 		.use(remarkGfm)
+		.use(remarkFlexibleMarkers)
 		.use(remarkCallout)
 		.use(remarkMath)
 		.use(remarkRehype, { allowDangerousHtml: true })

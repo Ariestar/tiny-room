@@ -406,7 +406,7 @@
         "dependencies": [
           6
         ],
-        "status": "pending",
+        "status": "in-progress",
         "subtasks": [
           {
             "id": 1,
@@ -414,7 +414,7 @@
             "description": "Set up the basic HTML structure and routing for the `/dashboard/gallery` page. Include placeholders for image display, upload controls, and album management.",
             "dependencies": [],
             "details": "Create the initial page layout, including header, navigation, and main content area. Define the basic structure for displaying images and albums.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -513,7 +513,7 @@
     ],
     "metadata": {
       "created": "2025-07-01T17:41:17.110Z",
-      "updated": "2025-07-07T02:40:47.211Z",
+      "updated": "2025-07-13T08:27:48.924Z",
       "description": "Tasks for master context"
     }
   }

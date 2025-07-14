@@ -1,7 +1,36 @@
-.prose {
-    font-family: var(--font-lora), var(--font-lxgw-wenkai), sans-serif;
+.prose p,
+.prose li,
+.prose ol,
+.prose ul,
+.prose a,
+.prose strong,
+.prose em,
+.prose b,
+.prose i,
+.prose blockquote,
+.prose pre,
+.prose table,
+.prose th,
+.prose td,
+.prose code,
+.prose pre,
+.prose blockquote,
+.prose hr,
+.prose img,
+.prose figure,
+.prose figcaption,
+.prose a,
+.prose strong,
+.prose em,
+.prose b,
+.prose i,
+.prose blockquote,
+.prose pre {
+    @apply text-2xl;
+    @apply text-foreground;
 }
 
+/* Custom typography styles for blog content */
 .prose pre {
     @apply scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 dark:scrollbar-track-gray-800 dark:scrollbar-thumb-gray-600;
 }

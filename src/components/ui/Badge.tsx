@@ -3,7 +3,15 @@ import { cn } from "@/lib/utils";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 	/** 徽章变体 */
-	variant?: "primary" | "secondary" | "destructive" | "success" | "warning" | "info" | "outline";
+	variant?:
+		| "default"
+		| "primary"
+		| "secondary"
+		| "destructive"
+		| "success"
+		| "warning"
+		| "info"
+		| "outline";
 	/** 徽章尺寸 */
 	size?: "sm" | "md" | "lg";
 	/** 是否为圆形徽章 */
@@ -33,6 +41,7 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
 
 		// 变体样式
 		const variantStyles = {
+			default: "border-transparent bg-primary text-primary-foreground focus:ring-primary",
 			primary: "border-transparent bg-primary text-primary-foreground focus:ring-primary",
 			secondary: "border-transparent bg-secondary text-secondary-foreground focus:ring-ring",
 			destructive:

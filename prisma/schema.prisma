@@ -24,6 +24,7 @@ model User {
   posts         Post[]
   projects      Project[]
   galleryItems  GalleryItem[]
+  albums        Album[]
 }
 
 model Account {
@@ -91,9 +92,28 @@ model GalleryItem {
   title       String
   description String?  @db.Text
   imageUrl    String
+  size        Int?      // Size in bytes
+  format      String?   // e.g., "jpeg", "png"
   published   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
   authorId    String
   author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  albumId     String?
+  album       Album?   @relation(fields: [albumId], references: [id], onDelete: SetNull)
+}
+
+model Album {
+  id          String   @id @default(cuid())
+  name        String
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  items       GalleryItem[]
 }
