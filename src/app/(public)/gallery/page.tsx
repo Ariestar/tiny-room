@@ -1,14 +1,15 @@
 "use client";
 
 import { listImages } from "@/lib/r2";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 import Image from "next/image";
-import { BentoGrid, BentoCard } from "@/components/ui/BentoGrid";
+import Masonry from "react-masonry-css";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FullscreenCarousel } from "@/components/feature/gallery/FullscreenCarousel";
 import { useScrollAnimation } from "@/lib/useScrollAnimation";
+import Loading from "@/components/ui/Loading";
 
 // Define and export a type for the image data
 export type R2Image = {
@@ -19,17 +20,7 @@ export type R2Image = {
 	height: number;
 };
 
-// Determines the span of a card based on image dimensions
-const getCardSizeClass = (width: number, height: number): string => {
-	// Landscape image
-	if (width > height) return "md:col-span-2";
-	// Portrait image
-	if (height > width) return "md:row-span-2";
-	// Square or near-square image
-	return "md:col-span-1 md:row-span-1";
-};
-
-export default function GalleryPage() {
+function GalleryClient() {
 	const [images, setImages] = useState<R2Image[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [preloadedBlobs, setPreloadedBlobs] = useState<Record<string, string>>({});
@@ -53,10 +44,9 @@ export default function GalleryPage() {
 		router.push(`${pathname}?${params.toString()}` as any, { scroll: false });
 	};
 
-	// Preload image and store it as a blob
 	const preloadImage = useCallback(
 		async (key: string, url: string) => {
-			if (preloadedBlobs[key]) return; // Already preloaded
+			if (preloadedBlobs[key]) return;
 
 			try {
 				const response = await fetch(url);
@@ -74,7 +64,6 @@ export default function GalleryPage() {
 		async function fetchImages() {
 			setLoading(true);
 			const fetchedImages = await listImages();
-			// Ensure all images have a key
 			const validImages = fetchedImages.filter(
 				(img: R2Image | null): img is R2Image => img !== null && typeof img.key === "string"
 			);
@@ -84,7 +73,6 @@ export default function GalleryPage() {
 		fetchImages();
 	}, []);
 
-	// Add keyboard support for closing the modal
 	useEffect(() => {
 		const onKeyDown = (e: KeyboardEvent) => {
 			if (e.key === "Escape") handleClose();
@@ -93,21 +81,31 @@ export default function GalleryPage() {
 		return () => window.removeEventListener("keydown", onKeyDown);
 	}, []);
 
-	// Lock body scroll when modal is open
 	useEffect(() => {
 		if (photoId) {
 			document.body.classList.add("overflow-hidden");
 		} else {
 			document.body.classList.remove("overflow-hidden");
 		}
-		// Cleanup on unmount
 		return () => {
 			document.body.classList.remove("overflow-hidden");
 		};
 	}, [photoId]);
 
+	const breakpointColumnsObj = {
+		default: 3, // More columns on larger screens for density
+		1500: 4,
+		1100: 3,
+		700: 2,
+		500: 1,
+	};
+
 	if (loading) {
-		return <p>Loading gallery...</p>;
+		return (
+			<div className='flex items-center justify-center h-[80vh]'>
+				<Loading size='xl' />
+			</div>
+		);
 	}
 
 	if (!images || images.length === 0) {
@@ -124,33 +122,37 @@ export default function GalleryPage() {
 					</motion.span>
 				)}
 			</h1>
-			<BentoGrid className='mx-auto max-w-full'>
+			<Masonry
+				breakpointCols={breakpointColumnsObj}
+				className='flex w-auto -ml-2' // Reduced gap
+				columnClassName='pl-2 bg-clip-padding' // Reduced gap
+			>
 				{images.map((image, i) => (
-					<BentoCard
+					<motion.div
 						key={image.key}
-						className={cn(
-							"overflow-hidden cursor-pointer",
-							getCardSizeClass(image.width, image.height)
-						)}
+						className='mb-2' // Reduced gap
 						onClick={() => handleImageClick(image.key)}
 						onViewportEnter={() => preloadImage(image.key, image.url)}
 					>
-						<motion.div
-							className='relative w-full h-full min-h-[15rem]'
-							layoutId={`card-${image.key}`}
-						>
-							<Image
-								src={image.url}
-								alt={image.key ?? "gallery image"}
-								fill
-								className='object-contain'
-								sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-								priority={i === 0}
-							/>
-						</motion.div>
-					</BentoCard>
+						<div className='p-1 rounded-lg bg-card border border-border/20 shadow-sm overflow-hidden cursor-pointer group/card'>
+							<motion.div
+								className='relative w-full h-auto'
+								layoutId={`card-${image.key}`}
+							>
+								<Image
+									src={image.url}
+									alt={image.key ?? "gallery image"}
+									width={image.width}
+									height={image.height}
+									className='rounded-md transition-transform duration-300 ease-in-out group-hover/card:scale-105'
+									sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+									priority={i < 5} // Prioritize loading for the first few images
+								/>
+							</motion.div>
+						</div>
+					</motion.div>
 				))}
-			</BentoGrid>
+			</Masonry>
 			<FullscreenCarousel
 				image={
 					selectedImage
@@ -177,5 +179,19 @@ export default function GalleryPage() {
 				)}
 			</AnimatePresence>
 		</div>
+	);
+}
+
+export default function GalleryPage() {
+	return (
+		<Suspense
+			fallback={
+				<div className='flex items-center justify-center h-[80vh]'>
+					<Loading size='xl' />
+				</div>
+			}
+		>
+			<GalleryClient />
+		</Suspense>
 	);
 }

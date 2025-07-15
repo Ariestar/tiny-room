@@ -8,24 +8,14 @@
 .prose b,
 .prose i,
 .prose blockquote,
-.prose pre,
 .prose table,
 .prose th,
 .prose td,
-.prose code,
-.prose pre,
 .prose blockquote,
 .prose hr,
 .prose img,
 .prose figure,
-.prose figcaption,
-.prose a,
-.prose strong,
-.prose em,
-.prose b,
-.prose i,
-.prose blockquote,
-.prose pre {
+.prose figcaption {
     @apply text-2xl;
     @apply text-foreground;
 }
@@ -35,23 +25,53 @@
     @apply scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 dark:scrollbar-track-gray-800 dark:scrollbar-thumb-gray-600;
 }
 
-/* rehype-pretty-code a11y & theme switching */
 [data-rehype-pretty-code-figure] {
     @apply relative rounded-lg border;
 }
 
-code[data-theme*=" "],
-code[data-theme*=" "] span {
-    color: var(--shiki-light);
+[data-rehype-pretty-code-figure] pre {
+    background-color: transparent;
+    @apply border-0;
+}
+
+[data-rehype-pretty-code-figure] code {
+    @apply grid min-w-full break-words rounded-none border-0 bg-transparent p-0;
+    counter-reset: line;
+    box-decoration-break: clone;
+
     background-color: var(--shiki-light-bg);
+    color: var(--shiki-light);
+    color: hsl(var(--card-foreground));
 }
 
-.dark code[data-theme*=" "],
-.dark code[data-theme*=" "] span {
-    color: var(--shiki-dark);
+.dark [data-rehype-pretty-code-figure] code {
     background-color: var(--shiki-dark-bg);
+    color: var(--shiki-dark);
+    color: hsl(var(--card-foreground));
 }
 
+[data-rehype-pretty-code-figure] code span {
+    color: var(--shiki-light);
+}
+
+.dark [data-rehype-pretty-code-figure] code span {
+    color: var(--shiki-dark);
+}
+
+
+.line {
+    @apply inline-block min-h-[1rem] w-full px-4;
+}
+
+.line.highlighted {
+    @apply bg-primary/10;
+}
+
+.line-number::before {
+    content: counter(line);
+    counter-increment: line;
+    @apply mr-4 inline-block w-4 text-right text-muted-foreground;
+}
 
 [data-callout] {
     padding: 1rem 1.5rem;

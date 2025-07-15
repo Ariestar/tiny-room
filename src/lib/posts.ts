@@ -10,6 +10,7 @@ import rehypeKatex from "rehype-katex";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeStringify from "rehype-stringify";
 import { cache } from "react";
+import { bundledLanguages, getSingletonHighlighter } from "shiki";
 import rehypeRaw from "rehype-raw";
 import remarkWikiLink from "remark-wiki-link";
 import remarkCallout from "@r4ai/remark-callout";
@@ -24,6 +25,8 @@ export type PostData = {
 	date: string;
 	tags: string[];
 	contentHtml: string;
+	content: string; // Add raw content
+	status: string; // Add status
 };
 
 export function getSortedPostsData() {
@@ -110,6 +113,25 @@ export const getPostBySlug = cache(async (slug: string): Promise<PostData | null
 				dark: "github-dark",
 			},
 			keepBackground: false,
+			getHighlighter: options =>
+				getSingletonHighlighter({
+					...options,
+					langs: [
+						...Object.keys(bundledLanguages),
+						"toml",
+						"json",
+						"yaml",
+						"javascript",
+						"typescript",
+						"jsx",
+						"tsx",
+						"bash",
+						"css",
+						"html",
+						"diff",
+						"dockerfile",
+					],
+				}),
 		})
 		.use(rehypeStringify)
 		.process(content);
@@ -120,6 +142,8 @@ export const getPostBySlug = cache(async (slug: string): Promise<PostData | null
 		date: (data.date as string) || stats.birthtime.toISOString(),
 		tags: (data.tags as string[]) || [],
 		contentHtml: contentHtml.toString(),
+		content: content, // Return raw content
+		status: (data.status as string) || "draft", // Return status
 	};
 });
 
