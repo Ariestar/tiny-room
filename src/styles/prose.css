@@ -320,3 +320,45 @@
 .prose .callout {
     @apply mt-6 flex items-start rounded-lg border p-4;
 }
+
+
+
+h1 .subheading-anchor,
+h2 .subheading-anchor,
+h3 .subheading-anchor,
+h4 .subheading-anchor,
+h5 .subheading-anchor,
+h6 .subheading-anchor {
+    opacity: 1;
+    text-decoration: none;
+    position: absolute;
+    transform: translateX(-150%);
+    padding-top: 0.25em;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    color: hsl(var(--muted-foreground));
+}
+
+h1 .subheading-anchor::before {
+    content: "H1";
+}
+
+h2 .subheading-anchor::before {
+    content: "H2";
+}
+
+h3 .subheading-anchor::before {
+    content: "H3";
+}
+
+h4 .subheading-anchor::before {
+    content: "H4";
+}
+
+h5 .subheading-anchor::before {
+    content: "H5";
+}
+
+h6 .subheading-anchor::before {
+    content: "H6";
+}

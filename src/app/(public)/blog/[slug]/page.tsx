@@ -1,13 +1,23 @@
-import { getAllPostSlugs, getPostBySlug } from "@/lib/posts";
-import { notFound } from "next/navigation";
 import "katex/dist/katex.min.css";
+import { getPostBySlug, getAllPostSlugs } from "@/lib/posts";
+import { notFound } from "next/navigation";
 import "@/styles/prose.css";
+import { PageTransition } from "@/components/animation/PageTransition";
+import { TableOfContents } from "@/components/feature/blog/TableOfContents";
+import { ReadingProgress } from "@/components/feature/blog/ReadingProgress";
+import { ArticleMetadata } from "@/components/feature/blog/ArticleMetadata";
+
+type Props = {
+	params: {
+		slug: string;
+	};
+};
 
 export async function generateStaticParams() {
-	const paths = getAllPostSlugs();
-	// The paths should be an array of objects like [{ slug: 'post-1' }, { slug: 'post-2' }]
-	// The key 'slug' must match the dynamic segment [slug]
-	return paths.map(p => ({ slug: p.slug }));
+	const slugs = getAllPostSlugs();
+	return slugs.map(item => ({
+		slug: item.slug,
+	}));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -15,13 +25,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 	const post = await getPostBySlug(decodedSlug);
 
 	if (!post) {
-		return {
-			title: "Post Not Found",
-		};
+		return notFound();
 	}
 
 	return {
 		title: post.title,
+		description: post.content.slice(0, 150),
 	};
 }
 
@@ -30,22 +39,38 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 	const post = await getPostBySlug(decodedSlug);
 
 	if (!post) {
-		notFound();
+		return notFound();
 	}
 
 	return (
-		<div>
-			<article className='container mx-auto px-4 py-8 prose lg:prose-xl dark:prose-invert'>
-				<div className='not-prose mb-8'></div>
-				<h1 className='text-center text-6xl'>{post.title}</h1>
-				<div className='text-muted-foreground mb-8'>
-					<time dateTime={post.date}>{new Date(post.date).toLocaleDateString()}</time>
+		<PageTransition>
+			<ReadingProgress />
+			<div className='container mx-auto max-w-5xl px-4 py-12'>
+				<div className='flex flex-row-reverse justify-between'>
+					<aside className='sticky top-24 h-full w-80 flex-shrink-0 pl-36 lg:block'>
+						<TableOfContents toc={post.toc} />
+					</aside>
+					<main className='w-full max-w-4xl'>
+						<div className='prose prose-zinc mx-auto dark:prose-invert lg:prose-lg'>
+							<h1 className='mb-6 text-3xl font-bold' id='page-title'>
+								{post.title}
+							</h1>
+
+							<ArticleMetadata
+								date={post.date}
+								readingTime={post.readingTime || "未知"}
+								tags={post.tags}
+								className='mb-8 pb-6 border-b border-gray-200 dark:border-gray-700'
+							/>
+
+							<article
+								className='font-lxgw text-xl'
+								dangerouslySetInnerHTML={{ __html: post.contentHtml }}
+							/>
+						</div>
+					</main>
 				</div>
-				<div
-					className='font-lxgw text-xl'
-					dangerouslySetInnerHTML={{ __html: post.contentHtml }}
-				/>
-			</article>
-		</div>
+			</div>
+		</PageTransition>
 	);
 }

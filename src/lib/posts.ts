@@ -16,6 +16,10 @@ import remarkWikiLink from "remark-wiki-link";
 import remarkCallout from "@r4ai/remark-callout";
 import readingTime from "reading-time";
 import remarkFlexibleMarkers from "remark-flexible-markers";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeExternalLinks from "rehype-external-links";
+import { rehypeExtractToc, type TocEntry } from "./rehype-extract-toc";
 
 const postsDirectory = path.join(process.cwd(), "posts");
 
@@ -27,6 +31,8 @@ export type PostData = {
 	contentHtml: string;
 	content: string; // Add raw content
 	status: string; // Add status
+	toc: TocEntry[]; // Add table of contents
+	readingTime: string; // Add reading time
 };
 
 export function getSortedPostsData() {
@@ -93,7 +99,7 @@ export const getPostBySlug = cache(async (slug: string): Promise<PostData | null
 	const matterResult = matter(fileContents);
 	const { data, content } = matterResult;
 
-	const contentHtml = await unified()
+	const processedContent = await unified()
 		.use(remarkParse)
 		.use(remarkWikiLink, {
 			pageResolver: (name: string) => [name],
@@ -106,6 +112,17 @@ export const getPostBySlug = cache(async (slug: string): Promise<PostData | null
 		.use(remarkMath)
 		.use(remarkRehype, { allowDangerousHtml: true })
 		.use(rehypeRaw)
+		.use(rehypeSlug)
+		.use(rehypeAutolinkHeadings, {
+			behavior: "prepend",
+			properties: {
+				className: ["subheading-anchor"],
+				"aria-hidden": "true",
+				tabIndex: -1,
+			},
+		})
+		.use(rehypeExtractToc) // Use our NEW rehype plugin here
+		.use(rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] })
 		.use(rehypeKatex)
 		.use(rehypePrettyCode, {
 			theme: {
@@ -141,9 +158,11 @@ export const getPostBySlug = cache(async (slug: string): Promise<PostData | null
 		title: (data.title as string) || slug,
 		date: (data.date as string) || stats.birthtime.toISOString(),
 		tags: (data.tags as string[]) || [],
-		contentHtml: contentHtml.toString(),
+		contentHtml: processedContent.toString(),
 		content: content, // Return raw content
 		status: (data.status as string) || "draft", // Return status
+		toc: (processedContent.data.toc as TocEntry[]) || [], // Return toc
+		readingTime: readingTime(fileContents).text, // Calculate and return reading time
 	};
 });
 
