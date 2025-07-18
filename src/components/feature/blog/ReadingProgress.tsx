@@ -25,11 +25,14 @@ export function ReadingProgress() {
 	}, []);
 
 	return (
-		<div className='fixed top-0 left-0 w-full h-1 bg-gray-200/20 z-40 dark:bg-gray-700/20'>
+		<div className='fixed right-4 top-1/2 -translate-y-1/2 w-1 h-64 bg-gray-200/30 rounded-full z-40 dark:bg-gray-700/30'>
 			<div
-				className='h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-150 ease-out'
-				style={{ width: `${progress}%` }}
+				className='w-full bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-150 ease-out'
+				style={{ height: `${progress}%` }}
 			/>
+			<div className='absolute -right-8 top-1/2 -translate-y-1/2 text-xs text-gray-500 dark:text-gray-400 font-mono'>
+				{Math.round(progress)}%
+			</div>
 		</div>
 	);
 }
