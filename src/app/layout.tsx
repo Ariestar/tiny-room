@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { ThemeRegistry } from "@/components/layout/ThemeRegistry";
 import { Header } from "@/components/layout/Header";
 import "@/styles/globals.css";
-import { lxgwWenkai } from "@/lib/fonts";
+import { lxgwWenkai, bookerly } from "@/lib/fonts";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				/>
 			</head>
 			<body
-				className={`${inter.className} ${lxgwWenkai.variable} bg-background text-foreground antialiased`}
+				className={`${inter.className} ${lxgwWenkai.variable} ${bookerly.variable} bg-background text-foreground antialiased`}
 			>
 				<ThemeRegistry attribute='class' defaultTheme='system' enableSystem>
 					<div className='relative flex min-h-dvh flex-col'>

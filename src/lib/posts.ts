@@ -20,6 +20,10 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeExternalLinks from "rehype-external-links";
 import { rehypeExtractToc, type TocEntry } from "./rehype-extract-toc";
+// 新增的Markdown插件导入
+import remarkDirective from "remark-directive";
+import remarkBreaks from "remark-breaks";
+// import rehypeMermaid from "rehype-mermaid";
 
 const postsDirectory = path.join(process.cwd(), "posts");
 
@@ -107,6 +111,10 @@ export const getPostBySlug = cache(async (slug: string): Promise<PostData | null
 			aliasDivider: "|",
 		})
 		.use(remarkGfm)
+		.use(remarkBreaks) // 新增：更自然的换行处理
+		.use(remarkDirective) // 新增：支持指令语法
+		// .use(remarkAdmonitions) // 暂时注释：修复prototype错误
+		// remark-gfm已经包含脚注功能，无需单独添加remarkFootnotes
 		.use(remarkFlexibleMarkers)
 		.use(remarkCallout)
 		.use(remarkMath)
@@ -123,6 +131,11 @@ export const getPostBySlug = cache(async (slug: string): Promise<PostData | null
 		})
 		.use(rehypeExtractToc) // Use our NEW rehype plugin here
 		.use(rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] })
+		// .use(rehypeMermaid, {
+		// 	// 新增：支持Mermaid图表
+		// 	strategy: "inline-svg",
+		// 	dark: true,
+		// })
 		.use(rehypeKatex)
 		.use(rehypePrettyCode, {
 			theme: {
@@ -147,6 +160,7 @@ export const getPostBySlug = cache(async (slug: string): Promise<PostData | null
 						"html",
 						"diff",
 						"dockerfile",
+						"mermaid", // 新增：支持mermaid语言高亮
 					],
 				}),
 		})

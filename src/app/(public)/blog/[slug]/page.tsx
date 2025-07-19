@@ -45,13 +45,13 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 	return (
 		<PageTransition>
 			<ReadingProgress />
-			<div className='container mx-auto max-w-5xl px-4 py-12'>
-				<div className='flex flex-row-reverse justify-between'>
-					<aside className='sticky top-24 h-full w-80 flex-shrink-0 pl-36 lg:block'>
+			<div className='container mx-auto max-w-6xl px-4 py-12'>
+				<div className='flex flex-col lg:flex-row-reverse lg:justify-between'>
+					<aside className='hidden lg:block sticky top-24 h-full w-64 flex-shrink-0 lg:pl-12'>
 						<TableOfContents toc={post.toc} />
 					</aside>
-					<main className='w-full max-w-4xl'>
-						<div className='prose prose-zinc mx-auto dark:prose-invert lg:prose-lg'>
+					<main className='w-full lg:max-w-[calc(100%-16rem)]'>
+						<div className='prose prose-zinc mx-auto dark:prose-invert lg:prose-lg font-blog'>
 							<h1 className='mb-6 text-3xl font-bold' id='page-title'>
 								{post.title}
 							</h1>
@@ -64,7 +64,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 							/>
 
 							<article
-								className='font-lxgw text-xl'
+								className='text-xl'
 								dangerouslySetInnerHTML={{ __html: post.contentHtml }}
 							/>
 						</div>

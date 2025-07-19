@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
+import { Search } from "@/components/feature/search/Search";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
@@ -105,8 +106,8 @@ export function Header({
 	const displayTitle = showAlternateTitle && dynamicTitle ? dynamicTitle : "Tiny Room";
 
 	return (
-		<header className='sticky top-0 z-50 flex items-center bg-background/95 justify-between border-b border-border p-4 transition-all duration-300'>
-			<div className='relative h-7 overflow-hidden'>
+		<header className='sticky top-0 z-30 flex items-center bg-background justify-between border-b border-border p-4 transition-all duration-fast'>
+			<div className='left-2 relative h-7 overflow-hidden flex-1 pr-4'>
 				<div
 					className={`transition-transform duration-300 ease-in-out ${
 						showAlternateTitle && dynamicTitle ? "-translate-y-full" : "translate-y-0"
@@ -121,12 +122,15 @@ export function Header({
 						showAlternateTitle && dynamicTitle ? "-translate-y-full" : "translate-y-0"
 					}`}
 				>
-					<span className='block max-w-[70vw] truncate font-bold text-lg text-foreground'>
+					<span className='block truncate font-bold text-lg text-foreground'>
 						{dynamicTitle}
 					</span>
 				</div>
 			</div>
-			<ThemeSwitcher />
+			<div className='flex items-center space-x-3 flex-shrink-0'>
+				<Search />
+				<ThemeSwitcher />
+			</div>
 		</header>
 	);
 }

@@ -1,3 +1,5 @@
+/* 移除prose字体配置，继承根布局的字体设置 */
+
 .prose p,
 .prose li,
 .prose ol,
@@ -361,4 +363,166 @@ h5 .subheading-anchor::before {
 
 h6 .subheading-anchor::before {
     content: "H6";
+}
+
+/* ============================
+   新增插件样式支持
+   ========================== */
+
+/* Mermaid图表样式 */
+.prose .mermaid {
+    @apply my-8 flex justify-center;
+}
+
+.prose .mermaid svg {
+    @apply max-w-full h-auto;
+    background: transparent;
+}
+
+/* Dark mode support for Mermaid */
+.dark .prose .mermaid svg {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+/* Admonitions (提示框) 样式 */
+.prose .admonition {
+    @apply my-6 p-4 rounded-lg border-l-4;
+}
+
+.prose .admonition.note {
+    @apply bg-blue-50 border-blue-400 dark:bg-blue-950/30 dark:border-blue-400;
+}
+
+.prose .admonition.tip {
+    @apply bg-green-50 border-green-400 dark:bg-green-950/30 dark:border-green-400;
+}
+
+.prose .admonition.important {
+    @apply bg-purple-50 border-purple-400 dark:bg-purple-950/30 dark:border-purple-400;
+}
+
+.prose .admonition.warning {
+    @apply bg-yellow-50 border-yellow-400 dark:bg-yellow-950/30 dark:border-yellow-400;
+}
+
+.prose .admonition.caution {
+    @apply bg-red-50 border-red-400 dark:bg-red-950/30 dark:border-red-400;
+}
+
+.prose .admonition-title {
+    @apply font-semibold text-lg mb-2 flex items-center gap-2;
+}
+
+.prose .admonition.note .admonition-title {
+    @apply text-blue-800 dark:text-blue-200;
+}
+
+.prose .admonition.tip .admonition-title {
+    @apply text-green-800 dark:text-green-200;
+}
+
+.prose .admonition.important .admonition-title {
+    @apply text-purple-800 dark:text-purple-200;
+}
+
+.prose .admonition.warning .admonition-title {
+    @apply text-yellow-800 dark:text-yellow-200;
+}
+
+.prose .admonition.caution .admonition-title {
+    @apply text-red-800 dark:text-red-200;
+}
+
+/* 脚注样式 */
+.prose .footnotes {
+    @apply mt-12 pt-8 border-t border-gray-200 dark:border-gray-700;
+}
+
+.prose .footnotes::before {
+    content: "脚注";
+    @apply block text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300;
+}
+
+.prose .footnotes ol {
+    @apply pl-6;
+}
+
+.prose .footnotes li {
+    @apply text-sm leading-relaxed mb-2;
+}
+
+/* 强化脚注链接样式，确保没有下划线 */
+.prose .footnote-ref,
+.prose .footnote-ref:link,
+.prose .footnote-ref:visited,
+.prose .footnote-ref:hover,
+.prose .footnote-ref:active {
+    @apply no-underline text-blue-600 dark:text-blue-400 font-medium;
+    @apply hover:text-blue-800 dark:hover:text-blue-200 transition-colors;
+    text-decoration: none !important;
+}
+
+.prose .footnote-backref,
+.prose .footnote-backref:link,
+.prose .footnote-backref:visited,
+.prose .footnote-backref:hover,
+.prose .footnote-backref:active {
+    @apply no-underline text-gray-500 dark:text-gray-400 ml-2;
+    @apply hover:text-gray-700 dark:hover:text-gray-200 transition-colors;
+    text-decoration: none !important;
+}
+
+/* 确保所有脚注相关的链接都没有下划线 */
+.prose sup a[data-footnote-ref],
+.prose sup a[data-footnote-ref]:link,
+.prose sup a[data-footnote-ref]:visited,
+.prose sup a[data-footnote-ref]:hover,
+.prose sup a[data-footnote-ref]:active {
+    @apply no-underline;
+    text-decoration: none !important;
+}
+
+/* 指令语法样式增强 */
+.prose .directive {
+    @apply my-4;
+}
+
+/* 改进的代码块样式 */
+.prose pre[data-language]::before {
+    content: attr(data-language);
+    @apply absolute top-2 right-2 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide;
+}
+
+/* 更好的表格样式 */
+.prose table {
+    @apply border-collapse border border-gray-200 dark:border-gray-700;
+}
+
+.prose th,
+.prose td {
+    @apply border border-gray-200 dark:border-gray-700 px-4 py-2;
+}
+
+.prose th {
+    @apply bg-gray-50 dark:bg-gray-800 font-semibold;
+}
+
+/* 改进的引用样式 */
+.prose blockquote {
+    @apply border-l-4 border-gray-300 dark:border-gray-600 pl-6 italic;
+    @apply bg-gray-50 dark:bg-gray-800/50 py-4 my-6 rounded-r-lg;
+}
+
+/* 任务列表样式增强 */
+.prose input[type="checkbox"] {
+    @apply mr-2 accent-blue-600;
+}
+
+.prose li:has(input[type="checkbox"]) {
+    @apply list-none flex items-start gap-2;
+}
+
+/* 高亮文本样式 */
+.prose mark {
+    @apply bg-yellow-200 dark:bg-yellow-800 px-1 rounded;
 }

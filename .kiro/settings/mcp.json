@@ -1,0 +1,83 @@
+{
+  "mcpServers": {
+    "fetch": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-fetch"
+      ],
+      "env": {},
+      "disabled": false,
+      "autoApprove": []
+    },
+    "context7-mcp": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@upstash/context7-mcp",
+        "--key",
+        "82a8aac5-3326-4e58-860a-249496eb66ec"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    },
+    "Sequential Thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@smithery-ai/server-sequential-thinking",
+        "--key",
+        "82a8aac5-3326-4e58-860a-249496eb66ec"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    },
+    "Framelink Figma MCP": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "figma-developer-mcp",
+        "--figma-api-key=YOUR-KEY",
+        "--stdio"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    },
+    "mcp-deepwiki": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-deepwiki@latest"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    },
+    "desktop-commander": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@wonderwhy-er/desktop-commander"
+      ],
+      "disabled": false,
+      "autoApprove": [
+        "read_file",
+        "list_directory"
+      ]
+    },
+    "structured-thinking": {
+      "command": "npx",
+      "args": [
+        "structured-thinking"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}

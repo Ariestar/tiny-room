@@ -181,6 +181,8 @@ module.exports = {
 			// 现代化字体系统
 			fontFamily: {
 				lxgw: ["var(--font-lxgw-wenkai)", ...fontFamily.sans],
+				bookerly: ["var(--font-bookerly)", ...fontFamily.serif],
+				blog: ["var(--font-bookerly)", "var(--font-lxgw-wenkai)", ...fontFamily.serif], // 中英文混排：英文优先Bookerly，中文回退霞鹜文楷
 				sans: ["system-ui", "sans-serif"],
 				serif: ["Times New Roman", "serif"],
 				mono: ["Fira Code", "JetBrains Mono", "monospace"],
