@@ -1,6 +1,6 @@
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
-import { BarChart, PenSquare, Eye, Users } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, StatCard } from "@/components/ui";
+import { BarChart, PenSquare, Eye, Users, GitBranch, Star, GitFork, Activity } from "lucide-react";
 import { auth } from "@/auth";
 import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils";
@@ -97,6 +97,52 @@ const DashboardPage = async () => {
 				))}
 			</div>
 
+			{/* Projects Statistics Section */}
+			<div className='mb-6'>
+				<div className='flex items-center justify-between mb-4'>
+					<div>
+						<h2 className='text-xl font-semibold text-foreground'>项目统计</h2>
+						<p className='text-sm text-muted-foreground'>您的GitHub项目概览</p>
+					</div>
+					<Link href='/dashboard/projects'>
+						<Button variant='outline' size='sm'>
+							管理项目
+						</Button>
+					</Link>
+				</div>
+
+				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+					<StatCard
+						title="总仓库数"
+						value="--"
+						subtitle="加载中..."
+						icon={GitBranch}
+						variant="default"
+					/>
+					<StatCard
+						title="总星标数"
+						value="--"
+						subtitle="加载中..."
+						icon={Star}
+						variant="default"
+					/>
+					<StatCard
+						title="总分叉数"
+						value="--"
+						subtitle="加载中..."
+						icon={GitFork}
+						variant="default"
+					/>
+					<StatCard
+						title="最近活跃"
+						value="--"
+						subtitle="30天内更新"
+						icon={Activity}
+						variant="highlighted"
+					/>
+				</div>
+			</div>
+
 			{/* Recent Activities & Quick Links */}
 			<div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
 				<Card className='lg:col-span-2'>
@@ -132,7 +178,7 @@ const DashboardPage = async () => {
 						<ul className='space-y-3'>
 							<li>
 								<Link
-									href='#'
+									href='/dashboard/blog'
 									className='font-medium text-foreground hover:text-primary transition-colors'
 								>
 									写新文章
@@ -140,18 +186,26 @@ const DashboardPage = async () => {
 							</li>
 							<li>
 								<Link
-									href='#'
+									href='/dashboard/projects'
 									className='font-medium text-foreground hover:text-primary transition-colors'
 								>
-									管理评论
+									管理项目
 								</Link>
 							</li>
 							<li>
 								<Link
-									href='#'
+									href='/dashboard/gallery'
 									className='font-medium text-foreground hover:text-primary transition-colors'
 								>
-									查看分析
+									管理画廊
+								</Link>
+							</li>
+							<li>
+								<Link
+									href='/dashboard/settings'
+									className='font-medium text-foreground hover:text-primary transition-colors'
+								>
+									系统设置
 								</Link>
 							</li>
 						</ul>

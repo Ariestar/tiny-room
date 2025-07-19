@@ -7,7 +7,9 @@
       ],
       "env": {},
       "disabled": false,
-      "autoApprove": []
+      "autoApprove": [
+        "fetch"
+      ]
     },
     "context7-mcp": {
       "command": "cmd",
@@ -68,7 +70,8 @@
       "disabled": false,
       "autoApprove": [
         "read_file",
-        "list_directory"
+        "list_directory",
+        "create_directory"
       ]
     },
     "structured-thinking": {
@@ -77,7 +80,10 @@
         "structured-thinking"
       ],
       "disabled": false,
-      "autoApprove": []
+      "autoApprove": [
+        "capture_thought",
+        "capture_thought"
+      ]
     }
   }
 }
