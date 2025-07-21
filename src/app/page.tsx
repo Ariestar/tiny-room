@@ -1,115 +1,273 @@
-import Button from "@/components/ui/Button";
-import Link from "next/link";
-import { techStack } from "@/lib/data";
-import { Component, Sparkles, Type } from "lucide-react";
+import { HeroSection, ContentSection } from "@/components/layout/Section";
+import { Container } from "@/components/layout/Container";
+import { ResponsiveGrid } from "@/components/layout/ResponsiveGrid";
+import { DynamicBackground } from "@/components/animation/DynamicBackground";
+import { MouseFollowParticles } from "@/components/animation/MouseFollowParticles";
+import { AnimatedGradient } from "@/components/animation/AnimatedGradient";
+import { PersonalizedGreeting } from "@/components/animation/PersonalizedGreeting";
+import { TypewriterText } from "@/components/animation/TypewriterText";
+import { InteractiveElements } from "@/components/animation/InteractiveElements";
+import { MicroInteraction } from "@/components/animation/MicroInteractions";
+import { CreativeCard, CardContent } from "@/components/ui/CreativeCard";
+import { BlogPreview } from "@/components/feature/blog/BlogPreview";
+import { ProjectShowcase } from "@/components/feature/projects/ProjectShowcase";
+import { PersonalIntro } from "@/components/feature/personal/PersonalIntro";
+import { SocialLinks } from "@/components/feature/contact/SocialLinks";
+import { ContactInfo } from "@/components/feature/contact/ContactInfo";
+import { InteractiveEasterEggs } from "@/components/feature/contact/InteractiveEasterEggs";
+import { ScrollRevealContainer, ScrollRevealItem } from "@/components/animation/ScrollReveal";
+import { getSortedPostsData } from "@/lib/posts";
+import { getAllProjects } from "@/lib/projects";
+import { motion } from "framer-motion";
 
 export default function Home() {
-	return (
-		<main>
-			{/* Hero Section */}
-			<div className='relative overflow-hidden bg-background'>
-				<div className='container mx-auto px-6 py-24 sm:py-32 md:py-40 relative z-10'>
-					<div className='text-center'>
-						<h1 className='text-6xl font-extrabold tracking-tighter text-foreground mb-6 font-display animate-slide-up'>
-							Tiny Room
-						</h1>
-						<p
-							className='text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed animate-slide-up'
-							style={{ animationDelay: "0.2s" }}
-						>
-							一个集展示、管理、分析于一体的现代个人网站。
-						</p>
+	// 获取最新的博客文章数据
+	const posts = getSortedPostsData();
 
-						<div
-							className='flex justify-center mt-8 space-x-4 animate-slide-up'
-							style={{ animationDelay: "0.4s" }}
-						>
-							<Button variant='primary' size='lg' asChild>
-								<Link href='/dashboard'>开始使用</Link>
-							</Button>
-							<Button variant='secondary' size='lg' asChild>
-								<Link href='https://github.com'>GitHub</Link>
-							</Button>
+	// 获取项目数据
+	const allProjects = getAllProjects();
+
+	return (
+		<main className="min-h-screen">
+			{/* 欢迎区域 - Hero Section */}
+			<HeroSection
+				height="lg"
+				pattern="none"
+				className="relative overflow-hidden"
+			>
+				{/* 动态背景效果 */}
+				<DynamicBackground
+					variant="gradient"
+					intensity="medium"
+					mouseFollow={true}
+					particles={false}
+					className="absolute inset-0"
+				/>
+
+				{/* 动画渐变背景 */}
+				<AnimatedGradient
+					variant="aurora"
+					speed="normal"
+					intensity="subtle"
+					className="absolute inset-0"
+				/>
+
+				{/* 鼠标跟随粒子系统 */}
+				<MouseFollowParticles
+					particleCount={15}
+					colors={["hsl(var(--accent-blue))", "hsl(var(--accent-purple))", "hsl(var(--accent-pink))"]}
+					sizeRange={[2, 4]}
+					followStrength={0.03}
+					enabled={true}
+					className="absolute inset-0"
+				/>
+
+				{/* 互动元素和彩蛋 */}
+				<InteractiveElements
+					enableEasterEggs={true}
+					enableMicroInteractions={true}
+					showActivityStatus={true}
+					className="absolute inset-0"
+				/>
+
+				<div className="relative z-20 text-center space-y-8">
+					{/* 个性化问候 */}
+					<div className="space-y-6">
+						<PersonalizedGreeting
+							typewriter={true}
+							typewriterSpeed={100}
+							rainbowGradient={false}
+							showEmoji={true}
+							customGreetings={[
+								"欢迎来到 Tiny Room ✨",
+								"很高兴遇见你 👋",
+								"一起探索有趣的世界 🌍",
+								"让创意与技术完美融合 🚀"
+							]}
+						/>
+
+						{/* 副标题 - 打字机效果 */}
+						<div>
+							<TypewriterText
+								text="一个有趣且富有个性的个人博客空间，展现创意与技术的完美融合"
+								speed={20}
+								showCursor={true}
+								className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed block"
+							/>
 						</div>
 					</div>
-				</div>
-			</div>
 
-			<FeaturesSection />
-			<TechStackSection />
+					{/* 快速导航按钮 */}
+					<ScrollRevealContainer className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+						<MicroInteraction type="hover-lift" intensity="strong">
+							<ScrollRevealItem className="px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer">
+								探索内容
+							</ScrollRevealItem>
+						</MicroInteraction>
+						<MicroInteraction type="hover-scale" intensity="strong">
+							<ScrollRevealItem className="px-6 py-3 bg-secondary text-secondary-foreground rounded-xl font-medium hover:bg-secondary/80 transition-colors cursor-pointer">
+								了解更多
+							</ScrollRevealItem>
+						</MicroInteraction>
+					</ScrollRevealContainer>
+				</div>
+			</HeroSection>
+
+			{/* 最新博客文章区域 */}
+			<ContentSection
+				title="最新文章"
+				subtitle="Latest Posts"
+				description="分享技术见解、学习心得和创意想法"
+				variant="default"
+				size="lg"
+				titleAlign="center"
+				divider
+			>
+				<Container size="lg">
+					<BlogPreview
+						posts={posts}
+						maxPosts={3}
+						className="mb-8"
+					/>
+				</Container>
+			</ContentSection>
+
+			{/* 精选项目区域 */}
+			<ContentSection
+				title="精选项目"
+				subtitle="Featured Projects"
+				description="展示技术实力和创新思维的项目作品"
+				variant="muted"
+				size="lg"
+				titleAlign="center"
+				divider
+			>
+				<Container size="lg">
+					<ProjectShowcase
+						projects={allProjects}
+						maxProjects={6}
+						showGitHubLink={true}
+						className="mb-8"
+					/>
+				</Container>
+			</ContentSection>
+
+			{/* 其他内容预览 */}
+			<ContentSection
+				title="更多内容"
+				subtitle="More Content"
+				description="发现更多有趣的内容和创作"
+				variant="default"
+				size="lg"
+				titleAlign="center"
+			>
+				<ScrollRevealContainer
+					className="mb-12"
+					staggerChildren={0.2}
+				>
+					<ResponsiveGrid
+						columns={{ xs: 1, md: 2 }}
+						gap="lg"
+					>
+						{/* 精美图片预览卡片 - 变形效果 */}
+						<ScrollRevealItem>
+							<CreativeCard
+								variant="morphing"
+								size="md"
+								enable3D={true}
+								enableHover={true}
+								gradient="linear-gradient(135deg, hsl(var(--accent-pink))/0.1 0%, hsl(var(--accent-orange))/0.1 100%)"
+							>
+								<CardContent
+									icon="📸"
+									title="精美图片"
+									description="记录生活美好瞬间和艺术创作"
+									badge="精选"
+									action="浏览画廊"
+								/>
+							</CreativeCard>
+						</ScrollRevealItem>
+
+						{/* 学习笔记预览卡片 - 玻璃效果 */}
+						<ScrollRevealItem>
+							<CreativeCard
+								variant="glass"
+								size="md"
+								enable3D={true}
+								enableHover={true}
+							>
+								<CardContent
+									icon="📚"
+									title="学习笔记"
+									description="技术学习过程中的心得体会和知识总结"
+									badge="持续更新"
+									action="查看笔记"
+								/>
+							</CreativeCard>
+						</ScrollRevealItem>
+					</ResponsiveGrid>
+				</ScrollRevealContainer>
+			</ContentSection>
+
+			{/* 个人介绍区域 */}
+			<ContentSection
+				title="关于我"
+				subtitle="About Me"
+				description="一个热爱技术与创意的开发者"
+				variant="default"
+				size="lg"
+				titleAlign="center"
+				divider
+			>
+				<Container size="xl">
+					<PersonalIntro className="py-8" />
+				</Container>
+			</ContentSection>
+
+			{/* 联系互动区域 */}
+			<ContentSection
+				title="联系我"
+				subtitle="Get In Touch"
+				description="欢迎交流技术、分享想法或者只是打个招呼"
+				variant="muted"
+				size="lg"
+				titleAlign="center"
+				divider
+			>
+				<Container size="xl">
+					<ScrollRevealContainer className="space-y-12" staggerChildren={0.3}>
+						{/* 联系方式详细信息 */}
+						<ScrollRevealItem>
+							<ContactInfo />
+						</ScrollRevealItem>
+
+						{/* 互动游戏和彩蛋 */}
+						<ScrollRevealItem>
+							<div>
+								<h3 className="text-xl font-semibold text-center text-gray-800 mb-8">
+									互动体验
+								</h3>
+								<InteractiveEasterEggs />
+							</div>
+						</ScrollRevealItem>
+
+						{/* 社交媒体链接 */}
+						<ScrollRevealItem>
+							<div>
+								<h3 className="text-xl font-semibold text-center text-gray-800 mb-8">
+									社交媒体
+								</h3>
+								<SocialLinks
+									layout="grid"
+									showLabels={true}
+									size="md"
+									className="max-w-4xl mx-auto"
+								/>
+							</div>
+						</ScrollRevealItem>
+					</ScrollRevealContainer>
+				</Container>
+			</ContentSection>
 		</main>
-	);
-}
-
-function FeaturesSection() {
-	return (
-		<section className='py-24 bg-card'>
-			<div className='container mx-auto px-4'>
-				<div className='text-center mb-16'>
-					<h2 className='text-4xl font-bold text-foreground mb-4 font-display'>
-						设计系统
-					</h2>
-					<p className='text-lg text-muted-foreground'>
-						我们的设计系统基于最新的技术和最佳实践
-					</p>
-				</div>
-				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-					<div className='bg-card rounded-3xl p-6 shadow-soft hover:shadow-medium transition-all duration-normal animate-card-hover cursor-pointer border border-border'>
-						<div className='w-12 h-12 bg-primary rounded-2xl mb-4 flex items-center justify-center'>
-							<Component className='w-6 h-6 text-primary-foreground' />
-						</div>
-						<h3 className='text-xl font-semibold mb-2 text-foreground'>原子化组件</h3>
-						<p className='text-muted-foreground'>
-							基于 shadcn/ui 构建，可组合、可定制。
-						</p>
-					</div>
-
-					<div className='bg-card rounded-3xl p-6 shadow-soft hover:shadow-medium transition-all duration-normal animate-card-hover cursor-pointer border border-border'>
-						<div className='w-12 h-12 bg-accent-purple rounded-2xl mb-4 flex items-center justify-center'>
-							<Sparkles className='w-6 h-6 text-white' />
-						</div>
-						<h3 className='text-xl font-semibold mb-2 text-foreground'>优雅的动画</h3>
-						<p className='text-muted-foreground'>
-							由 Framer Motion 驱动，带来流畅的交互体验。
-						</p>
-					</div>
-
-					<div className='bg-card rounded-3xl p-6 shadow-soft hover:shadow-medium transition-all duration-normal animate-card-hover cursor-pointer border border-border'>
-						<div className='w-12 h-12 bg-accent-pink rounded-2xl mb-4 flex items-center justify-center'>
-							<Type className='w-6 h-6 text-white' />
-						</div>
-						<h3 className='text-xl font-semibold mb-2 text-foreground'>精美的排版</h3>
-						<p className='text-muted-foreground'>
-							优化了中英文的阅读体验，视觉效果出众。
-						</p>
-					</div>
-				</div>
-			</div>
-		</section>
-	);
-}
-
-function TechStackSection() {
-	return (
-		<section className='py-24 bg-background'>
-			<div className='container mx-auto px-4'>
-				<div className='text-center mb-16'>
-					<h2 className='text-4xl font-bold text-foreground mb-4 font-display'>技术栈</h2>
-					<p className='text-lg text-muted-foreground'>生产级代码，企业级标准</p>
-				</div>
-				<div className='max-w-4xl mx-auto'>
-					<ul className='grid grid-cols-2 md:grid-cols-4 gap-8'>
-						{techStack.map((tech: any) => (
-							<li key={tech.name} className='flex items-center space-x-4'>
-								<div className='text-4xl'>{tech.icon}</div>
-								<div>
-									<h3 className='font-semibold text-foreground'>{tech.name}</h3>
-								</div>
-							</li>
-						))}
-					</ul>
-				</div>
-			</div>
-		</section>
 	);
 }
