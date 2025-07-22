@@ -1,0 +1,314 @@
+/**
+ * Animation Performance Optimizations
+ * 动画性能优化样式
+ */
+
+/* 硬件加速工具类 */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.will-change-transform-opacity {
+  will-change: transform, opacity;
+}
+
+.will-change-auto {
+  will-change: auto;
+}
+
+/* 性能优化的动画基类 */
+.optimized-animation {
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* 减少动画偏好支持 */
+@media (prefers-reduced-motion: reduce) {
+  .motion-reduce\:transition-none {
+    transition: none !important;
+  }
+
+  .motion-reduce\:animate-none {
+    animation: none !important;
+  }
+
+  .motion-reduce\:transform-none {
+    transform: none !important;
+  }
+
+  /* 保留重要的功能性动画，但大幅缩短时长 */
+  .motion-reduce\:duration-fast {
+    animation-duration: 0.1s !important;
+    transition-duration: 0.1s !important;
+  }
+}
+
+/* GPU 加速的动画类 */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.gpu-accelerated-opacity {
+  transform: translateZ(0);
+  will-change: opacity;
+}
+
+/* 优化的悬停效果 */
+.optimized-hover {
+  transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+  will-change: transform, opacity;
+}
+
+.optimized-hover:hover {
+  transform: translateY(-2px) translateZ(0);
+}
+
+/* 性能友好的阴影动画 */
+.shadow-animate {
+  transition: box-shadow 0.3s ease-out;
+  will-change: box-shadow;
+}
+
+.shadow-animate:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* 优化的缩放动画 */
+.scale-animate {
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+}
+
+.scale-animate:hover {
+  transform: scale(1.05) translateZ(0);
+}
+
+/* 旋转动画优化 */
+.rotate-animate {
+  transition: transform 0.3s ease-out;
+  will-change: transform;
+}
+
+.rotate-animate:hover {
+  transform: rotate(5deg) translateZ(0);
+}
+
+/* 淡入动画关键帧 */
+@keyframes optimized-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+.fade-in-optimized {
+  animation: optimized-fade-in 0.6s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+/* 滑入动画关键帧 */
+@keyframes optimized-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+.slide-up-optimized {
+  animation: optimized-slide-up 0.6s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+/* 缩放动画关键帧 */
+@keyframes optimized-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateZ(0);
+  }
+}
+
+.scale-in-optimized {
+  animation: optimized-scale-in 0.6s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+/* 脉冲动画 */
+@keyframes optimized-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1) translateZ(0);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05) translateZ(0);
+  }
+}
+
+.pulse-optimized {
+  animation: optimized-pulse 2s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* 浮动动画 */
+@keyframes optimized-float {
+  0%,
+  100% {
+    transform: translateY(0) translateZ(0);
+  }
+  50% {
+    transform: translateY(-10px) translateZ(0);
+  }
+}
+
+.float-optimized {
+  animation: optimized-float 3s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* 渐变背景动画 */
+@keyframes optimized-gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-animate {
+  background-size: 200% 200%;
+  animation: optimized-gradient-shift 4s ease infinite;
+  will-change: background-position;
+}
+
+/* 性能监控辅助类 */
+.performance-monitor::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* 动画完成后清理 will-change */
+.animation-complete {
+  will-change: auto !important;
+}
+
+/* 响应式动画控制 */
+@media (max-width: 768px) {
+  /* 移动端减少动画复杂度 */
+  .mobile-reduce-animation {
+    animation-duration: 0.3s !important;
+    transition-duration: 0.3s !important;
+  }
+
+  /* 移动端禁用某些动画 */
+  .mobile-no-animation {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* 低性能设备优化 */
+@media (max-width: 480px) {
+  .low-end-optimize {
+    animation: none !important;
+    transition: opacity 0.2s ease !important;
+    will-change: auto !important;
+  }
+}
+
+/* 高刷新率屏幕优化 */
+@media (min-resolution: 120dpi) {
+  .high-refresh-optimize {
+    animation-timing-function: linear;
+  }
+}
+
+/* 暗色模式下的动画调整 */
+@media (prefers-color-scheme: dark) {
+  .dark-mode-animation {
+    /* 暗色模式下减少发光效果的强度 */
+    filter: brightness(0.9);
+  }
+}
+
+/* 电池节能模式检测 */
+@media (prefers-reduced-data: reduce) {
+  .data-saver-mode {
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+}
+
+/* 无障碍优化 */
+@media (prefers-contrast: high) {
+  .high-contrast-animation {
+    /* 高对比度模式下简化动画 */
+    animation-duration: 0.2s !important;
+    transition-duration: 0.2s !important;
+  }
+}
+
+/* 调试工具 */
+.animation-debug {
+  outline: 2px dashed red;
+  position: relative;
+}
+
+.animation-debug::after {
+  content: "ANIMATING";
+  position: absolute;
+  top: -20px;
+  left: 0;
+  background: red;
+  color: white;
+  padding: 2px 4px;
+  font-size: 10px;
+  z-index: 9999;
+}
+
+/* 性能警告 */
+.performance-warning {
+  border: 2px solid orange !important;
+}
+
+.performance-warning::before {
+  content: "⚠️ Performance Impact";
+  position: absolute;
+  top: -25px;
+  left: 0;
+  background: orange;
+  color: white;
+  padding: 2px 6px;
+  font-size: 11px;
+  border-radius: 3px;
+  z-index: 9999;
+}

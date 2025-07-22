@@ -4,6 +4,7 @@
 
 /* 动画性能优化样式 */
 @import "./animations.css";
+@import "./animation-performance.css";
 
 /* 增强文本选中效果 */
 ::selection {

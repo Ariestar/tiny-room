@@ -409,3 +409,6 @@ export function ClickEasterEgg({
         </div>
     );
 }
+
+// 默认导出
+export default InteractiveElements;

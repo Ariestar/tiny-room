@@ -1,8 +1,14 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import {
+    prefersReducedMotion,
+    createResponsiveAnimationConfig,
+    AnimationPerformanceMonitor,
+    createThrottledAnimationTrigger
+} from "@/lib/animation-performance";
 
 export interface DynamicBackgroundProps {
     /** 背景变体 */
@@ -32,12 +38,12 @@ export function DynamicBackground({
 }: DynamicBackgroundProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const animationMonitor = AnimationPerformanceMonitor.getInstance();
+    const isReducedMotion = prefersReducedMotion();
 
-    // 鼠标跟随效果
-    useEffect(() => {
-        if (!mouseFollow) return;
-
-        const handleMouseMove = (e: MouseEvent) => {
+    // 优化的鼠标跟随效果 - 使用节流
+    const throttledMouseMove = useCallback(
+        createThrottledAnimationTrigger((e: MouseEvent) => {
             if (containerRef.current) {
                 const rect = containerRef.current.getBoundingClientRect();
                 setMousePosition({
@@ -45,14 +51,29 @@ export function DynamicBackground({
                     y: ((e.clientY - rect.top) / rect.height) * 100,
                 });
             }
-        };
+        }, 16), // ~60fps
+        []
+    );
+
+    useEffect(() => {
+        if (!mouseFollow || isReducedMotion) return;
 
         const container = containerRef.current;
         if (container) {
-            container.addEventListener("mousemove", handleMouseMove);
-            return () => container.removeEventListener("mousemove", handleMouseMove);
+            container.addEventListener("mousemove", throttledMouseMove);
+            return () => container.removeEventListener("mousemove", throttledMouseMove);
         }
-    }, [mouseFollow]);
+    }, [mouseFollow, throttledMouseMove, isReducedMotion]);
+
+    // 如果用户偏好减少动画，返回简化版本
+    if (isReducedMotion) {
+        return (
+            <div className={cn("relative overflow-hidden", className)}>
+                <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/10" />
+                <div className="relative z-10">{children}</div>
+            </div>
+        );
+    }
 
     return (
         <div
@@ -91,7 +112,7 @@ export function DynamicBackground({
 }
 
 /**
- * 渐变网格背景组件
+ * 渐变网格背景组件 - 性能优化版本
  */
 function GradientGridBackground({
     intensity,
@@ -100,13 +121,23 @@ function GradientGridBackground({
     intensity: string;
     mousePosition: { x: number; y: number };
 }) {
-    const animationDuration = intensity === "high" ? 20 : intensity === "medium" ? 30 : 40;
+    const animationConfig = createResponsiveAnimationConfig({
+        duration: intensity === "high" ? 20 : intensity === "medium" ? 30 : 40
+    });
+
+    const animationMonitor = AnimationPerformanceMonitor.getInstance();
+
+    useEffect(() => {
+        animationMonitor.startAnimation();
+        return () => animationMonitor.endAnimation();
+    }, [animationMonitor]);
 
     return (
         <div className="absolute inset-0">
-            {/* 基础渐变 */}
+            {/* 基础渐变 - 优化版本 */}
             <motion.div
                 className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/20"
+                style={{ willChange: "transform" }}
                 animate={{
                     background: [
                         "linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--background)) 50%, hsl(var(--muted))/0.2 100%)",
@@ -116,13 +147,19 @@ function GradientGridBackground({
                     ],
                 }}
                 transition={{
-                    duration: animationDuration,
+                    ...animationConfig,
                     repeat: Infinity,
                     ease: "linear",
                 }}
+                onAnimationComplete={() => {
+                    // 动画完成后清理 will-change
+                    const element = document.querySelector('[data-animation="gradient"]') as HTMLElement;
+                    if (element) element.style.willChange = 'auto';
+                }}
+                data-animation="gradient"
             />
 
-            {/* 动态网格 */}
+            {/* 动态网格 - 使用 transform 优化 */}
             <motion.div
                 className="absolute inset-0 opacity-30"
                 style={{
@@ -131,22 +168,30 @@ function GradientGridBackground({
 						linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)
 					`,
                     backgroundSize: "50px 50px",
+                    willChange: "transform"
                 }}
                 animate={{
-                    backgroundPosition: ["0px 0px", "50px 50px"],
+                    x: [0, 50],
+                    y: [0, 50],
                 }}
                 transition={{
-                    duration: animationDuration,
+                    ...animationConfig,
                     repeat: Infinity,
                     ease: "linear",
                 }}
+                onAnimationComplete={() => {
+                    const element = document.querySelector('[data-animation="grid"]') as HTMLElement;
+                    if (element) element.style.willChange = 'auto';
+                }}
+                data-animation="grid"
             />
 
-            {/* 鼠标跟随光晕 */}
+            {/* 鼠标跟随光晕 - 优化版本 */}
             <motion.div
-                className="absolute w-96 h-96 rounded-full opacity-20"
+                className="absolute w-96 h-96 rounded-full opacity-20 pointer-events-none"
                 style={{
                     background: "radial-gradient(circle, hsl(var(--primary))/0.3 0%, transparent 70%)",
+                    willChange: "transform",
                     left: `${mousePosition.x}%`,
                     top: `${mousePosition.y}%`,
                     transform: "translate(-50%, -50%)",
@@ -155,9 +200,11 @@ function GradientGridBackground({
                     scale: [1, 1.2, 1],
                 }}
                 transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
+                    scale: {
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                    }
                 }}
             />
         </div>
@@ -165,10 +212,12 @@ function GradientGridBackground({
 }
 
 /**
- * 网格背景组件
+ * 网格背景组件 - 性能优化版本
  */
 function GridBackground({ intensity }: { intensity: string }) {
-    const animationDuration = intensity === "high" ? 15 : intensity === "medium" ? 25 : 35;
+    const animationConfig = createResponsiveAnimationConfig({
+        duration: intensity === "high" ? 15 : intensity === "medium" ? 25 : 35
+    });
 
     return (
         <motion.div
@@ -179,24 +228,38 @@ function GridBackground({ intensity }: { intensity: string }) {
 					linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)
 				`,
                 backgroundSize: "40px 40px",
+                willChange: "transform"
             }}
             animate={{
-                backgroundPosition: ["0px 0px", "40px 40px"],
+                x: [0, 40],
+                y: [0, 40],
             }}
             transition={{
-                duration: animationDuration,
+                ...animationConfig,
                 repeat: Infinity,
                 ease: "linear",
             }}
+            onAnimationComplete={() => {
+                const element = document.querySelector('[data-animation="grid-bg"]') as HTMLElement;
+                if (element) element.style.willChange = 'auto';
+            }}
+            data-animation="grid-bg"
         />
     );
 }
 
 /**
- * 几何图形背景组件
+ * 几何图形背景组件 - 性能优化版本
  */
 function GeometricBackground({ intensity }: { intensity: string }) {
-    const shapes = Array.from({ length: 8 }, (_, i) => i);
+    const shapeCount = intensity === "high" ? 8 : intensity === "medium" ? 6 : 4;
+    const shapes = Array.from({ length: shapeCount }, (_, i) => i);
+    const animationMonitor = AnimationPerformanceMonitor.getInstance();
+
+    useEffect(() => {
+        animationMonitor.startAnimation();
+        return () => animationMonitor.endAnimation();
+    }, [animationMonitor]);
 
     return (
         <div className="absolute inset-0">
@@ -204,32 +267,40 @@ function GeometricBackground({ intensity }: { intensity: string }) {
                 // 使用固定种子确保服务端和客户端一致
                 const leftPos = seededRandom(i * 500) * 100;
                 const topPos = seededRandom(i * 600) * 100;
-                const xMove = seededRandom(i * 700) * 100 - 50;
-                const yMove = seededRandom(i * 800) * 100 - 50;
-                const duration = 20 + seededRandom(i * 900) * 10;
+                const xMove = seededRandom(i * 700) * 50 - 25; // 减少移动范围
+                const yMove = seededRandom(i * 800) * 50 - 25;
+                const animationConfig = createResponsiveAnimationConfig({
+                    duration: 15 + seededRandom(i * 900) * 5, // 减少动画时长
+                    delay: i * 1
+                });
 
                 return (
                     <motion.div
                         key={i}
-                        className="absolute w-32 h-32 opacity-10"
+                        className="absolute w-24 h-24 opacity-10 pointer-events-none"
                         style={{
                             left: `${leftPos}%`,
                             top: `${topPos}%`,
                             background: `linear-gradient(45deg, hsl(var(--primary))/0.3, hsl(var(--accent))/0.3)`,
                             borderRadius: i % 2 === 0 ? "50%" : "20%",
+                            willChange: "transform"
                         }}
                         animate={{
                             x: [0, xMove],
                             y: [0, yMove],
-                            rotate: [0, 360],
-                            scale: [1, 1.2, 1],
+                            rotate: [0, 180], // 减少旋转角度
+                            scale: [1, 1.1, 1], // 减少缩放范围
                         }}
                         transition={{
-                            duration: duration,
+                            ...animationConfig,
                             repeat: Infinity,
                             ease: "easeInOut",
-                            delay: i * 2,
                         }}
+                        onAnimationComplete={() => {
+                            const element = document.querySelector(`[data-animation="shape-${i}"]`) as HTMLElement;
+                            if (element) element.style.willChange = 'auto';
+                        }}
+                        data-animation={`shape-${i}`}
                     />
                 );
             })}

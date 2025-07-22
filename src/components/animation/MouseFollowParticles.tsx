@@ -2,6 +2,12 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
+import {
+    prefersReducedMotion,
+    createResponsiveAnimationConfig,
+    AnimationPerformanceMonitor,
+    createThrottledAnimationTrigger
+} from "@/lib/animation-performance";
 
 export interface MouseFollowParticlesProps {
     /** 粒子数量 */
@@ -35,7 +41,7 @@ interface Particle {
 }
 
 /**
- * 鼠标跟随粒子系统
+ * 鼠标跟随粒子系统 - 性能优化版本
  * 创建跟随鼠标移动的粒子效果
  */
 export function MouseFollowParticles({
@@ -52,6 +58,16 @@ export function MouseFollowParticles({
     const [particles, setParticles] = useState<Particle[]>([]);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [isMouseInside, setIsMouseInside] = useState(false);
+    const animationMonitor = AnimationPerformanceMonitor.getInstance();
+    const isReducedMotion = prefersReducedMotion();
+
+    // 如果用户偏好减少动画，返回简化版本
+    if (!enabled || isReducedMotion) {
+        return null;
+    }
+
+    // 根据性能调整粒子数量
+    const optimizedParticleCount = Math.min(particleCount, 15);
 
     // 创建粒子
     const createParticle = useCallback((id: number, x: number, y: number): Particle => {
@@ -71,44 +87,60 @@ export function MouseFollowParticles({
         };
     }, [colors, sizeRange, lifetime]);
 
+    // 优化的鼠标移动处理 - 使用节流
+    const throttledMouseMove = useCallback(
+        createThrottledAnimationTrigger((e: MouseEvent) => {
+            if (containerRef.current) {
+                const rect = containerRef.current.getBoundingClientRect();
+                setMousePosition({
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top,
+                });
+            }
+        }, 16), // ~60fps
+        []
+    );
+
     // 初始化粒子
     useEffect(() => {
         if (!enabled) return;
 
         const initialParticles: Particle[] = [];
-        for (let i = 0; i < particleCount; i++) {
+        for (let i = 0; i < optimizedParticleCount; i++) {
             initialParticles.push(createParticle(i, 0, 0));
         }
         setParticles(initialParticles);
-    }, [enabled, particleCount, createParticle]);
 
-    // 鼠标事件处理
+        // 注册动画监控
+        animationMonitor.startAnimation();
+        return () => animationMonitor.endAnimation();
+    }, [enabled, optimizedParticleCount, createParticle, animationMonitor]);
+
+    // 鼠标事件处理 - 优化版本
     useEffect(() => {
         if (!enabled || !containerRef.current) return;
 
         const container = containerRef.current;
 
-        const handleMouseMove = (e: MouseEvent) => {
-            const rect = container.getBoundingClientRect();
-            setMousePosition({
-                x: e.clientX - rect.left,
-                y: e.clientY - rect.top,
-            });
+        const handleMouseEnter = () => setIsMouseInside(true);
+        const handleMouseLeave = () => {
+            setIsMouseInside(false);
+            // 清理动画帧
+            if (animationRef.current) {
+                cancelAnimationFrame(animationRef.current);
+            }
         };
 
-        const handleMouseEnter = () => setIsMouseInside(true);
-        const handleMouseLeave = () => setIsMouseInside(false);
-
-        container.addEventListener("mousemove", handleMouseMove);
+        container.addEventListener("mousemove", throttledMouseMove);
         container.addEventListener("mouseenter", handleMouseEnter);
         container.addEventListener("mouseleave", handleMouseLeave);
 
         return () => {
-            container.removeEventListener("mousemove", handleMouseMove);
+            container.removeEventListener("mousemove", throttledMouseMove);
             container.removeEventListener("mouseenter", handleMouseEnter);
             container.removeEventListener("mouseleave", handleMouseLeave);
         };
-    }, [enabled]);
+    }, [enabled, throttledMouseMove]);
 
     // 粒子动画循环
     useEffect(() => {
@@ -185,16 +217,20 @@ export function MouseFollowParticles({
                         height: particle.size,
                         backgroundColor: particle.color,
                         opacity: particle.opacity,
+                        willChange: "transform, opacity"
                     }}
                     animate={{
                         scale: [1, 1.2, 1],
                     }}
-                    transition={{
+                    transition={createResponsiveAnimationConfig({
                         duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: particle.id * 0.1,
+                        ease: "easeInOut"
+                    })}
+                    onAnimationComplete={() => {
+                        const element = document.querySelector(`[data-particle="${particle.id}"]`) as HTMLElement;
+                        if (element) element.style.willChange = 'auto';
                     }}
+                    data-particle={particle.id}
                 />
             ))}
         </div>
@@ -258,3 +294,6 @@ export function SimpleMouseParticles({
         </div>
     );
 }
+
+// 默认导出
+export default MouseFollowParticles;

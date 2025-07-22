@@ -439,3 +439,6 @@ export function CompactProjectShowcase({
         </div>
     );
 }
+
+// 默认导出
+export default ProjectShowcase;

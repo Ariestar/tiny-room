@@ -387,8 +387,8 @@ export function InteractiveEasterEggs({ className = "" }: InteractiveEasterEggsP
                             <div
                                 key={egg.id}
                                 className={`p-2 rounded-lg text-center transition-all duration-300 ${foundEggs.includes(egg.id)
-                                        ? `${egg.bgColor} ${egg.color} border-2 border-current`
-                                        : 'bg-gray-100 text-gray-400'
+                                    ? `${egg.bgColor} ${egg.color} border-2 border-current`
+                                    : 'bg-gray-100 text-gray-400'
                                     }`}
                             >
                                 <egg.icon className="w-4 h-4 mx-auto mb-1" />
@@ -444,4 +444,6 @@ export function InteractiveEasterEggs({ className = "" }: InteractiveEasterEggsP
             </motion.div>
         </div>
     );
-}
+}// 默认导出
+
+export default InteractiveEasterEggs;

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
+import { AvatarImage } from "@/components/ui/OptimizedImage";
 import { MapPin, Calendar, Coffee, Heart, Sparkles, ChevronDown } from "lucide-react";
 import { PersonalStatus } from "./PersonalStatus";
 import { PersonalSkills } from "./PersonalSkills";
@@ -25,11 +25,11 @@ export function PersonalIntro({ className = "" }: PersonalIntroProps) {
             </div>
 
             {/* 头像和问候区域 */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-16">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-16 mobile-personal-intro">
                 {/* 左侧：头像 */}
                 <ScrollReveal
                     animation="slideInLeft"
-                    className="lg:col-span-5 flex flex-col items-center lg:items-start"
+                    className="lg:col-span-5 flex flex-col items-center lg:items-start mobile-avatar-container"
                 >
                     {/* 创意头像 */}
                     <div className="relative">
@@ -59,22 +59,25 @@ export function PersonalIntro({ className = "" }: PersonalIntroProps) {
                             />
 
                             {/* 头像容器 */}
-                            <div className="relative w-32 h-32 lg:w-40 lg:h-40 rounded-full overflow-hidden bg-white p-1">
+                            <div className="relative w-32 h-32 lg:w-40 lg:h-40 mobile-avatar-size rounded-full overflow-hidden bg-white p-1">
                                 <div className="w-full h-full rounded-full overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-                                    <Image
+                                    <AvatarImage
                                         src="/images/avatar.svg"
                                         alt="个人头像"
                                         width={160}
                                         height={160}
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full"
                                         priority
+                                        quality={95}
+                                        enableBlur={true}
+                                        loadingAnimation="scale"
                                     />
                                 </div>
                             </div>
 
                             {/* 装饰性图标 */}
                             <motion.div
-                                className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg"
+                                className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg mobile-animation-optimized"
                                 animate={{
                                     y: isHovered ? [-2, 2, -2] : 0,
                                 }}
@@ -96,11 +99,11 @@ export function PersonalIntro({ className = "" }: PersonalIntroProps) {
                     delay={200}
                     className="lg:col-span-7"
                 >
-                    <div className="space-y-4">
-                        <h2 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-gray-900 via-purple-600 to-blue-600 bg-clip-text text-transparent">
+                    <div className="space-y-4 text-center lg:text-left">
+                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-gray-900 via-purple-600 to-blue-600 bg-clip-text text-transparent mobile-text-optimized">
                             嗨，我是 Tiny Room 👋
                         </h2>
-                        <p className="text-lg text-gray-600">
+                        <p className="text-base sm:text-lg text-gray-600 mobile-text-optimized">
                             一个热爱代码和创意的数字工匠
                         </p>
                     </div>
@@ -110,30 +113,30 @@ export function PersonalIntro({ className = "" }: PersonalIntroProps) {
             {/* 基本信息区域 */}
             <ScrollReveal animation="fadeInUp" className="mb-16">
                 <div className="max-w-md mx-auto">
-                    <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200/50">
+                    <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-200/50 mobile-personal-info">
                         <ScrollRevealContainer className="space-y-3">
                             <ScrollRevealItem>
                                 <div className="flex items-center space-x-3 text-gray-600">
-                                    <MapPin className="w-4 h-4 text-blue-500" />
-                                    <span className="text-sm">📍 地球某个角落</span>
+                                    <MapPin className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                                    <span className="text-sm mobile-text-optimized">📍 地球某个角落</span>
                                 </div>
                             </ScrollRevealItem>
                             <ScrollRevealItem>
                                 <div className="flex items-center space-x-3 text-gray-600">
-                                    <Calendar className="w-4 h-4 text-green-500" />
-                                    <span className="text-sm">🎂 永远18岁</span>
+                                    <Calendar className="w-4 h-4 text-green-500 flex-shrink-0" />
+                                    <span className="text-sm mobile-text-optimized">🎂 永远18岁</span>
                                 </div>
                             </ScrollRevealItem>
                             <ScrollRevealItem>
                                 <div className="flex items-center space-x-3 text-gray-600">
-                                    <Coffee className="w-4 h-4 text-amber-500" />
-                                    <span className="text-sm">☕ 咖啡驱动的程序员</span>
+                                    <Coffee className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                                    <span className="text-sm mobile-text-optimized">☕ 咖啡驱动的程序员</span>
                                 </div>
                             </ScrollRevealItem>
                             <ScrollRevealItem>
                                 <div className="flex items-center space-x-3 text-gray-600">
-                                    <Heart className="w-4 h-4 text-red-500" />
-                                    <span className="text-sm">❤️ 热爱创造美好事物</span>
+                                    <Heart className="w-4 h-4 text-red-500 flex-shrink-0" />
+                                    <span className="text-sm mobile-text-optimized">❤️ 热爱创造美好事物</span>
                                 </div>
                             </ScrollRevealItem>
                         </ScrollRevealContainer>
@@ -172,34 +175,34 @@ export function PersonalIntro({ className = "" }: PersonalIntroProps) {
             {/* 有趣的事实区域 */}
             <ScrollReveal animation="scaleIn" className="mb-16">
                 <div className="max-w-3xl mx-auto">
-                    <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-6 border border-purple-200/50">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center flex items-center justify-center">
+                    <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-4 sm:p-6 border border-purple-200/50">
+                        <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-4 text-center flex items-center justify-center mobile-text-optimized">
                             <span className="mr-2">🎪</span>
                             有趣的事实
                         </h3>
-                        <ScrollRevealContainer className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+                        <ScrollRevealContainer className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 text-sm text-gray-600 mobile-personal-facts">
                             <ScrollRevealItem>
                                 <div className="flex items-center space-x-2">
-                                    <span>🍕</span>
-                                    <span>披萨是我的第二编程语言</span>
+                                    <span className="text-base flex-shrink-0">🍕</span>
+                                    <span className="mobile-text-optimized">披萨是我的第二编程语言</span>
                                 </div>
                             </ScrollRevealItem>
                             <ScrollRevealItem>
                                 <div className="flex items-center space-x-2">
-                                    <span>🌙</span>
-                                    <span>夜猫子，最佳工作时间是深夜</span>
+                                    <span className="text-base flex-shrink-0">🌙</span>
+                                    <span className="mobile-text-optimized">夜猫子，最佳工作时间是深夜</span>
                                 </div>
                             </ScrollRevealItem>
                             <ScrollRevealItem>
                                 <div className="flex items-center space-x-2">
-                                    <span>🎵</span>
-                                    <span>编程时必须听音乐</span>
+                                    <span className="text-base flex-shrink-0">🎵</span>
+                                    <span className="mobile-text-optimized">编程时必须听音乐</span>
                                 </div>
                             </ScrollRevealItem>
                             <ScrollRevealItem>
                                 <div className="flex items-center space-x-2">
-                                    <span>📚</span>
-                                    <span>技术书籍收集爱好者</span>
+                                    <span className="text-base flex-shrink-0">📚</span>
+                                    <span className="mobile-text-optimized">技术书籍收集爱好者</span>
                                 </div>
                             </ScrollRevealItem>
                         </ScrollRevealContainer>
@@ -251,3 +254,6 @@ export function PersonalIntro({ className = "" }: PersonalIntroProps) {
         </div>
     );
 }
+
+// 默认导出
+export default PersonalIntro;

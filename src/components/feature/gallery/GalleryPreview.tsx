@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import { GalleryImage as OptimizedGalleryImage } from "@/components/ui/OptimizedImage";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -238,12 +238,17 @@ function ImageCard({
                                 isPortrait ? "aspect-[3/4]" : isLandscape ? "aspect-[4/3]" : "aspect-square"
                             )}
                         >
-                            <Image
+                            <OptimizedGalleryImage
                                 src={image.url}
                                 alt={image.title || image.key}
-                                fill
-                                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                width={image.width}
+                                height={image.height}
+                                className="transition-transform duration-500 group-hover:scale-110"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                enableLazyLoading={true}
+                                loadingAnimation="blur"
+                                quality={80}
+                                aspectRatio={isPortrait ? "3:4" : isLandscape ? "4:3" : "square"}
                             />
 
                             {/* 悬停覆盖层 */}
@@ -399,12 +404,16 @@ function ImageModal({
                     >
                         {/* 图片 */}
                         <div className="relative">
-                            <Image
+                            <OptimizedGalleryImage
                                 src={image.url}
                                 alt={image.title || image.key}
                                 width={image.width}
                                 height={image.height}
-                                className="max-w-full max-h-[80vh] object-contain"
+                                className="max-w-full max-h-[80vh]"
+                                objectFit="contain"
+                                priority={true}
+                                quality={95}
+                                enableLazyLoading={false}
                             />
                         </div>
 
@@ -482,15 +491,21 @@ export function CompactGalleryPreview({
                     transition={{ delay: index * 0.05 }}
                     className="relative aspect-square rounded-lg overflow-hidden group cursor-pointer"
                 >
-                    <Image
+                    <OptimizedGalleryImage
                         src={image.url}
                         alt={image.title || image.key}
-                        fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-110"
+                        width={200}
+                        height={200}
+                        className="transition-transform duration-300 group-hover:scale-110"
+                        aspectRatio="square"
+                        enableLazyLoading={true}
+                        quality={75}
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
                 </motion.div>
             ))}
         </div>
     );
-}
+}// 
+默认导出
+export default GalleryPreview;

@@ -299,3 +299,5 @@ function CosmicGradient({ duration, intensity }: { duration: number; intensity: 
         </div>
     );
 }
+// 默认导出
+export default AnimatedGradient;
