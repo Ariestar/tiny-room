@@ -1,3 +1,5 @@
+"use client";
+
 import { HeroSection, ContentSection } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
 import { ResponsiveGrid } from "@/components/layout/ResponsiveGrid";
@@ -17,35 +19,93 @@ import { ContactInfo } from "@/components/feature/contact/ContactInfo";
 import { InteractiveEasterEggs } from "@/components/feature/contact/InteractiveEasterEggs";
 import { ScrollRevealContainer, ScrollRevealItem } from "@/components/animation/ScrollReveal";
 import { HomepageStructuredData } from "@/components/seo/StructuredData";
-import { getSortedPostsData } from "@/lib/posts";
-import { getAllProjects } from "@/lib/projects";
+import { useState, useEffect } from "react";
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo";
-import { DynamicComponents } from "@/components/utils/DynamicLoader";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { Suspense } from "react";
+import { CompatibilityTester } from "@/components/dev/CompatibilityTester";
+import { TestingDashboard } from "@/components/dev/TestingDashboard";
 
-// 生成页面元数据
-export const metadata = generateSEOMetadata({
-	title: "Tiny Room",
-	description: "一个有趣且富有个性的个人博客空间，展现创意与技术的完美融合。分享技术见解、学习心得和创意想法。",
-	keywords: [
-		"个人博客", "技术博客", "前端开发", "全栈开发", "React", "Next.js",
-		"TypeScript", "JavaScript", "Web开发", "编程", "技术分享", "创意设计"
-	],
-	url: "/",
-	type: "website"
-});
+
+// 注意：客户端组件不能导出 metadata，元数据已移至 layout.tsx
 export default function Home() {
-	// 获取最新的博客文章数据
-	const posts = getSortedPostsData();
+	// 状态管理
+	const [posts, setPosts] = useState([]);
+	const [projects, setProjects] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [error, setError] = useState(null);
 
-	// 获取项目数据
-	const allProjects = getAllProjects();
+	// 获取数据
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				setIsLoading(true);
+
+				// 并行获取博客文章和项目数据
+				const [postsResponse, projectsResponse] = await Promise.all([
+					fetch('/api/posts').then(res => res.json()),
+					fetch('/api/projects').then(res => res.json())
+				]);
+
+				setPosts(postsResponse);
+				setProjects(projectsResponse);
+			} catch (err) {
+				console.error('Error fetching data:', err);
+				setError(err);
+				// 设置默认数据以防止页面崩溃
+				setPosts([]);
+				setProjects([]);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		fetchData();
+	}, []);
+
+	// 如果正在加载，显示加载界面
+	if (isLoading) {
+		return (
+			<ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
+				<main className="min-h-screen flex items-center justify-center" role="main" aria-label="主要内容">
+					<LoadingSpinner
+						variant="creative"
+						size="lg"
+						text="正在加载精彩内容..."
+						showText={true}
+					/>
+				</main>
+			</ErrorBoundary>
+		);
+	}
+
+	// 如果有错误，显示错误信息
+	if (error) {
+		return (
+			<ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
+				<main className="min-h-screen flex items-center justify-center" role="main" aria-label="主要内容">
+					<div className="text-center p-8">
+						<h2 className="text-2xl font-bold text-gray-800 mb-4">加载数据时出现问题</h2>
+						<p className="text-gray-600 mb-6">请刷新页面重试</p>
+						<button
+							onClick={() => window.location.reload()}
+							className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+						>
+							刷新页面
+						</button>
+					</div>
+				</main>
+			</ErrorBoundary>
+		);
+	}
 
 	return (
-		<>
+		<ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
 			{/* SEO 结构化数据 */}
 			<HomepageStructuredData />
 
-			<main className="min-h-screen">
+			<main className="min-h-screen" role="main" aria-label="主要内容">
 				{/* 欢迎区域 - Hero Section */}
 				<HeroSection
 					height="lg"
@@ -117,14 +177,44 @@ export default function Home() {
 						</div>
 
 						{/* 快速导航按钮 */}
-						<ScrollRevealContainer className="flex flex-col sm:flex-row gap-4 justify-center items-center mobile-button-group">
+						<ScrollRevealContainer className="flex flex-col sm:flex-row gap-4 justify-center items-center mobile-button-group" role="navigation" aria-label="快速导航">
 							<MicroInteraction type="hover-lift" intensity="strong">
-								<ScrollRevealItem className="touch-target px-6 py-4 sm:py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer w-full sm:w-auto text-center mobile-button-feedback">
+								<ScrollRevealItem
+									className="touch-target px-6 py-4 sm:py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer w-full sm:w-auto text-center mobile-button-feedback"
+									role="button"
+									tabIndex={0}
+									aria-label="探索网站内容"
+									onKeyDown={(e) => {
+										if (e.key === 'Enter' || e.key === ' ') {
+											e.preventDefault();
+											// 滚动到内容区域
+											document.querySelector('[data-section="content"]')?.scrollIntoView({ behavior: 'smooth' });
+										}
+									}}
+									onClick={() => {
+										document.querySelector('[data-section="content"]')?.scrollIntoView({ behavior: 'smooth' });
+									}}
+								>
 									探索内容
 								</ScrollRevealItem>
 							</MicroInteraction>
 							<MicroInteraction type="hover-scale" intensity="strong">
-								<ScrollRevealItem className="touch-target px-6 py-4 sm:py-3 bg-secondary text-secondary-foreground rounded-xl font-medium hover:bg-secondary/80 transition-colors cursor-pointer w-full sm:w-auto text-center mobile-button-feedback">
+								<ScrollRevealItem
+									className="touch-target px-6 py-4 sm:py-3 bg-secondary text-secondary-foreground rounded-xl font-medium hover:bg-secondary/80 transition-colors cursor-pointer w-full sm:w-auto text-center mobile-button-feedback"
+									role="button"
+									tabIndex={0}
+									aria-label="了解更多关于作者的信息"
+									onKeyDown={(e) => {
+										if (e.key === 'Enter' || e.key === ' ') {
+											e.preventDefault();
+											// 滚动到关于我区域
+											document.querySelector('[data-section="about"]')?.scrollIntoView({ behavior: 'smooth' });
+										}
+									}}
+									onClick={() => {
+										document.querySelector('[data-section="about"]')?.scrollIntoView({ behavior: 'smooth' });
+									}}
+								>
 									了解更多
 								</ScrollRevealItem>
 							</MicroInteraction>
@@ -142,6 +232,7 @@ export default function Home() {
 					titleAlign="center"
 					divider
 					className="mobile-content-section"
+					data-section="content"
 				>
 					<Container size="lg" className="mobile-container">
 						<BlogPreview
@@ -165,7 +256,7 @@ export default function Home() {
 				>
 					<Container size="lg" className="mobile-container">
 						<ProjectShowcase
-							projects={allProjects}
+							projects={projects}
 							maxProjects={6}
 							showGitHubLink={true}
 							className="mb-6 sm:mb-8 mobile-project-grid"
@@ -246,6 +337,7 @@ export default function Home() {
 					titleAlign="center"
 					divider
 					className="mobile-content-section"
+					data-section="about"
 				>
 					<Container size="xl" className="mobile-container">
 						<PersonalIntro className="py-6 sm:py-8" />
@@ -298,5 +390,10 @@ export default function Home() {
 				</ContentSection>
 
 			</main>
-		</>);
+
+			{/* 开发环境测试工具 */}
+			<CompatibilityTester />
+			<TestingDashboard />
+		</ErrorBoundary>
+	);
 }

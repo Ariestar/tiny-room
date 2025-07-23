@@ -215,9 +215,12 @@ export function PersonalIntro({ className = "" }: PersonalIntroProps) {
                 <div className="flex justify-center">
                     <motion.button
                         onClick={() => setIsExpanded(!isExpanded)}
-                        className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+                        className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        aria-expanded={isExpanded}
+                        aria-controls="personal-details"
+                        aria-label={isExpanded ? "收起个人详细信息" : "展开个人详细信息"}
                     >
                         <span>{isExpanded ? "收起详情" : "了解更多"}</span>
                         <motion.div
@@ -239,6 +242,9 @@ export function PersonalIntro({ className = "" }: PersonalIntroProps) {
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.5, ease: "easeInOut" }}
                         className="mt-12 overflow-hidden"
+                        id="personal-details"
+                        role="region"
+                        aria-label="个人详细信息"
                     >
                         <div className="border-t border-gray-200 pt-12 space-y-12">
                             <ScrollReveal animation="fadeInUp" delay={200}>

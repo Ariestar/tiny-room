@@ -5,13 +5,21 @@ import { ThemeRegistry } from "@/components/layout/ThemeRegistry";
 import { Header } from "@/components/layout/Header";
 import "@/styles/globals.css";
 import { lxgwWenkai, bookerly } from "@/lib/fonts";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-	title: "Tiny Room - Personal Website",
-	description: "A modern personal website showcasing creativity and art",
-};
+// 生成页面元数据
+export const metadata: Metadata = generateSEOMetadata({
+	title: "Tiny Room",
+	description: "一个有趣且富有个性的个人博客空间，展现创意与技术的完美融合。分享技术见解、学习心得和创意想法。",
+	keywords: [
+		"个人博客", "技术博客", "前端开发", "全栈开发", "React", "Next.js",
+		"TypeScript", "JavaScript", "Web开发", "编程", "技术分享", "创意设计"
+	],
+	url: "/",
+	type: "website"
+});
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (

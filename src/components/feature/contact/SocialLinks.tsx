@@ -227,6 +227,15 @@ export function SocialLinks({
                             variants={animationVariants[platform.animation as keyof typeof animationVariants]}
                             whileHover="hover"
                             whileTap={{ scale: 0.95 }}
+                            aria-label={`${platform.description} - ${platform.name}`}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    handleSocialClick(platform);
+                                }
+                            }}
                         >
                             {/* 背景渐变效果 */}
                             <motion.div
