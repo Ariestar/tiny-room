@@ -42,15 +42,25 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 	}
 
 	return (
-		<div className='container mx-auto max-w-6xl px-4 py-12'>
-			<PageTransition transitionType="slide">
-				<div className='flex flex-col lg:flex-row-reverse lg:justify-between'>
-					<aside className='hidden lg:block sticky top-24 h-full w-64 flex-shrink-0 lg:pl-12'>
-						<TableOfContents toc={post.toc} />
-					</aside>
-					<main className='w-full lg:max-w-[calc(100%-16rem)]'>
-						<div className='prose prose-zinc mx-auto dark:prose-invert lg:prose-lg font-blog'>
-							<h1 className='mb-6 text-3xl font-bold' id='page-title'>
+		<>
+			{/* 浮动TOC - 桌面端，移到PageTransition外面 */}
+			<aside className='hidden lg:block fixed top-20 right-4 w-64 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-lg border border-gray-200 dark:border-gray-700 shadow-xl p-4 max-h-[calc(100vh-10rem)] overflow-y-auto transition-all duration-300 hover:shadow-2xl'>
+				<TableOfContents toc={post.toc} />
+			</aside>
+
+			<div className='container mx-auto max-w-4xl px-4 py-12'>
+				<PageTransition transitionType="slide">
+					{/* 移动端TOC - 在内容前显示 */}
+					<div className='lg:hidden mb-8'>
+						<div className='bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700'>
+							<TableOfContents toc={post.toc} />
+						</div>
+					</div>
+
+					{/* 居中的主内容 */}
+					<main className='w-full'>
+						<div className='prose prose-zinc mx-auto dark:prose-invert lg:prose-lg font-blog max-w-3xl'>
+							<h1 className='mb-6 text-3xl font-bold text-center' id='page-title'>
 								{post.title}
 							</h1>
 
@@ -58,17 +68,17 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 								date={post.date}
 								readingTime={post.readingTime || "未知"}
 								tags={post.tags}
-								className='mb-8 pb-6 border-b border-gray-200 dark:border-gray-700'
+								className='mb-8 pb-6 border-b border-gray-200 dark:border-gray-700 text-center'
 							/>
 
 							<article
-								className='text-xl'
+								className='text-lg leading-relaxed'
 								dangerouslySetInnerHTML={{ __html: post.contentHtml }}
 							/>
 						</div>
 					</main>
-				</div>
-			</PageTransition>
-		</div>
+				</PageTransition>
+			</div>
+		</>
 	);
 }

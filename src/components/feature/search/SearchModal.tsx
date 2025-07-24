@@ -229,12 +229,12 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 	if (!isOpen) return null;
 
 	return (
-		<div className='fixed inset-0 z-50 flex items-start justify-center pt-20'>
+		<div className='fixed inset-0 z-150 flex items-start justify-center pt-20'>
 			{/* 背景遮罩 */}
 			<div className='absolute inset-0 bg-black/50 backdrop-blur-sm' onClick={onClose} />
 
 			{/* 搜索框容器 */}
-			<AnimatedDiv animation='slideUp' className='relative w-full max-w-2xl mx-4'>
+			<AnimatedDiv duration={0.1} animation='slideUp' className='relative w-full max-w-2xl mx-4'>
 				<div className='bg-background border border-border rounded-lg shadow-lg overflow-hidden'>
 					{/* 搜索输入框 */}
 					<div className='flex items-center px-4 py-3 border-b border-border'>
@@ -284,11 +284,10 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 							<div
 								key={result.slug}
 								data-result-index={index}
-								className={`px-4 py-3 cursor-pointer transition-all duration-150 border-l-2 ${
-									index === selectedIndex
-										? "bg-primary/10 border-primary text-primary-foreground"
-										: "border-transparent hover:bg-accent/50 hover:border-accent"
-								}`}
+								className={`px-4 py-3 cursor-pointer transition-all duration-150 border-l-2 ${index === selectedIndex
+									? "bg-primary/10 border-primary text-primary-foreground"
+									: "border-transparent hover:bg-accent/50 hover:border-accent"
+									}`}
 								onClick={() => handleSelectResult(result)}
 							>
 								<div className='space-y-1'>
@@ -355,6 +354,6 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 					)}
 				</div>
 			</AnimatedDiv>
-		</div>
+		</div >
 	);
 }
