@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 
 // Card 主组件 Props
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {

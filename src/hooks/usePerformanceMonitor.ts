@@ -8,7 +8,7 @@ import {
   WebVitalsMetric,
   initializePerformanceMonitoring,
   generatePerformanceReport,
-} from "@/lib/performance-monitor";
+} from "@/lib/performance/monitor";
 
 // 性能监控 Hook
 export const usePerformanceMonitor = () => {

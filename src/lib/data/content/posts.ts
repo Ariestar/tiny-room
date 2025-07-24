@@ -19,7 +19,7 @@ import remarkFlexibleMarkers from "remark-flexible-markers";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeExternalLinks from "rehype-external-links";
-import { rehypeExtractToc, type TocEntry } from "./rehype-extract-toc";
+import { rehypeExtractToc, type TocEntry } from "./markdown/rehype-extract-toc";
 // 新增的Markdown插件导入
 import remarkDirective from "remark-directive";
 import remarkBreaks from "remark-breaks";

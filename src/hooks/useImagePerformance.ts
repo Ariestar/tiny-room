@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { ImageOptimizationUtils } from "@/lib/image-optimization";
+import { ImageOptimizationUtils } from "@/lib/ui/images";
 
 /**
  * 图片性能监控 Hook

@@ -16,7 +16,7 @@ import {
 import {
     runCompatibilityTestSuite,
     type DeviceTestResult
-} from "@/utils/device-compatibility-test";
+} from "@/lib/testing/device-compatibility-test";
 
 interface TestResult {
     deviceInfo: DeviceTestResult;
@@ -129,8 +129,8 @@ export function CompatibilityTester() {
                                     <button
                                         onClick={() => setAutoTest(!autoTest)}
                                         className={`text-xs px-2 py-1 rounded ${autoTest
-                                                ? 'bg-green-100 text-green-700'
-                                                : 'bg-gray-100 text-gray-600'
+                                            ? 'bg-green-100 text-green-700'
+                                            : 'bg-gray-100 text-gray-600'
                                             }`}
                                     >
                                         自动测试

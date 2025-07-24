@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import { Container, ContainerProps } from "./Container";
 
 export interface SectionProps extends React.HTMLAttributes<HTMLElement> {

@@ -1,17 +1,17 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 	/** 徽章变体 */
 	variant?:
-		| "default"
-		| "primary"
-		| "secondary"
-		| "destructive"
-		| "success"
-		| "warning"
-		| "info"
-		| "outline";
+	| "default"
+	| "primary"
+	| "secondary"
+	| "destructive"
+	| "success"
+	| "warning"
+	| "info"
+	| "outline";
 	/** 徽章尺寸 */
 	size?: "sm" | "md" | "lg";
 	/** 是否为圆形徽章 */

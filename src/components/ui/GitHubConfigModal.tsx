@@ -1,13 +1,13 @@
 "use client"
 
 import React, { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import Card, { CardHeader, CardTitle, CardContent, CardFooter } from "./Card";
 import Button from "./Button";
 import Input from "./Input";
 import Badge from "./Badge";
 import Loading from "./Loading";
-import { githubService } from "@/lib/github";
+import { githubService } from "@/lib/data/api/github";
 
 // GitHub Config Modal Props
 export interface GitHubConfigModalProps {

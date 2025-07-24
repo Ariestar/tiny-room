@@ -132,16 +132,6 @@ export function generateMetadata(config: SEOConfig): Metadata {
       apple: "/apple-touch-icon.png",
     },
 
-    // 主题颜色
-    themeColor: baseSEOConfig.themeColor,
-
-    // 视口设置
-    viewport: {
-      width: "device-width",
-      initialScale: 1,
-      maximumScale: 1,
-    },
-
     // 验证
     verification: {
       google: process.env.GOOGLE_SITE_VERIFICATION,

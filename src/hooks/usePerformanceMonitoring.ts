@@ -5,7 +5,7 @@ import {
   PerformanceUtils,
   WebVitalsMetric,
   PerformanceMetrics,
-} from "@/lib/performance-monitoring";
+} from "@/lib/performance/monitor";
 
 /**
  * Web Vitals 监控 Hook

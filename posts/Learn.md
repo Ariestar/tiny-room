@@ -499,3 +499,212 @@
   // 开发体验
   浮动面板设计, 快捷操作按钮, 测试历史记录;
   ```
+
+### 项目结构重构和 Lib 文件夹优化 (2025-01-22)
+
+- \*\*问
+
+  - 项目根目录存在 7 个不同 AI 助手配置目录，造成混乱
+  - `src/lib` 文件夹包含 20+个文件，职责不清晰，存在功能重合
+  - 组件目录结构不一致，样式文件分散
+  - 测试文件组织混乱，配置文件过多
+
+- **业界最佳实践研究**:
+
+  - **shadcn/ui**: 极简主义，只有 `utils.ts` 一个核心工具文件
+  - **Next.js**: 按功能模块分类 (constants, metadata, router, cache)
+  - **Supabase**: 按业务领域分类 (auth, database, storage)
+  - **VS Code**: 按技术层次分类 (common, platform, services)
+
+- **最终采用方案**: 技术栈分层 + 功能领域分类
+
+  ```typescript
+  src/lib/
+  ├── data/              # 数据层 - 所有数据获取和处理
+  │   ├── api/          # 外部API集成 (github, r2)
+  │   ├── content/      # 内容数据处理 (posts, projects)
+  │   │   └── markdown/ # Markdown处理工具
+  │   └── index.ts
+  │
+  ├── ui/               # 表现层 - 用户界面相关工具
+  │   ├── styles/       # 样式和布局工具 (animations, breakpoints)
+  │   ├── images/       # 图片处理工具 (optimization, utils)
+  │   └── index.ts
+  │
+  ├── system/           # 系统层 - 系统级功能和基础设施
+  │   ├── performance/  # 性能监控和优化
+  │   ├── seo/         # SEO和元数据
+  │   └── index.ts
+  │
+  ├── testing/          # 测试层 - 开发和测试工具
+  │   ├── device-compatibility.ts
+  │   ├── functional-suite.ts
+  │   └── index.ts
+  │
+  └── shared/           # 共享层 - 通用工具和定义
+      ├── utils.ts      # 通用工具函数
+      ├── constants.ts  # 全局常量
+      ├── types.ts      # 类型定义
+      └── index.ts
+  ```
+
+- **分层设计原则**:
+
+  - **单向依赖**: `shared ← data ← ui ← system ← testing`
+  - **职责明确**: 每个层级有清晰的功能边界
+  - **可扩展性**: 新功能容易找到合适的位置
+  - **维护性**: 相关功能聚合，便于团队协作
+
+- **重构优势**:
+
+  - **文件数量分散**: 每个子目录只有 3-5 个文件
+  - **导入路径清晰**: 从路径就能知道功能层级
+  - **便于维护**: 修改某个功能时影响范围明确
+  - **团队协作**: 不同开发者可以专注不同层级
+
+- **实际应用效果**:
+
+  ```typescript
+  // 清晰的分层导入
+  import { getSortedPostsData } from "@/lib/data/content"; // 数据层
+  import { imageOptimization } from "@/lib/ui/images"; // UI层
+  import { performanceMonitor } from "@/lib/performance/monitor"; // 系统层
+  import { cn, formatDate } from "@/lib/shared/utils"; // 共享层
+  ```
+
+- **经验总结**:
+  - **避免过度工程化**: 根据项目实际规模选择合适的组织方式
+  - **参考业界标准**: 学习知名项目的最佳实践，降低学习成本
+  - **保持一致性**: 建立清晰的文件组织规范并严格执行
+  - **定期重构**: 随着项目发展及时调整结构，避免技术债务积累
+
+### Next.js 15 兼容性问题修复 (2025-01-22)
+
+- **问题背景**: 升级到 Next.js 15 后遇到多个兼容性问题
+- **主要问题**:
+
+  1. **服务器组件事件处理器错误**:
+
+     - 错误: "Event handlers cannot be passed to Client Component props"
+     - 原因: Next.js 15 中服务器组件不支持事件处理器
+     - 解决: 在页面顶部添加 `"use client";` 转换为客户端组件
+
+  2. **客户端组件元数据导出错误**:
+
+     - 错误: "You are attempting to export metadata from a component marked with use client"
+     - 原因: 客户端组件不能导出 `metadata`
+     - 解决: 将 SEO 元数据移至 `layout.tsx` 根布局文件
+
+  3. **Node.js 模块访问错误**:
+     - 错误: "Module not found: Can't resolve 'fs'"
+     - 原因: 客户端组件无法访问 Node.js 模块 (fs, path 等)
+     - 解决: 创建 API 路由处理服务器端数据获取
+
+- **解决方案实施**:
+
+  ```typescript
+  // 1. 页面组件转换为客户端组件
+  "use client";
+  import { useState, useEffect } from "react";
+
+  // 2. 元数据移至布局文件
+  // src/app/layout.tsx
+  export const metadata = generateSEOMetadata({...});
+
+  // 3. 创建 API 路由
+  // src/app/api/posts/route.ts
+  export async function GET() {
+    const posts = getSortedPostsData();
+    return NextResponse.json(posts);
+  }
+
+  // 4. 客户端数据获取
+  useEffect(() => {
+    const fetchData = async () => {
+      const [postsResponse, projectsResponse] = await Promise.all([
+        fetch('/api/posts').then(res => res.json()),
+        fetch('/api/projects').then(res => res.json())
+      ]);
+      setPosts(postsResponse);
+      setProjects(projectsResponse);
+    };
+    fetchData();
+  }, []);
+  ```
+
+- **架构改进**:
+
+  - **数据获取分离**: 服务器端 API 路由 + 客户端状态管理
+  - **错误处理增强**: 加载状态、错误边界、重试机制
+  - **用户体验优化**: 并行数据获取、友好的加载界面
+
+- **经验教训**:
+  - **框架升级需谨慎**: 主要版本升级可能带来破坏性变更
+  - **架构设计要灵活**: 能够适应框架变化的架构更健壮
+  - **渐进式迁移**: 分步骤解决问题，避免一次性大改动
+  - **文档和社区**: 及时关注官方文档和社区最佳实践
+
+### 专业测试框架集成计划 (2025-01-22)
+
+- **现状分析**:
+
+  - 当前使用自制测试系统，功能有限
+  - 缺乏行业标准的测试覆盖
+  - 无法与 CI/CD 流程集成
+  - 测试结果不够专业和全面
+
+- **专业测试技术栈规划**:
+
+  ```typescript
+  {
+    "单元测试": "Vitest (比 Jest 更快)",
+    "组件测试": "@testing-library/react",
+    "E2E测试": "Playwright (比 Cypress 更强大)",
+    "视觉回归": "Chromatic + Storybook",
+    "性能测试": "Lighthouse CI",
+    "无障碍测试": "@axe-core/react",
+    "类型检查": "TypeScript strict mode"
+  }
+  ```
+
+- **测试能力对比**:
+
+  | 测试类型       | 自制版本             | 专业框架            | 差距分析                        |
+  | -------------- | -------------------- | ------------------- | ------------------------------- |
+  | **性能测试**   | 简单 Performance API | **Lighthouse CI**   | 专业框架有完整预算管理、CI 集成 |
+  | **无障碍测试** | 手动检查 ARIA        | **@axe-core/react** | 专业工具有 4000+规则、WCAG 覆盖 |
+  | **E2E 测试**   | 无                   | **Playwright**      | 真实用户场景、多浏览器并行      |
+  | **视觉测试**   | 无                   | **Chromatic**       | 像素级对比、跨浏览器截图        |
+
+- **CI/CD 集成配置**:
+
+  ```yaml
+  # GitHub Actions 工作流
+  jobs:
+    unit-tests: # Vitest 单元测试
+    e2e-tests: # Playwright E2E测试
+    lighthouse: # Lighthouse 性能测试
+    accessibility: # axe-core 无障碍测试
+    visual: # Chromatic 视觉回归测试
+  ```
+
+- **实施计划**:
+
+  1. **第一阶段**: 集成 Vitest + Testing Library (单元测试)
+  2. **第二阶段**: 添加 Playwright (E2E 测试)
+  3. **第三阶段**: 集成 Lighthouse CI (性能测试)
+  4. **第四阶段**: 添加 axe-core (无障碍测试)
+  5. **第五阶段**: 集成 Chromatic (视觉测试)
+
+- **预期收益**:
+
+  - **测试覆盖率**: 从基础检查提升到专业级全面测试
+  - **质量保证**: 自动化质量门禁，防止回归问题
+  - **开发效率**: 早期发现问题，减少调试时间
+  - **团队协作**: 标准化测试流程，便于团队维护
+
+- **经验反思**:
+  - **重新造轮子的代价**: 自制工具虽然灵活，但缺乏专业性和完整性
+  - **业界标准的价值**: 成熟框架经过大量验证，更可靠
+  - **渐进式采用**: 不必一次性替换，可以逐步集成专业工具
+  - **学习成本**: 投入时间学习专业工具，长期收益更大

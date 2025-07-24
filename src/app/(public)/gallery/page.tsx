@@ -1,14 +1,14 @@
 "use client";
 
-import { listImages } from "@/lib/r2";
+import { listImages } from "@/lib/data/api/r2";
 import { useEffect, useState, useCallback, Suspense } from "react";
 import Image from "next/image";
 import Masonry from "react-masonry-css";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FullscreenCarousel } from "@/components/feature/gallery/FullscreenCarousel";
-import { useScrollAnimation } from "@/lib/useScrollAnimation";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import Loading from "@/components/ui/Loading";
 
 // Define and export a type for the image data
@@ -157,9 +157,9 @@ function GalleryClient() {
 				image={
 					selectedImage
 						? {
-								...selectedImage,
-								url: preloadedBlobs[selectedImage.key] || selectedImage.url,
-						  }
+							...selectedImage,
+							url: preloadedBlobs[selectedImage.key] || selectedImage.url,
+						}
 						: null
 				}
 				onClose={handleClose}

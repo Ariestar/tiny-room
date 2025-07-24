@@ -1,4 +1,4 @@
-import { getSortedPostsData } from "@/lib/posts";
+import { getSortedPostsData } from "@/lib/data/content/posts";
 import { DataTable, columns } from "./data-table";
 
 export default function DashboardBlogPage() {

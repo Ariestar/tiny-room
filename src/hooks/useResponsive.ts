@@ -1,21 +1,22 @@
-"use client";
+/**
+ * 统一响应式设计 Hook
+ * Unified Responsive Design Hook
+ */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
-  Breakpoint,
   breakpoints,
+  type Breakpoint,
+  type BreakpointKey,
   getCurrentBreakpoint,
   matchesBreakpoint,
-  isMobile,
-  isTablet,
-  isDesktop,
-  isTouchDevice,
-  isRetinaDisplay,
   getResponsiveValue,
-} from "@/lib/breakpoints";
+  deviceDetection,
+  responsiveLayout,
+  mobileOptimization,
+} from "@/lib/ui/responsive";
 
-// 响应式状态接口
-interface ResponsiveState {
+export interface ResponsiveState {
   currentBreakpoint: Breakpoint;
   isMobile: boolean;
   isTablet: boolean;
@@ -24,42 +25,97 @@ interface ResponsiveState {
   isRetinaDisplay: boolean;
   windowWidth: number;
   windowHeight: number;
+  orientation: "portrait" | "landscape";
+  devicePixelRatio: number;
 }
 
-// 主要的响应式Hook
-export const useResponsive = () => {
-  const [state, setState] = useState<ResponsiveState>(() => ({
-    currentBreakpoint: "lg", // SSR默认值
-    isMobile: false,
-    isTablet: false,
-    isDesktop: true,
-    isTouchDevice: false,
-    isRetinaDisplay: false,
-    windowWidth: 1024,
-    windowHeight: 768,
-  }));
+export interface MobileOptimizationConfig {
+  /** 是否为移动设备 */
+  isMobile: boolean;
+  /** 是否为平板设备 */
+  isTablet: boolean;
+  /** 是否为桌面设备 */
+  isDesktop: boolean;
+  /** 屏幕宽度 */
+  screenWidth: number;
+  /** 屏幕高度 */
+  screenHeight: number;
+  /** 是否为触控设备 */
+  isTouchDevice: boolean;
+  /** 是否支持悬停 */
+  supportsHover: boolean;
+  /** 设备像素比 */
+  devicePixelRatio: number;
+  /** 是否为横屏 */
+  isLandscape: boolean;
+  /** 是否为竖屏 */
+  isPortrait: boolean;
+  /** 网络连接类型 */
+  connectionType: string;
+  /** 是否为慢速网络 */
+  isSlowConnection: boolean;
+}
+
+/**
+ * 响应式状态 Hook
+ */
+export function useResponsive(): ResponsiveState {
+  const [state, setState] = useState<ResponsiveState>(() => {
+    if (typeof window === "undefined") {
+      return {
+        currentBreakpoint: "lg" as Breakpoint,
+        isMobile: false,
+        isTablet: false,
+        isDesktop: true,
+        isTouchDevice: false,
+        isRetinaDisplay: false,
+        windowWidth: 1024,
+        windowHeight: 768,
+        orientation: "landscape" as const,
+        devicePixelRatio: 1,
+      };
+    }
+
+    return {
+      currentBreakpoint: getCurrentBreakpoint(),
+      isMobile: window.innerWidth < breakpoints.md,
+      isTablet:
+        window.innerWidth >= breakpoints.md &&
+        window.innerWidth < breakpoints.lg,
+      isDesktop: window.innerWidth >= breakpoints.lg,
+      isTouchDevice: deviceDetection.isTouchDevice(),
+      isRetinaDisplay: deviceDetection.isRetinaDisplay(),
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight,
+      orientation: deviceDetection.getOrientation(),
+      devicePixelRatio: deviceDetection.getDevicePixelRatio(),
+    };
+  });
 
   const updateState = useCallback(() => {
     if (typeof window === "undefined") return;
 
     setState({
       currentBreakpoint: getCurrentBreakpoint(),
-      isMobile: isMobile(),
-      isTablet: isTablet(),
-      isDesktop: isDesktop(),
-      isTouchDevice: isTouchDevice(),
-      isRetinaDisplay: isRetinaDisplay(),
+      isMobile: window.innerWidth < breakpoints.md,
+      isTablet:
+        window.innerWidth >= breakpoints.md &&
+        window.innerWidth < breakpoints.lg,
+      isDesktop: window.innerWidth >= breakpoints.lg,
+      isTouchDevice: deviceDetection.isTouchDevice(),
+      isRetinaDisplay: deviceDetection.isRetinaDisplay(),
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
+      orientation: deviceDetection.getOrientation(),
+      devicePixelRatio: deviceDetection.getDevicePixelRatio(),
     });
   }, []);
 
   useEffect(() => {
-    // 初始化状态
-    updateState();
+    if (typeof window === "undefined") return;
 
-    // 监听窗口大小变化
     let timeoutId: NodeJS.Timeout;
+
     const handleResize = () => {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(updateState, 100); // 防抖
@@ -69,332 +125,378 @@ export const useResponsive = () => {
     window.addEventListener("orientationchange", updateState);
 
     return () => {
+      clearTimeout(timeoutId);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("orientationchange", updateState);
-      clearTimeout(timeoutId);
     };
   }, [updateState]);
 
-  // 检查是否匹配特定断点
-  const matches = useCallback((breakpoint: Breakpoint) => {
+  return state;
+}
+
+/**
+ * 断点匹配 Hook
+ */
+export function useBreakpoint() {
+  const { currentBreakpoint, windowWidth } = useResponsive();
+
+  const matches = useCallback((breakpoint: BreakpointKey) => {
     return matchesBreakpoint(breakpoint);
   }, []);
 
-  // 获取响应式值
-  const getValue = useCallback(
-    <T>(values: Partial<Record<Breakpoint, T>>, fallback: T): T => {
-      return getResponsiveValue(values, fallback);
+  const isAbove = useCallback(
+    (breakpoint: BreakpointKey) => {
+      return windowWidth >= breakpoints[breakpoint];
     },
-    []
+    [windowWidth]
   );
 
-  return {
-    ...state,
-    matches,
-    getValue,
-  };
-};
-
-// 断点匹配Hook
-export const useBreakpoint = (breakpoint: Breakpoint) => {
-  const [matches, setMatches] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const mediaQuery = window.matchMedia(
-      `(min-width: ${breakpoints[breakpoint]}px)`
-    );
-
-    const handleChange = (e: MediaQueryListEvent) => {
-      setMatches(e.matches);
-    };
-
-    setMatches(mediaQuery.matches);
-    mediaQuery.addEventListener("change", handleChange);
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleChange);
-    };
-  }, [breakpoint]);
-
-  return matches;
-};
-
-// 媒体查询Hook
-export const useMediaQuery = (query: string) => {
-  const [matches, setMatches] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const mediaQuery = window.matchMedia(query);
-
-    const handleChange = (e: MediaQueryListEvent) => {
-      setMatches(e.matches);
-    };
-
-    setMatches(mediaQuery.matches);
-    mediaQuery.addEventListener("change", handleChange);
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleChange);
-    };
-  }, [query]);
-
-  return matches;
-};
-
-// 移动端检测Hook
-export const useMobile = () => {
-  const { isMobile } = useResponsive();
-  return isMobile;
-};
-
-// 触摸设备检测Hook
-export const useTouch = () => {
-  const { isTouchDevice } = useResponsive();
-  return isTouchDevice;
-};
-
-// 方向检测Hook
-export const useOrientation = () => {
-  const [orientation, setOrientation] = useState<"portrait" | "landscape">(
-    "portrait"
+  const isBelow = useCallback(
+    (breakpoint: BreakpointKey) => {
+      return windowWidth < breakpoints[breakpoint];
+    },
+    [windowWidth]
   );
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const updateOrientation = () => {
-      setOrientation(
-        window.innerHeight > window.innerWidth ? "portrait" : "landscape"
+  const isBetween = useCallback(
+    (start: BreakpointKey, end: BreakpointKey) => {
+      return (
+        windowWidth >= breakpoints[start] && windowWidth < breakpoints[end]
       );
-    };
-
-    updateOrientation();
-    window.addEventListener("resize", updateOrientation);
-    window.addEventListener("orientationchange", updateOrientation);
-
-    return () => {
-      window.removeEventListener("resize", updateOrientation);
-      window.removeEventListener("orientationchange", updateOrientation);
-    };
-  }, []);
-
-  return orientation;
-};
-
-// 安全区域Hook
-export const useSafeArea = () => {
-  const [safeArea, setSafeArea] = useState({
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  });
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const updateSafeArea = () => {
-      const computedStyle = getComputedStyle(document.documentElement);
-
-      setSafeArea({
-        top: parseInt(
-          computedStyle.getPropertyValue("env(safe-area-inset-top)") || "0"
-        ),
-        right: parseInt(
-          computedStyle.getPropertyValue("env(safe-area-inset-right)") || "0"
-        ),
-        bottom: parseInt(
-          computedStyle.getPropertyValue("env(safe-area-inset-bottom)") || "0"
-        ),
-        left: parseInt(
-          computedStyle.getPropertyValue("env(safe-area-inset-left)") || "0"
-        ),
-      });
-    };
-
-    updateSafeArea();
-    window.addEventListener("resize", updateSafeArea);
-
-    return () => {
-      window.removeEventListener("resize", updateSafeArea);
-    };
-  }, []);
-
-  return safeArea;
-};
-
-// 视口尺寸Hook
-export const useViewport = () => {
-  const [viewport, setViewport] = useState({
-    width: 1024,
-    height: 768,
-    scrollY: 0,
-  });
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const updateViewport = () => {
-      setViewport({
-        width: window.innerWidth,
-        height: window.innerHeight,
-        scrollY: window.scrollY,
-      });
-    };
-
-    updateViewport();
-
-    let timeoutId: NodeJS.Timeout;
-    const handleResize = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(updateViewport, 100);
-    };
-
-    const handleScroll = () => {
-      setViewport((prev) => ({
-        ...prev,
-        scrollY: window.scrollY,
-      }));
-    };
-
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      window.removeEventListener("scroll", handleScroll);
-      clearTimeout(timeoutId);
-    };
-  }, []);
-
-  return viewport;
-};
-
-// 响应式类名生成Hook
-export const useResponsiveClasses = () => {
-  const { currentBreakpoint, isMobile, isTablet, isDesktop, isTouchDevice } =
-    useResponsive();
-
-  const getClasses = useCallback(
-    (
-      classes: Partial<
-        Record<Breakpoint | "mobile" | "tablet" | "desktop" | "touch", string>
-      >
-    ): string => {
-      const activeClasses: string[] = [];
-
-      // 断点特定类名
-      if (classes[currentBreakpoint]) {
-        activeClasses.push(classes[currentBreakpoint]!);
-      }
-
-      // 设备类型类名
-      if (isMobile && classes.mobile) {
-        activeClasses.push(classes.mobile);
-      }
-      if (isTablet && classes.tablet) {
-        activeClasses.push(classes.tablet);
-      }
-      if (isDesktop && classes.desktop) {
-        activeClasses.push(classes.desktop);
-      }
-      if (isTouchDevice && classes.touch) {
-        activeClasses.push(classes.touch);
-      }
-
-      return activeClasses.join(" ");
     },
-    [currentBreakpoint, isMobile, isTablet, isDesktop, isTouchDevice]
+    [windowWidth]
   );
 
   return {
-    getClasses,
-    currentBreakpoint,
-    isMobile,
-    isTablet,
-    isDesktop,
-    isTouchDevice,
+    current: currentBreakpoint,
+    matches,
+    isAbove,
+    isBelow,
+    isBetween,
+    // 便捷检查
+    isMobile: windowWidth < breakpoints.md,
+    isTablet: isBetween("md", "lg"),
+    isDesktop: isAbove("lg"),
   };
-};
+}
 
-// 响应式样式Hook
-export const useResponsiveStyles = () => {
+/**
+ * 响应式值选择 Hook
+ */
+export function useResponsiveValue<T>(
+  values: Partial<Record<BreakpointKey, T>>,
+  defaultValue: T
+): T {
   const { currentBreakpoint } = useResponsive();
 
-  const getStyles = useCallback(
-    <T>(
-      styles: Partial<Record<Breakpoint, T>>,
-      fallback?: T
-    ): T | undefined => {
-      return getResponsiveValue(styles, fallback);
-    },
-    []
+  return useMemo(() => {
+    return getResponsiveValue(values, defaultValue);
+  }, [values, defaultValue, currentBreakpoint]);
+}
+
+/**
+ * 移动端优化 Hook
+ */
+export function useMobileOptimization(): MobileOptimizationConfig {
+  const responsive = useResponsive();
+  const [networkInfo, setNetworkInfo] = useState<{
+    effectiveType: string;
+    downlink: number;
+    rtt: number;
+    saveData: boolean;
+  } | null>(null);
+
+  useEffect(() => {
+    if (typeof navigator === "undefined" || !("connection" in navigator))
+      return;
+
+    const connection = (navigator as any).connection;
+    if (connection) {
+      const updateNetworkInfo = () => {
+        setNetworkInfo({
+          effectiveType: connection.effectiveType,
+          downlink: connection.downlink,
+          rtt: connection.rtt,
+          saveData: connection.saveData,
+        });
+      };
+
+      updateNetworkInfo();
+      connection.addEventListener("change", updateNetworkInfo);
+
+      return () => {
+        connection.removeEventListener("change", updateNetworkInfo);
+      };
+    }
+  }, []);
+
+  return useMemo(
+    () => ({
+      isMobile: responsive.isMobile,
+      isTablet: responsive.isTablet,
+      isDesktop: responsive.isDesktop,
+      screenWidth: responsive.windowWidth,
+      screenHeight: responsive.windowHeight,
+      isTouchDevice: responsive.isTouchDevice,
+      supportsHover: !responsive.isTouchDevice,
+      devicePixelRatio: responsive.devicePixelRatio,
+      isLandscape: responsive.orientation === "landscape",
+      isPortrait: responsive.orientation === "portrait",
+      connectionType: networkInfo?.effectiveType || "unknown",
+      isSlowConnection: networkInfo
+        ? ["slow-2g", "2g", "3g"].includes(networkInfo.effectiveType)
+        : false,
+    }),
+    [responsive, networkInfo]
   );
+}
 
-  return { getStyles, currentBreakpoint };
-};
+/**
+ * 响应式布局 Hook
+ */
+export function useResponsiveLayout() {
+  const { windowWidth } = useResponsive();
 
-// 设备特性检测Hook
-export const useDeviceFeatures = () => {
-  const [features, setFeatures] = useState({
-    hasTouch: false,
-    hasHover: false,
-    hasPointer: false,
-    supportsWebP: false,
-    supportsAVIF: false,
-    prefersReducedMotion: false,
-    prefersDarkMode: false,
-  });
+  return useMemo(
+    () => ({
+      columns: responsiveLayout.getColumnCount(windowWidth),
+      spacing: responsiveLayout.getSpacing(windowWidth),
+      fontSize: (baseSize: number = 16) =>
+        responsiveLayout.getFontSize(windowWidth, baseSize),
+      imageSize: (containerWidth: number = 1200) =>
+        responsiveLayout.getImageSize(windowWidth, containerWidth),
+      gridConfig: responsiveLayout.getGridConfig(windowWidth),
+    }),
+    [windowWidth]
+  );
+}
+
+/**
+ * 移动端动画配置 Hook
+ */
+export function useMobileAnimationConfig() {
+  const { isMobile, isTouchDevice } = useMobileOptimization();
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const checkFeatures = async () => {
-      // 检查WebP支持
-      const checkWebP = () => {
-        return new Promise<boolean>((resolve) => {
-          const webP = new Image();
-          webP.onload = webP.onerror = () => resolve(webP.height === 2);
-          webP.src =
-            "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA";
-        });
-      };
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
 
-      // 检查AVIF支持
-      const checkAVIF = () => {
-        return new Promise<boolean>((resolve) => {
-          const avif = new Image();
-          avif.onload = avif.onerror = () => resolve(avif.height === 2);
-          avif.src =
-            "data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgABogQEAwgMg8f8D///8WfhwB8+ErK42A=";
-        });
-      };
-
-      const [supportsWebP, supportsAVIF] = await Promise.all([
-        checkWebP(),
-        checkAVIF(),
-      ]);
-
-      setFeatures({
-        hasTouch: "ontouchstart" in window || navigator.maxTouchPoints > 0,
-        hasHover: window.matchMedia("(hover: hover)").matches,
-        hasPointer: window.matchMedia("(pointer: fine)").matches,
-        supportsWebP,
-        supportsAVIF,
-        prefersReducedMotion: window.matchMedia(
-          "(prefers-reduced-motion: reduce)"
-        ).matches,
-        prefersDarkMode: window.matchMedia("(prefers-color-scheme: dark)")
-          .matches,
-      });
+    const handleChange = (e: MediaQueryListEvent) => {
+      setPrefersReducedMotion(e.matches);
     };
 
-    checkFeatures();
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
-  return features;
-};
+  return useMemo(() => {
+    const shouldReduceMotion = prefersReducedMotion || isMobile;
+
+    return {
+      shouldAnimate: !prefersReducedMotion,
+      reducedMotion: shouldReduceMotion,
+      duration: shouldReduceMotion ? 0.2 : 0.3,
+      disableParallax: isMobile || isTouchDevice,
+      disableAutoplay: isMobile,
+      enableHardwareAcceleration: !isMobile,
+    };
+  }, [prefersReducedMotion, isMobile, isTouchDevice]);
+}
+
+/**
+ * 移动端触控优化 Hook
+ */
+export function useMobileTouchOptimization() {
+  const { isTouchDevice, isMobile } = useMobileOptimization();
+
+  return useMemo(
+    () => ({
+      isTouchDevice,
+      minTouchTarget: isTouchDevice ? 44 : 32, // 44px for touch, 32px for mouse
+      touchTargetStyle: isTouchDevice
+        ? {
+            minWidth: "44px",
+            minHeight: "44px",
+            padding: "12px",
+          }
+        : {
+            minWidth: "32px",
+            minHeight: "32px",
+            padding: "8px",
+          },
+      spacing: isMobile
+        ? {
+            xs: 4,
+            sm: 8,
+            md: 12,
+            lg: 16,
+            xl: 24,
+          }
+        : {
+            xs: 8,
+            sm: 12,
+            md: 16,
+            lg: 24,
+            xl: 32,
+          },
+      shouldSimplifyUI: mobileOptimization.shouldSimplifyUI(),
+    }),
+    [isTouchDevice, isMobile]
+  );
+}
+
+/**
+ * 移动端布局优化 Hook
+ */
+export function useMobileLayoutOptimization() {
+  const responsive = useResponsive();
+  const layout = useResponsiveLayout();
+  const touch = useMobileTouchOptimization();
+
+  return useMemo(
+    () => ({
+      // 布局配置
+      layout: {
+        columns: layout.columns,
+        spacing: layout.spacing,
+        containerPadding: responsive.isMobile ? 16 : 24,
+        maxWidth: responsive.isMobile ? "100%" : "1200px",
+      },
+
+      // 字体配置
+      typography: {
+        baseSize: responsive.isMobile ? 14 : 16,
+        headingScale: responsive.isMobile ? 1.2 : 1.25,
+        lineHeight: responsive.isMobile ? 1.4 : 1.6,
+      },
+
+      // 交互配置
+      interaction: {
+        ...touch,
+        hoverEnabled: !responsive.isTouchDevice,
+        focusVisible: true,
+      },
+
+      // 性能配置
+      performance: {
+        lazyLoadThreshold: responsive.isMobile ? "50px" : "100px",
+        imageQuality: responsive.isMobile ? 75 : 85,
+        enableAnimations: !responsive.isMobile,
+      },
+    }),
+    [responsive, layout, touch]
+  );
+}
+
+/**
+ * 移动端性能优化 Hook
+ */
+export function useMobilePerformanceOptimization() {
+  const mobile = useMobileOptimization();
+  const animation = useMobileAnimationConfig();
+
+  return useMemo(
+    () => ({
+      // 图片优化
+      images: {
+        quality: mobile.isSlowConnection ? 60 : mobile.isMobile ? 75 : 85,
+        format: "webp",
+        lazyLoad: true,
+        placeholder: "blur",
+        sizes: mobile.isMobile ? "100vw" : "50vw",
+      },
+
+      // 动画优化
+      animations: {
+        ...animation,
+        stagger: animation.reducedMotion ? 0 : 0.1,
+        parallax: !mobile.isMobile && !animation.disableParallax,
+      },
+
+      // 资源优化
+      resources: {
+        preload: !mobile.isSlowConnection,
+        prefetch: mobile.isDesktop && !mobile.isSlowConnection,
+        codesplitting: true,
+        bundleSize: mobile.isMobile ? "small" : "normal",
+      },
+
+      // 网络优化
+      network: {
+        timeout: mobile.isSlowConnection ? 10000 : 5000,
+        retry: mobile.isSlowConnection ? 1 : 3,
+        compression: true,
+        caching: true,
+      },
+    }),
+    [mobile, animation]
+  );
+}
+
+/**
+ * 方向变化 Hook
+ */
+export function useOrientation() {
+  const [orientation, setOrientation] = useState<"portrait" | "landscape">(
+    () => {
+      if (typeof window === "undefined") return "portrait";
+      return deviceDetection.getOrientation();
+    }
+  );
+
+  useEffect(() => {
+    const handleOrientationChange = () => {
+      setOrientation(deviceDetection.getOrientation());
+    };
+
+    window.addEventListener("orientationchange", handleOrientationChange);
+    window.addEventListener("resize", handleOrientationChange);
+
+    return () => {
+      window.removeEventListener("orientationchange", handleOrientationChange);
+      window.removeEventListener("resize", handleOrientationChange);
+    };
+  }, []);
+
+  return {
+    orientation,
+    isPortrait: orientation === "portrait",
+    isLandscape: orientation === "landscape",
+  };
+}
+
+/**
+ * 容器查询 Hook (实验性)
+ */
+export function useContainerQuery(containerRef: React.RefObject<HTMLElement>) {
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(0);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setContainerWidth(entry.contentRect.width);
+        setContainerHeight(entry.contentRect.height);
+      }
+    });
+
+    resizeObserver.observe(containerRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [containerRef]);
+
+  return {
+    width: containerWidth,
+    height: containerHeight,
+    isSmall: containerWidth < 400,
+    isMedium: containerWidth >= 400 && containerWidth < 800,
+    isLarge: containerWidth >= 800,
+  };
+}

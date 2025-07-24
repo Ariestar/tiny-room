@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 
 export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
 	/** 警告框变体 */

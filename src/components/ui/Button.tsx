@@ -3,20 +3,20 @@
 import React from "react";
 import { motion, HTMLMotionProps, Variants, useAnimation } from "framer-motion";
 import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@/lib/utils";
-import { hoverVariants, tapVariants, durations, easings } from "@/lib/animations";
+import { cn } from "@/lib/shared/utils";
+import { optimizedAnimationVariants, easingConfig } from "@/lib/ui/animations";
 import Loading from "./Loading";
 
 export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "size"> {
 	/** 按钮变体 */
 	variant?:
-		| "primary"
-		| "secondary"
-		| "ghost"
-		| "outline"
-		| "destructive"
-		| "gradient"
-		| "minimal";
+	| "primary"
+	| "secondary"
+	| "ghost"
+	| "outline"
+	| "destructive"
+	| "gradient"
+	| "minimal";
 	/** 按钮尺寸 */
 	size?: "sm" | "md" | "lg" | "xl" | "icon";
 	/** 是否为加载状态 */
@@ -162,19 +162,19 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					variant === "primary"
 						? "0 10px 25px rgba(0, 112, 243, 0.15)"
 						: variant === "gradient"
-						? "0 10px 25px rgba(124, 58, 237, 0.2)"
-						: "0 4px 12px rgba(0, 0, 0, 0.15)",
+							? "0 10px 25px rgba(124, 58, 237, 0.2)"
+							: "0 4px 12px rgba(0, 0, 0, 0.15)",
 				transition: {
-					duration: durations.fast,
-					ease: easings.easeOut,
+					duration: 0.2,
+					ease: easingConfig.easeOut,
 				},
 			},
 			tap: {
 				scale: 0.98,
 				y: 0,
 				transition: {
-					duration: durations.fast / 2,
-					ease: easings.easeOut,
+					duration: 0.1,
+					ease: easingConfig.easeOut,
 				},
 			},
 		};
@@ -186,7 +186,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 				transition: {
 					duration: 1.5,
 					repeat: Infinity,
-					ease: easings.easeInOut,
+					ease: easingConfig.easeInOut,
 				},
 			},
 		};
@@ -198,8 +198,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 				opacity: 1,
 				scale: 1.1,
 				transition: {
-					duration: durations.normal,
-					ease: easings.easeOut,
+					duration: 0.6,
+					ease: easingConfig.easeOut,
 				},
 			},
 		};
@@ -239,7 +239,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 			rest: { opacity: 1 },
 			loading: {
 				opacity: 0.6,
-				transition: { duration: durations.fast },
+				transition: { duration: 0.2 },
 			},
 		};
 

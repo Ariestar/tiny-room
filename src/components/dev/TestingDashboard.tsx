@@ -17,11 +17,11 @@ import {
 import {
     runFunctionalTestSuite,
     type TestSuiteResult
-} from "@/utils/functional-test-suite";
+} from "@/lib/testing/functional-test-suite";
 import {
     generatePerformanceReport,
     type PerformanceMetrics
-} from "@/utils/performance-optimizer";
+} from "@/lib/system/performance/performance-optimizer";
 
 interface TestingDashboardState {
     functionalTests: TestSuiteResult | null;

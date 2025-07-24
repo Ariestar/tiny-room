@@ -2,13 +2,13 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import {
     prefersReducedMotion,
     createResponsiveAnimationConfig,
     AnimationPerformanceMonitor,
     createThrottledAnimationTrigger
-} from "@/lib/animation-performance";
+} from "@/lib/ui/animations";
 
 export interface DynamicBackgroundProps {
     /** 背景变体 */

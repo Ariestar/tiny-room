@@ -20,7 +20,7 @@ import { InteractiveEasterEggs } from "@/components/feature/contact/InteractiveE
 import { ScrollRevealContainer, ScrollRevealItem } from "@/components/animation/ScrollReveal";
 import { HomepageStructuredData } from "@/components/seo/StructuredData";
 import { useState, useEffect } from "react";
-import { generateMetadata as generateSEOMetadata } from "@/lib/seo";
+import { generateMetadata as generateSEOMetadata } from "@/lib/system/seo/seo";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { Suspense } from "react";

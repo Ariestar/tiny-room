@@ -10,7 +10,7 @@ import {
     AdaptiveQualityManager,
     ImageErrorHandler,
     ImagePerformanceMonitor
-} from "@/lib/image-optimization";
+} from "@/lib/ui/images";
 import { useAnimationPerformance } from "@/hooks/useAnimationPerformance";
 
 interface EnhancedImageProps extends Omit<ImageProps, 'placeholder' | 'quality'> {

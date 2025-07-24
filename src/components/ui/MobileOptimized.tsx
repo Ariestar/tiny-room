@@ -3,7 +3,7 @@
 import { forwardRef, ReactNode, ButtonHTMLAttributes, HTMLAttributes } from "react";
 import { motion, MotionProps } from "framer-motion";
 import { useResponsive, useTouch, useOrientation } from "@/hooks/useResponsive";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 
 // 移动端优化按钮
 interface MobileButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

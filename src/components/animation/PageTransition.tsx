@@ -2,8 +2,8 @@
 
 import React from "react";
 import { motion, HTMLMotionProps, Variants, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { pageVariants, pageTransition, durations, easings } from "@/lib/animations";
+import { cn } from "@/lib/shared/utils";
+import { pageTransitions, easingConfig } from "@/lib/ui/animations";
 
 // 页面转场类型
 export type PageTransitionType =
@@ -80,7 +80,11 @@ const createPageVariants = (transitionType: PageTransitionType, duration: number
 			};
 
 		default: // 'slide'
-			return pageVariants;
+			return {
+				initial: { x: 30, opacity: 0 },
+				in: { x: 0, opacity: 1 },
+				out: { x: -30, opacity: 0 },
+			};
 	}
 };
 
@@ -97,7 +101,7 @@ export const PageTransition = React.forwardRef<HTMLDivElement, PageTransitionPro
 		{
 			transitionType = "slide",
 			variants,
-			duration = durations.normal,
+			duration = 0.6,
 			disableAnimation = false,
 			children,
 			className,
@@ -120,26 +124,27 @@ export const PageTransition = React.forwardRef<HTMLDivElement, PageTransitionPro
 		// 创建转场配置
 		const transition = {
 			type: "tween",
-			ease: easings.easeInOut,
+			ease: easingConfig.easeInOut,
 			duration,
 		};
 
 		return (
-			<AnimatePresence mode='wait'>
-				<motion.div
-					ref={ref}
-					key={transitionType}
-					initial='initial'
-					animate='in'
-					exit='out'
-					variants={animationVariants}
-					transition={transition}
-					className={cn("w-full", className)}
-					{...props}
-				>
-					{children}
-				</motion.div>
-			</AnimatePresence>
+			<motion.div
+				ref={ref}
+				initial='initial'
+				animate='in'
+				variants={animationVariants}
+				transition={transition}
+				className={cn("w-full relative", className)}
+				style={{
+					willChange: 'transform, opacity',
+					isolation: 'isolate',
+					contain: 'layout style paint'
+				}}
+				{...props}
+			>
+				{children}
+			</motion.div>
 		);
 	}
 );

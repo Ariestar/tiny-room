@@ -7,7 +7,7 @@ import {
     createResponsiveAnimationConfig,
     AnimationPerformanceMonitor,
     createThrottledAnimationTrigger
-} from "@/lib/animation-performance";
+} from "@/lib/ui/animations";
 
 export interface MouseFollowParticlesProps {
     /** 粒子数量 */

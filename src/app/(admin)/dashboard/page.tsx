@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, StatCard } f
 import { BarChart, PenSquare, Eye, Users, GitBranch, Star, GitFork, Activity } from "lucide-react";
 import { auth } from "@/auth";
 import { Button } from "@/components/ui";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import Link from "next/link";
 
 const stats = [

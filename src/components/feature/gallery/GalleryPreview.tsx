@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { GalleryImage as OptimizedGalleryImage } from "@/components/ui/OptimizedImage";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import { CreativeCard } from "@/components/ui/CreativeCard";
 import { ScrollReveal, ScrollRevealContainer, ScrollRevealItem } from "@/components/animation/ScrollReveal";
 import {

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 
 export interface NavigationItem {
 	/** 导航项标识 */

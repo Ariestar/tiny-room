@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 
 export interface MicroInteractionProps {
     /** 交互类型 */

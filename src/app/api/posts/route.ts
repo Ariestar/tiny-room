@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSortedPostsData } from "@/lib/posts";
+import { getSortedPostsData } from "@/lib/data/content/posts";
 
 export async function GET() {
   try {

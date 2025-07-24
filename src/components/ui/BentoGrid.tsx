@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import { motion } from "framer-motion";
 
@@ -41,7 +41,7 @@ const bentoCardVariants = cva(
 
 export interface BentoCardProps
 	extends React.ComponentProps<typeof motion.div>,
-		VariantProps<typeof bentoCardVariants> {}
+	VariantProps<typeof bentoCardVariants> { }
 
 export const BentoCard = ({ className, size, children, ...props }: BentoCardProps) => {
 	return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 
 export interface LoadingProps extends React.HTMLAttributes<HTMLDivElement> {
 	/** 加载动画类型 */
@@ -124,10 +124,10 @@ const Loading = React.forwardRef<HTMLDivElement, LoadingProps>(
 								size === "sm"
 									? "12px"
 									: size === "md"
-									? "16px"
-									: size === "lg"
-									? "20px"
-									: "24px",
+										? "16px"
+										: size === "lg"
+											? "20px"
+											: "24px",
 							animationDelay: `${index * 0.15}s`,
 							animationDuration: "1.2s",
 							backgroundColor: "currentColor",

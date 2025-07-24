@@ -1,13 +1,13 @@
 "use client";
 
-import { getSortedPostsData } from "@/lib/posts";
+import { getSortedPostsData } from "@/lib/data/content/posts";
 import Link from "next/link";
 import Image from "next/image";
 import { BentoCard, BentoGrid } from "@/components/ui/BentoGrid";
 import Badge from "@/components/ui/Badge";
 import { useState } from "react";
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
-import { useScrollAnimation } from "@/lib/useScrollAnimation";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 type Post = ReturnType<typeof getSortedPostsData>[number];
 
@@ -63,14 +63,12 @@ const FeaturedPostCard = ({ post }: { post: Post }) => (
 			</div>
 		)}
 		<div
-			className={`flex-grow flex flex-col ${
-				post.coverImage ? "absolute bottom-0 p-6" : "p-2"
-			}`}
+			className={`flex-grow flex flex-col ${post.coverImage ? "absolute bottom-0 p-6" : "p-2"
+				}`}
 		>
 			<h2
-				className={`text-4xl font-bold mb-4 group-hover:text-primary transition-colors ${
-					post.coverImage ? "text-white" : ""
-				}`}
+				className={`text-4xl font-bold mb-4 group-hover:text-primary transition-colors ${post.coverImage ? "text-white" : ""
+					}`}
 			>
 				{post.title}
 			</h2>
@@ -82,9 +80,8 @@ const FeaturedPostCard = ({ post }: { post: Post }) => (
 				))}
 			</div>
 			<div
-				className={`flex items-center text-sm mt-auto ${
-					post.coverImage ? "text-gray-300" : "text-muted-foreground"
-				}`}
+				className={`flex items-center text-sm mt-auto ${post.coverImage ? "text-gray-300" : "text-muted-foreground"
+					}`}
 			>
 				<span>
 					{new Date(post.date).toLocaleDateString("en-US", {

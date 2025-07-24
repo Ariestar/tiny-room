@@ -2,7 +2,7 @@
 
 import { motion, MotionProps, Variants } from "framer-motion";
 import { forwardRef, ReactNode } from "react";
-import { useOptimizedAnimation, performantVariants, performantTransitions } from "@/lib/animation-utils";
+import { useOptimizedAnimation, optimizedAnimationVariants as performantVariants, optimizedSpringConfig as performantTransitions } from "@/lib/ui/animations";
 
 interface OptimizedMotionProps extends Omit<MotionProps, 'variants' | 'transition'> {
     children: ReactNode;
@@ -37,8 +37,12 @@ export const OptimizedMotion = forwardRef<HTMLDivElement, OptimizedMotionProps>(
         const variants = getVariants(performantVariants[variant]);
 
         // 获取优化的过渡
+        const speedConfig = speed === 'fast' ? performantTransitions.quick :
+            speed === 'slow' ? performantTransitions.gentle :
+                performantTransitions.smooth;
+
         const transition = getTransition({
-            ...performantTransitions[speed],
+            ...speedConfig,
             delay: stagger ? delay + (staggerDelay * (props.custom || 0)) : delay
         });
 

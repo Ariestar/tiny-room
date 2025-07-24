@@ -1,0 +1,25 @@
+{
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:lighthouse": "lhci autorun",
+    "test:a11y": "axe src/",
+    "test:visual": "chromatic --exit-zero-on-changes",
+    "test:all": "npm run test && npm run test:e2e && npm run test:lighthouse"
+  },
+  "devDependencies": {
+    "@axe-core/react": "^4.8.4",
+    "@playwright/test": "^1.40.0",
+    "@storybook/addon-a11y": "^7.6.0",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/user-event": "^14.5.1",
+    "chromatic": "^10.0.0",
+    "jsdom": "^23.0.1",
+    "lighthouse": "^11.4.0",
+    "@lhci/cli": "^0.12.0",
+    "vitest": "^1.0.4"
+  }
+}

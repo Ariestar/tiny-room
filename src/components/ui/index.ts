@@ -94,7 +94,7 @@ export type {
 } from "../animation/PageTransition";
 
 // 动画工具函数和预设
-export * from "@/lib/animations";
+export * from "@/lib/ui/animations";
 
 // 导航组件
 export { default as TopNavigation } from "../layout/TopNavigation";

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 
 export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
     /** 容器尺寸变体 */

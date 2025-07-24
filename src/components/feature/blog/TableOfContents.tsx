@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { TocEntry } from "@/lib/remark-extract-toc";
-import { useScrollspy } from "@/lib/use-scrollspy";
-import { cn } from "@/lib/utils";
+import type { TocEntry } from "@/lib/data/content/markdown/remark-extract-toc";
+import { useScrollspy } from "@/hooks/use-scrollspy";
+import { cn } from "@/lib/shared/utils";
 
 interface TocProps {
 	toc: TocEntry[];
@@ -48,10 +48,9 @@ export function TableOfContents({ toc }: TocProps) {
 										: "text-muted-foreground hover:text-foreground pl-1"
 								)}
 								style={{
-									paddingLeft: `${
-										relativeDepth * 0.75 +
+									paddingLeft: `${relativeDepth * 0.75 +
 										(item.url.substring(1) === activeId ? 0.75 : 0.25)
-									}rem`,
+										}rem`,
 								}}
 							>
 								{item.title}

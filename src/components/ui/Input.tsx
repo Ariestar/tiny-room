@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
 	/** 输入框标签 */
@@ -129,20 +129,20 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 		// 左侧内边距调整
 		const leftPadding = leftIcon
 			? {
-					sm: "pl-9",
-					md: "pl-11",
-					lg: "pl-13",
-			  }
+				sm: "pl-9",
+				md: "pl-11",
+				lg: "pl-13",
+			}
 			: {};
 
 		// 右侧内边距调整
 		const rightPadding =
 			rightIcon || isPassword || isSearch
 				? {
-						sm: "pr-9",
-						md: "pr-11",
-						lg: "pr-13",
-				  }
+					sm: "pr-9",
+					md: "pr-11",
+					lg: "pr-13",
+				}
 				: {};
 
 		// 组合输入框样式
@@ -150,7 +150,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 			...baseStyles,
 			...variantStyles[variant],
 			stateStyles[
-				hasError ? "error" : hasSuccess ? "success" : hasWarning ? "warning" : "default"
+			hasError ? "error" : hasSuccess ? "success" : hasWarning ? "warning" : "default"
 			],
 			sizeStyles[size],
 			leftPadding[size] || "",
@@ -171,10 +171,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 			hasError
 				? "text-destructive-foreground"
 				: hasSuccess
-				? "text-success-foreground"
-				: hasWarning
-				? "text-warning-foreground"
-				: "text-muted-foreground",
+					? "text-success-foreground"
+					: hasWarning
+						? "text-warning-foreground"
+						: "text-muted-foreground",
 		]);
 
 		// 图标容器样式

@@ -18,7 +18,7 @@ import {
 	calculateTotalStats,
 	filterRepositories,
 	sortRepositories
-} from "@/lib/github";
+} from "@/lib/data/api/github";
 
 // Mock data for development - replace with real API calls
 const mockRepositories: GitHubRepository[] = [];

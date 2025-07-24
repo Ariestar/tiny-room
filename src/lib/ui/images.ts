@@ -1,6 +1,6 @@
 /**
- * 图片优化工具库
- * Image Optimization Utilities
+ * 统一图片优化工具
+ * Unified Image Optimization Utilities
  */
 
 /**
@@ -89,7 +89,7 @@ export class ImagePreloader {
 
       // 设置优先级
       if (priority === "high") {
-        img.fetchPriority = "high";
+        (img as any).fetchPriority = "high";
       }
 
       img.src = src;
@@ -113,7 +113,6 @@ export class ImagePreloader {
     const { priority = "low", maxConcurrent = 3, onProgress } = options;
 
     let loaded = 0;
-    const results: Promise<HTMLImageElement>[] = [];
 
     // 分批处理，避免同时加载太多图片
     const batches: string[][] = [];
@@ -166,7 +165,9 @@ export class ResponsiveImageCalculator {
   static calculateOptimalSize(
     containerWidth: number,
     containerHeight: number,
-    devicePixelRatio: number = window.devicePixelRatio || 1
+    devicePixelRatio: number = typeof window !== "undefined"
+      ? window.devicePixelRatio || 1
+      : 1
   ): { width: number; height: number } {
     // 考虑设备像素比，但限制最大倍数以节省带宽
     const maxPixelRatio = Math.min(devicePixelRatio, 2);
@@ -206,27 +207,29 @@ export class ResponsiveImageCalculator {
  */
 export class LazyLoadObserver {
   private static instance: LazyLoadObserver;
-  private observer: IntersectionObserver;
+  private observer: IntersectionObserver | null = null;
   private callbacks = new Map<Element, () => void>();
 
   private constructor() {
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const callback = this.callbacks.get(entry.target);
-            if (callback) {
-              callback();
-              this.unobserve(entry.target);
+    if (typeof window !== "undefined") {
+      this.observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const callback = this.callbacks.get(entry.target);
+              if (callback) {
+                callback();
+                this.unobserve(entry.target);
+              }
             }
-          }
-        });
-      },
-      {
-        rootMargin: "50px", // 提前50px开始加载
-        threshold: 0.1,
-      }
-    );
+          });
+        },
+        {
+          rootMargin: "50px", // 提前50px开始加载
+          threshold: 0.1,
+        }
+      );
+    }
   }
 
   static getInstance(): LazyLoadObserver {
@@ -237,18 +240,24 @@ export class LazyLoadObserver {
   }
 
   observe(element: Element, callback: () => void) {
+    if (!this.observer) return;
+
     this.callbacks.set(element, callback);
     this.observer.observe(element);
   }
 
   unobserve(element: Element) {
+    if (!this.observer) return;
+
     this.callbacks.delete(element);
     this.observer.unobserve(element);
   }
 
   disconnect() {
-    this.observer.disconnect();
-    this.callbacks.clear();
+    if (this.observer) {
+      this.observer.disconnect();
+      this.callbacks.clear();
+    }
   }
 }
 
@@ -273,7 +282,7 @@ export class AdaptiveQualityManager {
     if ("connection" in navigator) {
       const connection = (navigator as any).connection;
       if (connection) {
-        this.dataServer = connection.saveData || false;
+        this.dataSaver = connection.saveData || false;
 
         // 根据连接类型调整质量
         const slowConnections = ["slow-2g", "2g", "3g"];
@@ -284,20 +293,22 @@ export class AdaptiveQualityManager {
     }
 
     // 监听网络变化
-    window.addEventListener("online", () => {
-      this.networkQuality = "fast";
-    });
+    if (typeof window !== "undefined") {
+      window.addEventListener("online", () => {
+        this.networkQuality = "fast";
+      });
 
-    window.addEventListener("offline", () => {
-      this.networkQuality = "slow";
-    });
+      window.addEventListener("offline", () => {
+        this.networkQuality = "slow";
+      });
+    }
   }
 
   /**
    * 根据网络条件获取推荐质量
    */
   static getRecommendedQuality(baseQuality: number = 85): number {
-    if (this.dataServer) return Math.min(baseQuality, 60);
+    if (this.dataSaver) return Math.min(baseQuality, 60);
     if (this.networkQuality === "slow") return Math.min(baseQuality, 70);
     return baseQuality;
   }
@@ -306,7 +317,7 @@ export class AdaptiveQualityManager {
    * 获取推荐的图片尺寸缩放比例
    */
   static getRecommendedScale(): number {
-    if (this.dataServer) return 0.7;
+    if (this.dataSaver) return 0.7;
     if (this.networkQuality === "slow") return 0.8;
     return 1;
   }
@@ -417,6 +428,16 @@ export class ImagePerformanceMonitor {
   static getStats() {
     const metrics = Array.from(this.metrics.values());
 
+    if (metrics.length === 0) {
+      return {
+        totalImages: 0,
+        averageLoadTime: 0,
+        totalSize: 0,
+        cacheHitRate: 0,
+        formatDistribution: {},
+      };
+    }
+
     return {
       totalImages: metrics.length,
       averageLoadTime:
@@ -439,6 +460,108 @@ export class ImagePerformanceMonitor {
 }
 
 /**
+ * 图片工具函数
+ */
+export const imageUtils = {
+  /**
+   * 获取图片的实际尺寸
+   */
+  getImageDimensions: (
+    src: string
+  ): Promise<{ width: number; height: number }> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        resolve({ width: img.naturalWidth, height: img.naturalHeight });
+      };
+      img.onerror = reject;
+      img.src = src;
+    });
+  },
+
+  /**
+   * 检查图片是否存在
+   */
+  imageExists: (src: string): Promise<boolean> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = src;
+    });
+  },
+
+  /**
+   * 生成图片的缩略图URL（如果有CDN支持）
+   */
+  generateThumbnail: (src: string, width: number, height?: number): string => {
+    // 这里可以根据实际的CDN服务进行调整
+    // 例如：Cloudinary, ImageKit, 等
+    const params = height ? `w_${width},h_${height}` : `w_${width}`;
+
+    // 如果是外部URL，直接返回
+    if (src.startsWith("http")) {
+      return src;
+    }
+
+    // 如果有CDN配置，可以在这里处理
+    return src;
+  },
+
+  /**
+   * 获取图片的主要颜色（简单版本）
+   */
+  getDominantColor: (src: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+
+      img.onload = () => {
+        try {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+
+          if (!ctx) {
+            reject(new Error("Cannot get canvas context"));
+            return;
+          }
+
+          canvas.width = img.width;
+          canvas.height = img.height;
+
+          ctx.drawImage(img, 0, 0);
+
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const data = imageData.data;
+
+          let r = 0,
+            g = 0,
+            b = 0;
+          const pixelCount = data.length / 4;
+
+          for (let i = 0; i < data.length; i += 4) {
+            r += data[i];
+            g += data[i + 1];
+            b += data[i + 2];
+          }
+
+          r = Math.floor(r / pixelCount);
+          g = Math.floor(g / pixelCount);
+          b = Math.floor(b / pixelCount);
+
+          resolve(`rgb(${r}, ${g}, ${b})`);
+        } catch (error) {
+          reject(error);
+        }
+      };
+
+      img.onerror = reject;
+      img.src = src;
+    });
+  },
+};
+
+/**
  * 图片优化工具集合
  */
 export const ImageOptimizationUtils = {
@@ -449,4 +572,17 @@ export const ImageOptimizationUtils = {
   qualityManager: AdaptiveQualityManager,
   errorHandler: ImageErrorHandler,
   performanceMonitor: ImagePerformanceMonitor,
+  utils: imageUtils,
 };
+
+// 导出便捷函数
+export const {
+  formatOptimizer,
+  preloader,
+  responsiveCalculator,
+  lazyLoader,
+  qualityManager,
+  errorHandler,
+  performanceMonitor,
+  utils,
+} = ImageOptimizationUtils;

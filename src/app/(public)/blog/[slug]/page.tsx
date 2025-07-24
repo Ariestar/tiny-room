@@ -1,5 +1,5 @@
 import "katex/dist/katex.min.css";
-import { getPostBySlug, getAllPostSlugs } from "@/lib/posts";
+import { getPostBySlug, getAllPostSlugs } from "@/lib/data/content/posts";
 import { notFound } from "next/navigation";
 import "@/styles/prose.css";
 import { PageTransition } from "@/components/animation/PageTransition";
@@ -42,8 +42,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 	}
 
 	return (
-		<PageTransition>
-			<div className='container mx-auto max-w-6xl px-4 py-12'>
+		<div className='container mx-auto max-w-6xl px-4 py-12'>
+			<PageTransition transitionType="slide">
 				<div className='flex flex-col lg:flex-row-reverse lg:justify-between'>
 					<aside className='hidden lg:block sticky top-24 h-full w-64 flex-shrink-0 lg:pl-12'>
 						<TableOfContents toc={post.toc} />
@@ -68,7 +68,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 						</div>
 					</main>
 				</div>
-			</div>
-		</PageTransition>
+			</PageTransition>
+		</div>
 	);
 }

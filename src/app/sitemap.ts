@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
-import { generateSitemapEntries } from "@/lib/seo";
-import { getSortedPostsData } from "@/lib/posts";
-import { getAllProjects } from "@/lib/projects";
+import { generateSitemapEntries } from "@/lib/system/seo/seo";
+import { getSortedPostsData } from "@/lib/data/content/posts";
+import { getAllProjects } from "@/lib/data/content/projects";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseEntries = generateSitemapEntries();

@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import Card, { CardHeader, CardContent } from "./Card";
 
 // StatCard Skeleton Props

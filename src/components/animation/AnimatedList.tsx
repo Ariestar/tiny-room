@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion, HTMLMotionProps, Variants } from "framer-motion";
-import { containerVariants, itemVariants, durations, easings } from "@/lib/animations";
+import { optimizedAnimationVariants, easingConfig } from "@/lib/ui/animations";
 
 // 列表动画预设类型
 export type ListAnimationType = "stagger" | "cascade" | "wave" | "scale" | "rotate";
@@ -54,7 +54,7 @@ const createListVariants = (
 					visible: {
 						opacity: 1,
 						x: 0,
-						transition: { duration: durations.normal, ease: easings.easeOut },
+						transition: { duration: 0.6, ease: easingConfig.easeOut },
 					},
 				},
 			};
@@ -69,9 +69,9 @@ const createListVariants = (
 						y: 0,
 						scale: 1,
 						transition: {
-							duration: durations.normal,
-							ease: easings.easeOut,
-							scale: { duration: durations.slow },
+							duration: 0.6,
+							ease: easingConfig.easeOut,
+							scale: { duration: 0.8 },
 						},
 					},
 				},
@@ -85,7 +85,12 @@ const createListVariants = (
 					visible: {
 						opacity: 1,
 						scale: 1,
-						transition: easings.springBouncy,
+						transition: {
+							type: "spring",
+							stiffness: 400,
+							damping: 20,
+							mass: 0.6,
+						},
 					},
 				},
 			};
@@ -100,9 +105,9 @@ const createListVariants = (
 						rotate: 0,
 						scale: 1,
 						transition: {
-							duration: durations.slow,
-							ease: easings.easeOut,
-							rotate: { duration: durations.normal },
+							duration: 0.8,
+							ease: easingConfig.easeOut,
+							rotate: { duration: 0.6 },
 						},
 					},
 				},
@@ -110,8 +115,8 @@ const createListVariants = (
 
 		default: // 'stagger'
 			return {
-				container: containerVariants,
-				item: itemVariants,
+				container: baseContainer,
+				item: optimizedAnimationVariants.slideUp,
 			};
 	}
 };

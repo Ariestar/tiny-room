@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
-import { breakpoints } from "@/lib/responsive-utils";
+import { breakpoints } from "@/lib/ui/responsive";
 
 interface DevicePreset {
     name: string;
@@ -268,8 +268,8 @@ export function DeviceCompatibilityTester() {
                         <div
                             key={device.name}
                             className={`p-4 border rounded-lg cursor-pointer transition-all hover:shadow-md ${selectedDevice.name === device.name
-                                    ? "border-blue-500 bg-blue-50"
-                                    : "border-gray-200 hover:border-gray-300"
+                                ? "border-blue-500 bg-blue-50"
+                                : "border-gray-200 hover:border-gray-300"
                                 }`}
                             onClick={() => simulateDevice(device)}
                         >

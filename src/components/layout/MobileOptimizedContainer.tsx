@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import { useMobileOptimization, useMobileLayoutOptimization } from "@/hooks/useMobileOptimization";
 
 interface MobileOptimizedContainerProps extends React.HTMLAttributes<HTMLDivElement> {

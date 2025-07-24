@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import Card, { CardHeader, CardTitle, CardContent } from "./Card";
 
 // Trend direction type
@@ -82,7 +82,7 @@ const TrendNeutralIcon = ({ className }: { className?: string }) => (
 // Format number helper
 const formatValue = (value: string | number): string => {
   if (typeof value === "string") return value;
-  
+
   if (value >= 1000000) {
     return `${(value / 1000000).toFixed(1)}M`;
   }
@@ -207,7 +207,7 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
                 </p>
               )}
             </div>
-            
+
             {trend && (
               <div className={cn(
                 "flex items-center gap-1 px-2 py-1 rounded-md bg-muted/50",

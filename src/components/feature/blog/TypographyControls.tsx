@@ -2,7 +2,13 @@
 
 import { usePathname } from "next/navigation";
 import { useTypography } from "@/lib/contexts/TypographyContext";
-import { FONT_OPTIONS } from "@/lib/fonts";
+import { fonts } from "@/lib/ui/styles";
+
+const FONT_OPTIONS = [
+	{ id: "system", name: "系统字体" },
+	{ id: "lxgw-wenkai", name: "霞鹜文楷" },
+	{ id: "bookerly", name: "Bookerly" },
+];
 
 export function TypographyControls() {
 	const pathname = usePathname();

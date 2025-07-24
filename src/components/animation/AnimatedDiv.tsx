@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useRef, useMemo } from "react";
-import { motion, HTMLMotionProps, Variants, useInView } from "framer-motion";
-import { animationPresets } from "@/lib/animations";
+import React from "react";
+import { motion, HTMLMotionProps, Variants } from "framer-motion";
+import { optimizedAnimationVariants } from "@/lib/ui/animations";
 
 // 动画预设类型
-export type AnimationPreset = keyof typeof animationPresets;
+export type AnimationPreset = keyof typeof optimizedAnimationVariants;
 
 // 组件Props接口
 export interface AnimatedDivProps
@@ -38,7 +38,7 @@ export interface AnimatedDivProps
 export const AnimatedDiv = React.forwardRef<HTMLDivElement, AnimatedDivProps>(
 	(
 		{
-			animation = "fade",
+			animation = "fadeIn",
 			variants,
 			delay = 0,
 			duration,
@@ -52,7 +52,7 @@ export const AnimatedDiv = React.forwardRef<HTMLDivElement, AnimatedDivProps>(
 	) => {
 		const customVariants: Variants = React.useMemo(() => {
 			if (disableAnimation) return {};
-			const animationVariants = variants || animationPresets[animation];
+			const animationVariants = variants || optimizedAnimationVariants[animation];
 
 			if (!animationVariants) return {};
 
@@ -107,7 +107,7 @@ AnimatedDiv.displayName = "AnimatedDiv";
 
 // 导出预设动画组件
 export const FadeIn = React.forwardRef<HTMLDivElement, Omit<AnimatedDivProps, "animation">>(
-	(props, ref) => <AnimatedDiv ref={ref} animation='fade' {...props} />
+	(props, ref) => <AnimatedDiv ref={ref} animation='fadeIn' {...props} />
 );
 FadeIn.displayName = "FadeIn";
 
@@ -142,6 +142,6 @@ export const BounceIn = React.forwardRef<HTMLDivElement, Omit<AnimatedDivProps, 
 BounceIn.displayName = "BounceIn";
 
 export const RotateIn = React.forwardRef<HTMLDivElement, Omit<AnimatedDivProps, "animation">>(
-	(props, ref) => <AnimatedDiv ref={ref} animation='rotate' {...props} />
+	(props, ref) => <AnimatedDiv ref={ref} animation='rotateIn' {...props} />
 );
 RotateIn.displayName = "RotateIn";

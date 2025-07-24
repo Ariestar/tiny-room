@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { generateRobotsTxt } from "@/lib/seo";
+import { generateRobotsTxt } from "@/lib/system/seo/seo";
 
 export default function robots(): MetadataRoute.Robots {
   return {

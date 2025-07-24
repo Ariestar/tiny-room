@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { breakpoints } from "@/lib/responsive-utils";
+import { breakpoints } from "@/lib/ui/responsive";
 
 type BreakpointKey = keyof typeof breakpoints;
 
