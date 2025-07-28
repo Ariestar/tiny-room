@@ -4,12 +4,20 @@ import { listImages } from "@/lib/data/api/r2";
 import { useEffect, useState, useCallback, Suspense } from "react";
 import Image from "next/image";
 import Masonry from "react-masonry-css";
-import { cn } from "@/lib/shared/utils";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FullscreenCarousel } from "@/components/feature/gallery/FullscreenCarousel";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import Loading from "@/components/ui/Loading";
+import {
+	ParallaxItem,
+	MagneticHover,
+	BreathingAnimation,
+	getParallaxLayer,
+	getAnimationDelay,
+	getMagneticStrength
+} from "@/components/animation";
 
 // Define and export a type for the image data
 export type R2Image = {
@@ -125,33 +133,62 @@ function GalleryClient() {
 			<Masonry
 				breakpointCols={breakpointColumnsObj}
 				className='flex w-auto -ml-2' // Reduced gap
-				columnClassName='pl-2 bg-clip-padding' // Reduced gap
+				columnClassName='pl-2 bg-clip-padding relative' // Reduced gap + relative positioning for z-index context
 			>
-				{images.map((image, i) => (
-					<motion.div
-						key={image.key}
-						className='mb-2' // Reduced gap
-						onClick={() => handleImageClick(image.key)}
-						onViewportEnter={() => preloadImage(image.key, image.url)}
-					>
-						<div className='p-1 rounded-lg bg-card border border-border/20 shadow-sm overflow-hidden cursor-pointer group/card'>
-							<motion.div
-								className='relative w-full h-auto'
-								layoutId={`card-${image.key}`}
+				{images.map((image, i) => {
+					// 确定图片类型（风景或人像）
+					const isLandscape = image.width > image.height;
+					const contentType = isLandscape ? "landscape" : "portrait";
+
+					// 计算视差层级和动画延迟
+					const parallaxLayer = getParallaxLayer(i);
+					const animationDelay = getAnimationDelay(i, 0.3);
+					const magneticStrength = getMagneticStrength("gallery");
+
+					return (
+						<div key={image.key} className='mb-2 relative' style={{ isolation: 'isolate' }}> {/* 外层容器确保正确的事件处理和层级隔离 */}
+							<ParallaxItem
+								layer={parallaxLayer}
 							>
-								<Image
-									src={image.url}
-									alt={image.key ?? "gallery image"}
-									width={image.width}
-									height={image.height}
-									className='rounded-md transition-transform duration-300 ease-in-out group-hover/card:scale-105'
-									sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-									priority={i < 5} // Prioritize loading for the first few images
-								/>
-							</motion.div>
+								<MagneticHover
+									strength={magneticStrength}
+									scaleOnHover={1.03}
+									showHalo={true}
+									className="block" // 确保是块级元素
+								>
+									<BreathingAnimation
+										contentType={contentType}
+										delay={animationDelay}
+										pauseOnHover={true}
+									>
+										<motion.div
+											onClick={() => handleImageClick(image.key)}
+											onViewportEnter={() => preloadImage(image.key, image.url)}
+											className="block" // 确保是块级元素
+										>
+											<div className='p-1 rounded-lg bg-card border border-border/20 shadow-sm cursor-pointer group/card'>
+												<motion.div
+													className='relative w-full h-auto overflow-hidden rounded-md'
+													layoutId={`card-${image.key}`}
+												>
+													<Image
+														src={image.url}
+														alt={image.key ?? "gallery image"}
+														width={image.width}
+														height={image.height}
+														className='rounded-md transition-transform duration-300 ease-in-out group-hover/card:scale-105'
+														sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+														priority={i < 5} // Prioritize loading for the first few images
+													/>
+												</motion.div>
+											</div>
+										</motion.div>
+									</BreathingAnimation>
+								</MagneticHover>
+							</ParallaxItem>
 						</div>
-					</motion.div>
-				))}
+					);
+				})}
 			</Masonry>
 			<FullscreenCarousel
 				image={

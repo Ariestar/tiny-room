@@ -1,0 +1,369 @@
+/* 视觉特效样式文件 */
+/* 为 BreathingAnimation、MagneticHover、ParallaxItem 组件提供 CSS 支持 */
+
+/* ===== 呼吸动画相关样式 ===== */
+
+/* 呼吸动画容器基础样式 */
+.breathing-animation {
+  /* 启用 GPU 加速 */
+  will-change: transform, filter;
+  transform-origin: center;
+
+  /* 确保动画的平滑性 */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  /* 为不同内容类型提供默认变量 */
+  --scale-min: 1;
+  --scale-max: 1.008;
+  --brightness-min: 1;
+  --brightness-max: 1.02;
+  --saturate-min: 1;
+  --saturate-max: 1.05;
+  --duration: 6s;
+  --delay: 0s;
+}
+
+/* 风景图片的呼吸动画参数 */
+.breathing-animation[data-content-type="landscape"] {
+  --duration: 8s;
+  --scale-max: 1.006;
+  --brightness-max: 1.015;
+  --saturate-max: 1.03;
+}
+
+/* 人像图片的呼吸动画参数 */
+.breathing-animation[data-content-type="portrait"] {
+  --duration: 5s;
+  --scale-max: 1.01;
+  --brightness-max: 1.025;
+  --saturate-max: 1.06;
+}
+
+/* 文章卡片的呼吸动画参数 */
+.breathing-animation[data-content-type="article"] {
+  --duration: 7s;
+  --scale-max: 1.005;
+  --brightness-max: 1.018;
+  --saturate-max: 1.04;
+}
+
+/* 纯 CSS 呼吸动画（作为 Framer Motion 的备选方案） */
+@keyframes breathing {
+  0%,
+  100% {
+    transform: scale(var(--scale-min));
+    filter: brightness(var(--brightness-min)) saturate(var(--saturate-min));
+  }
+  50% {
+    transform: scale(var(--scale-max));
+    filter: brightness(var(--brightness-max)) saturate(var(--saturate-max));
+  }
+}
+
+.breathing-animation.css-fallback {
+  animation: breathing var(--duration) ease-in-out infinite;
+  animation-delay: var(--delay);
+}
+
+/* 悬停时暂停动画 */
+.breathing-animation:hover {
+  animation-play-state: paused;
+}
+
+/* ===== 磁吸悬停相关样式 ===== */
+
+/* 磁吸悬停容器基础样式 */
+.magnetic-hover-container {
+  /* 启用 GPU 加速和 3D 变换 */
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  /* 确保光晕效果的正确层级 */
+  position: relative;
+  isolation: isolate;
+}
+
+/* 磁吸光晕效果基础样式 */
+.magnetic-halo {
+  /* 定位和层级 */
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+
+  /* 启用 GPU 加速 */
+  will-change: opacity, transform, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  /* 基础样式 */
+  border-radius: 12px;
+  opacity: 0;
+
+  /* 默认光晕颜色（使用 CSS 变量） */
+  background: radial-gradient(
+    circle at center,
+    rgba(var(--primary-rgb, 0, 0, 0), 0.1) 0%,
+    rgba(var(--primary-rgb, 0, 0, 0), 0.05) 50%,
+    transparent 100%
+  );
+}
+
+/* Gallery 图片的磁吸效果参数 */
+.magnetic-hover-container[data-context="gallery"] {
+  --magnetic-strength: 0.15;
+  --magnetic-scale: 1.03;
+  --magnetic-rotation: 0.05;
+}
+
+/* Blog 卡片的磁吸效果参数 */
+.magnetic-hover-container[data-context="blog"] {
+  --magnetic-strength: 0.1;
+  --magnetic-scale: 1.02;
+  --magnetic-rotation: 0.03;
+}
+
+/* ===== 视差滚动相关样式 ===== */
+
+/* 视差项目基础样式 */
+.parallax-item {
+  /* 启用 GPU 加速 */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  /* 确保视差效果的正确层级 */
+  position: relative;
+}
+
+/* 不同视差层级的 z-index */
+.parallax-item[data-layer="0"] {
+  z-index: 0;
+}
+
+.parallax-item[data-layer="1"] {
+  z-index: -1;
+}
+
+.parallax-item[data-layer="2"] {
+  z-index: -2;
+}
+
+/* 视差容器样式 */
+.parallax-container {
+  position: relative;
+  /* 创建新的层叠上下文 */
+  isolation: isolate;
+}
+
+/* ===== 滚动指示器相关样式 ===== */
+
+/* 滚动指示器基础样式 */
+.scroll-indicator {
+  /* 定位 */
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+
+  /* 样式 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  /* 动画 */
+  will-change: opacity, transform;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 滚动指示器文字样式 */
+.scroll-indicator-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(var(--foreground-rgb, 0, 0, 0), 0.7);
+  white-space: nowrap;
+}
+
+/* 滚动指示器箭头样式 */
+.scroll-indicator-arrow {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: rgba(var(--foreground-rgb, 0, 0, 0), 0.5);
+
+  /* 箭头动画 */
+  animation: bounce-arrow 2s ease-in-out infinite;
+}
+
+@keyframes bounce-arrow {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(0.25rem);
+  }
+  60% {
+    transform: translateY(0.125rem);
+  }
+}
+
+/* ===== 响应式和无障碍访问样式 ===== */
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  /* 减少移动端的动画强度 */
+  .breathing-animation {
+    --scale-max: calc(var(--scale-max) * 0.7);
+    --brightness-max: calc(var(--brightness-max) * 0.8);
+    --saturate-max: calc(var(--saturate-max) * 0.8);
+  }
+
+  .magnetic-hover-container {
+    --magnetic-strength: calc(var(--magnetic-strength, 0.15) * 0.7);
+    --magnetic-scale: calc(var(--magnetic-scale, 1.03) * 0.9);
+  }
+
+  /* 移动端滚动指示器调整 */
+  .scroll-indicator {
+    bottom: 1rem;
+    scale: 0.9;
+  }
+}
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+  /* 触摸设备上禁用悬停效果 */
+  .breathing-animation:hover {
+    animation-play-state: running;
+  }
+
+  /* 调整触摸设备的磁吸效果 */
+  .magnetic-hover-container {
+    --magnetic-strength: calc(var(--magnetic-strength, 0.15) * 0.5);
+  }
+}
+
+/* 减少动画偏好设置 */
+@media (prefers-reduced-motion: reduce) {
+  /* 禁用所有动画效果 */
+  .breathing-animation,
+  .breathing-animation.css-fallback {
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .magnetic-halo {
+    display: none !important;
+  }
+
+  .parallax-item {
+    transform: none !important;
+  }
+
+  .scroll-indicator-arrow {
+    animation: none !important;
+  }
+
+  /* 保持基本的过渡效果，但缩短时间 */
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  .magnetic-halo {
+    /* 在高对比度模式下使用更明显的光晕 */
+    background: radial-gradient(
+      circle at center,
+      rgba(var(--foreground-rgb, 0, 0, 0), 0.2) 0%,
+      rgba(var(--foreground-rgb, 0, 0, 0), 0.1) 50%,
+      transparent 100%
+    );
+  }
+
+  .scroll-indicator-text,
+  .scroll-indicator-arrow {
+    color: rgba(var(--foreground-rgb, 0, 0, 0), 1);
+  }
+}
+
+/* ===== 主题相关样式 ===== */
+
+/* 深色主题下的调整 */
+@media (prefers-color-scheme: dark) {
+  .magnetic-halo {
+    background: radial-gradient(
+      circle at center,
+      rgba(var(--primary-rgb, 255, 255, 255), 0.15) 0%,
+      rgba(var(--primary-rgb, 255, 255, 255), 0.08) 50%,
+      transparent 100%
+    );
+  }
+
+  .scroll-indicator-text {
+    color: rgba(var(--foreground-rgb, 255, 255, 255), 0.8);
+  }
+
+  .scroll-indicator-arrow {
+    color: rgba(var(--foreground-rgb, 255, 255, 255), 0.6);
+  }
+}
+
+/* ===== 性能优化相关样式 ===== */
+
+/* 为动画元素启用硬件加速 */
+.breathing-animation,
+.magnetic-hover-container,
+.parallax-item,
+.magnetic-halo {
+  /* 强制启用 GPU 加速 */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+
+  /* 优化渲染性能 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 视口外元素的性能优化 */
+.parallax-item[data-in-viewport="false"] {
+  /* 视口外的视差元素不进行变换计算 */
+  will-change: auto;
+}
+
+/* 动画完成后清理 will-change */
+.animation-complete {
+  will-change: auto;
+}
+
+/* ===== 调试和开发辅助样式 ===== */
+
+/* 开发模式下的调试边框（通过 data-debug 属性启用） */
+[data-debug="true"] .breathing-animation {
+  outline: 2px dashed rgba(255, 0, 0, 0.3);
+}
+
+[data-debug="true"] .magnetic-hover-container {
+  outline: 2px dashed rgba(0, 255, 0, 0.3);
+}
+
+[data-debug="true"] .parallax-item {
+  outline: 2px dashed rgba(0, 0, 255, 0.3);
+}
+
+[data-debug="true"] .magnetic-halo {
+  outline: 1px solid rgba(255, 255, 0, 0.5);
+  opacity: 0.3 !important;
+}

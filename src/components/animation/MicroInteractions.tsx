@@ -337,13 +337,19 @@ export function InteractiveButton({
     size = "md",
     className,
     children,
-    ...props
+    onClick,
+    disabled,
+    type = "button",
+    ...htmlProps
 }: {
     variant?: "primary" | "secondary" | "ghost";
     size?: "sm" | "md" | "lg";
     className?: string;
     children: React.ReactNode;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>) {
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    disabled?: boolean;
+    type?: "button" | "submit" | "reset";
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onClick' | 'disabled' | 'type' | 'className'>) {
     const variantStyles = {
         primary: "bg-primary text-primary-foreground hover:bg-primary/90",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
@@ -366,7 +372,10 @@ export function InteractiveButton({
                     className
                 )}
                 whileTap={{ scale: 0.98 }}
-                {...props}
+                onClick={onClick}
+                disabled={disabled}
+                type={type}
+                {...htmlProps}
             >
                 {children}
             </motion.button>

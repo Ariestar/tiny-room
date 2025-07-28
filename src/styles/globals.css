@@ -5,6 +5,7 @@
 /* 动画性能优化样式 */
 @import "./animations.css";
 @import "./animation-performance.css";
+@import "./visual-effects.css";
 
 /* 增强文本选中效果 */
 ::selection {
@@ -81,6 +82,36 @@
     --ease-in: cubic-bezier(0.4, 0, 1, 1);
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* 视觉特效相关变量 */
+    /* RGB 颜色值（用于光晕效果） */
+    --primary-rgb: 0, 0, 0;
+    --secondary-rgb: 245, 245, 245;
+    --accent-rgb: 0, 112, 243;
+    --foreground-rgb: 0, 0, 0;
+    --background-rgb: 255, 255, 255;
+
+    /* 呼吸动画参数 */
+    --breathing-duration-landscape: 8s;
+    --breathing-duration-portrait: 5s;
+    --breathing-duration-article: 7s;
+    --breathing-duration-default: 6s;
+
+    /* 磁吸效果参数 */
+    --magnetic-strength-gallery: 0.15;
+    --magnetic-strength-blog: 0.1;
+    --magnetic-strength-default: 0.12;
+    --magnetic-scale-gallery: 1.03;
+    --magnetic-scale-blog: 1.02;
+    --magnetic-scale-default: 1.025;
+
+    /* 视差效果参数 */
+    --parallax-intensity: 0.5;
+    --parallax-layers: 3;
+
+    /* 动画延迟基数 */
+    --animation-delay-base: 0.3s;
+    --animation-delay-blog: 0.4s;
   }
 
   .dark {
@@ -118,6 +149,13 @@
     --gray-400: #888888;
     --gray-600: #e5e5e5;
     --gray-900: #ffffff;
+
+    /* 深色主题的视觉特效变量 */
+    --primary-rgb: 255, 255, 255;
+    --secondary-rgb: 38, 38, 38;
+    --accent-rgb: 0, 112, 243;
+    --foreground-rgb: 255, 255, 255;
+    --background-rgb: 20, 20, 20;
   }
 
   html {
