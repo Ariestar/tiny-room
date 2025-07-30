@@ -55,9 +55,18 @@ export interface ParallaxContainerProps {
  * 滚动指示器组件的属性类型
  */
 export interface ScrollIndicatorProps {
-  show: boolean;
+  /** 是否显示滚动指示器 */
+  visible?: boolean;
+  /** 指示器文本 */
   text?: string;
+  /** 位置样式 */
+  position?: "bottom-center" | "bottom-left" | "bottom-right";
+  /** 自定义样式类名 */
   className?: string;
+  /** 点击回调 */
+  onClick?: () => void;
+  /** 自动隐藏延迟（毫秒），0 表示不自动隐藏 */
+  autoHideDelay?: number;
 }
 
 /**

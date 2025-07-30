@@ -24,6 +24,7 @@ export { PersonalizedGreeting } from "./PersonalizedGreeting";
 export { BreathingAnimation } from "./BreathingAnimation";
 export { MagneticHover } from "./MagneticHover";
 export { ParallaxItem, ParallaxContainer } from "./ParallaxItem";
+export { ScrollIndicator } from "./ScrollIndicator";
 
 // 类型导入（用于内部函数）
 import type {

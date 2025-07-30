@@ -94,27 +94,27 @@
   - 为每个图片设置 index \* 0.3 秒的动画延迟
   - _需求: 1.3, 1.4_
 
-- [ ] 4. 创建图片详情滚动交互功能
+- [x] 4. 创建图片详情滚动交互功能
 
   - 增强现有 FullscreenCarousel 组件，添加滚动查看详情功能
   - 实现滚动指示器和图片详情面板
   - _需求: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10, 2.11_
 
-- [ ] 4.1 创建 ScrollIndicator 组件
+- [x] 4.1 创建 ScrollIndicator 组件
 
   - 创建 `src/components/animation/ScrollIndicator.tsx` 文件
   - 实现带动画的滚动提示组件，包含向下箭头和提示文字
   - 添加显示/隐藏的动画过渡效果
   - _需求: 2.2_
 
-- [ ] 4.2 创建 ImageDetails 组件
+- [x] 4.2 创建 ImageDetails 组件
 
   - 创建 `src/components/feature/gallery/ImageDetails.tsx` 文件
   - 实现图片详情面板，包含基本信息、评分、评论、相关推荐功能
   - 使用现有的 Card、Input、Button 等 UI 组件
   - _需求: 2.5, 2.6, 2.7, 2.8_
 
-- [ ] 4.3 增强 FullscreenCarousel 组件
+- [x] 4.3 增强 FullscreenCarousel 组件
 
   - 修改 `src/components/feature/gallery/FullscreenCarousel.tsx` 文件
   - 添加滚动监听和进度计算逻辑
@@ -122,20 +122,20 @@
   - 集成 ScrollIndicator 和 ImageDetails 组件
   - _需求: 2.1, 2.3, 2.4, 2.9, 2.10, 2.11_
 
-- [ ] 5. 增强 Blog 页面视觉效果
+- [x] 5. 增强 Blog 页面视觉效果
 
   - 为现有 BentoGrid 卡片添加磁吸和呼吸动画效果
   - 保持现有的网格布局和动画系统
   - _需求: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
 
-- [ ] 5.1 为 Blog 文章卡片添加视觉特效
+- [x] 5.1 为 Blog 文章卡片添加视觉特效
 
   - 修改 `src/app/(public)/blog/BlogPageClient.tsx` 文件
   - 在现有 BentoCard 外包装 MagneticHover 和 BreathingAnimation 组件
   - 为文章卡片设置较小的磁吸强度 0.1 和 7 秒的呼吸周期
   - _需求: 3.2, 3.3_
 
-- [ ] 5.2 优化 Blog 页面的动画参数
+- [x] 5.2 优化 Blog 页面的动画参数
 
   - 调整精选文章和普通文章的不同动画参数
   - 设置文章卡片的动画延迟为 index \* 0.4 秒

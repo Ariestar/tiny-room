@@ -367,3 +367,27 @@
   outline: 1px solid rgba(255, 255, 0, 0.5);
   opacity: 0.3 !important;
 }
+
+/* ===== Gallery 特殊样式 ===== */
+
+/* Gallery 图片项的层级管理 */
+.gallery-image-item {
+  position: relative;
+  z-index: 1;
+}
+
+.gallery-image-item:hover {
+  z-index: 9999 !important;
+}
+
+/* 确保磁吸悬停容器在悬停时提升层级 */
+.magnetic-hover-container:hover {
+  z-index: 9999 !important;
+}
+
+/* 强制 Masonry 布局不创建层叠上下文 */
+.masonry-grid,
+.masonry-grid_column {
+  position: static !important;
+  z-index: auto !important;
+}

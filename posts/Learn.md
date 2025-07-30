@@ -708,3 +708,299 @@
   - **业界标准的价值**: 成熟框架经过大量验证，更可靠
   - **渐进式采用**: 不必一次性替换，可以逐步集成专业工具
   - **学习成本**: 投入时间学习专业工具，长期收益更大
+
+### Gallery 磁吸悬停效果 z-index 层叠上下文问题修复 (2025-01-30)
+
+- **问题背景**: 在 Gallery 页面实现磁吸悬停效果时，遇到放大的图片被其他图片遮挡的问题
+- **核心挑战**:
+
+  1. **z-index 9999 仍被遮挡**: 即使设置极高的 z-index 值，悬停图片仍然被相邻图片遮挡
+  2. **Portal 方案的副作用**: 使用 Portal 移动元素导致图片闪烁和布局空隙
+  3. **Masonry 布局的层叠上下文干扰**: 瀑布流布局创建了复杂的层叠上下文嵌套
+
+- **问题根源分析**:
+
+  ```css
+  /* 问题1: CSS 属性创建层叠上下文 */
+  transform: any-value;        /* Framer Motion 动画 */
+  opacity: < 1;               /* 透明度动画 */
+  filter: any-value;          /* 滤镜效果 */
+  will-change: transform;     /* 性能优化 */
+  isolation: isolate;         /* 手动创建的层叠上下文 */
+
+  /* 问题2: 组件嵌套创建多层上下文 */
+  ParallaxItem (transform)
+    → MagneticHover (transform)
+      → BreathingAnimation (transform)
+        → motion.div (transform)
+  ```
+
+- **技术原理深入理解**:
+
+  - **层叠上下文（Stacking Context）**: z-index 只在同一层叠上下文内有效
+  - **层叠上下文的创建**: transform、opacity、filter 等属性会创建新的层叠上下文
+  - **嵌套限制**: 子元素的 z-index 无法超越父级层叠上下文的边界
+  - **Masonry 布局影响**: 每个列容器可能创建独立的层叠上下文
+
+- **解决方案演进过程**:
+
+  **方案 1: 提升 z-index 值 (失败)**
+
+  ```typescript
+  // 尝试使用极高的 z-index
+  style={{ zIndex: isHovered ? 9999 : 1 }}
+  // 结果: 仍然被遮挡，因为受限于父级层叠上下文
+  ```
+
+  **方案 2: Portal 完全移动 (问题多)**
+
+  ```typescript
+  // 将整个元素移动到页面根层级
+  if (isHovered) {
+    return createPortal(<motion.div>{children}</motion.div>, document.body);
+  }
+  // 问题: 图片重新渲染导致闪烁，原位置出现空隙
+  ```
+
+  **方案 3: 简化架构 + CSS 强制规则 (成功)**
+
+  ```typescript
+  // 1. 调整组件嵌套顺序，MagneticHover 在最外层
+  <MagneticHover>
+    <ParallaxItem>
+      <BreathingAnimation>
+        {children}
+      </BreathingAnimation>
+    </ParallaxItem>
+  </MagneticHover>
+
+  // 2. 移除创建层叠上下文的样式
+  // 移除: isolation: 'isolate'
+  // 移除: position: 'relative' (Masonry 列容器)
+
+  // 3. CSS 强制规则确保层级
+  .gallery-image-item:hover {
+    z-index: 9999 !important;
+  }
+  .masonry-grid, .masonry-grid_column {
+    position: static !important;
+  }
+  ```
+
+- **最终解决方案特点**:
+
+  - **元素保持原位**: 避免 Portal 移动导致的闪烁和布局问题
+  - **简化层叠上下文**: 移除不必要的层叠上下文创建
+  - **CSS 强制规则**: 使用 `!important` 确保悬停时的层级优先级
+  - **组件架构优化**: 调整嵌套顺序，减少层叠上下文嵌套深度
+
+- **关键技术点**:
+
+  ```typescript
+  // 1. 动态 z-index 控制
+  style={{
+    zIndex: isHovered ? 9999 : 1,
+    position: "relative",
+  }}
+
+  // 2. 光晕效果使用 Portal (不移动主内容)
+  {showHalo && createPortal(
+    <motion.div className="magnetic-halo" />,
+    portalContainer
+  )}
+
+  // 3. CSS 类名层级管理
+  <div className="gallery-image-item">
+    <MagneticHover className="magnetic-hover-container">
+  ```
+
+- **性能和用户体验优化**:
+
+  - **无闪烁**: 图片始终在同一 DOM 元素中，无重新渲染
+  - **无布局跳动**: 元素保持原始占位空间，其他图片不会移动
+  - **平滑动画**: 使用 CSS transform 实现变换，性能更好
+  - **事件处理优化**: 简化的事件监听，避免复杂的全局监听器
+
+- **经验总结**:
+
+  - **层叠上下文是 CSS 中的隐形杀手**: 很多 z-index 问题都源于此
+  - **简单方案往往更有效**: 复杂的 Portal 方案不如简单的 CSS 规则
+  - **组件架构影响样式**: 组件嵌套顺序会影响 CSS 层叠上下文
+  - **!important 的合理使用**: 在特定场景下，!important 是解决层级问题的有效工具
+  - **性能与效果的平衡**: 避免过度工程化，选择最简单有效的方案
+
+- **调试技巧**:
+
+  - **浏览器开发者工具**: 使用 Elements 面板查看层叠上下文
+  - **CSS 属性排查**: 检查 transform、opacity、filter 等属性
+  - **逐步简化**: 从复杂方案逐步简化到最小可行方案
+  - **对比测试**: 在不同浏览器和设备上验证效果
+
+- **适用场景**:
+  - **瀑布流布局的悬停效果**: Masonry、Pinterest 风格布局
+  - **卡片网格的交互动画**: 产品展示、作品集网站
+  - **复杂嵌套组件的层级管理**: 多层动画组件的协调
+
+### Gallery 磁吸悬停效果全屏模式优化 (2025-01-30)
+
+- **问题背景**: Gallery 页面的磁吸悬停效果在全屏模式下存在多个用户体验问题
+- **核心问题**:
+
+  1. **全屏模式下磁吸效果仍然活跃**: 用户点击图片进入全屏查看时，背景的磁吸组件仍在工作，干扰专注体验
+  2. **层级关系混乱**: 全屏组件被右下角图标和其他元素遮挡
+  3. **动画效果异常**: 图片放大时出现奇怪的拉伸动画，然后才按比例缩放
+  4. **白色背景遮挡**: 全屏模式下出现白色背景，影响沉浸式体验
+
+- **技术根源分析**:
+
+  ```typescript
+  // 问题1: 全屏状态未传递给磁吸组件
+  <MagneticHover
+    strength={magneticStrength}
+    scaleOnHover={1.03}
+    showHalo={true}
+    // 缺少: disabled={!!photoId}
+  />
+
+  // 问题2: z-index 层级冲突
+  FullscreenCarousel: z-50
+  右下角图标: z-50  // 相同层级导致遮挡
+
+  // 问题3: layoutId 冲突导致动画异常
+  Gallery图片: layoutId={`card-${image.key}`}
+  全屏图片: layoutId={`card-${image.key}`}  // 相同ID导致布局动画冲突
+
+  // 问题4: 图片容器背景色问题
+  <motion.div className='relative w-[90vw] h-[90vh]'>  // 默认白色背景
+  ```
+
+- **解决方案实施**:
+
+  **1. 全屏模式下禁用磁吸效果**
+
+  ```typescript
+  <MagneticHover
+    strength={magneticStrength}
+    scaleOnHover={1.03}
+    showHalo={true}
+    disabled={!!photoId} // 全屏模式时禁用磁悬浮效果
+    className="block"
+  />
+  ```
+
+  **2. 修复层级关系**
+
+  ```typescript
+  // 提升全屏组件层级
+  className='fixed inset-0 z-[9999] flex items-center justify-center bg-black'
+
+  // 全屏模式时隐藏其他浮动元素
+  {isScrolled && !photoId && ( // 添加 !photoId 条件
+    <motion.div className='fixed bottom-8 right-8 z-50'>
+  ```
+
+  **3. 移除动画冲突**
+
+  ```typescript
+  // 移除 Gallery 中的 layoutId，避免与全屏组件冲突
+  <motion.div
+    className='relative w-full h-auto overflow-hidden rounded-md'
+    // 移除: layoutId={`card-${image.key}`}
+  >
+
+  // 全屏组件使用自然缩放动画
+  <motion.div
+    initial={{ scale: 0.8, opacity: 0 }}
+    animate={{ scale: 1, opacity: 1 }}
+    exit={{ scale: 0.8, opacity: 0 }}
+    transition={{ type: "spring", damping: 25, stiffness: 300 }}
+  />
+  ```
+
+  **4. 修复背景色问题**
+
+  ```typescript
+  <motion.div
+    className="relative w-[90vw] h-[90vh] bg-transparent" // 添加透明背景
+  >
+    <Image
+      className="object-contain bg-transparent" // 图片也设为透明背景
+    />
+  </motion.div>
+  ```
+
+  **5. 全屏模式下的完整隔离**
+
+  ```typescript
+  // 主容器添加交互禁用
+  <div className={`p-4 md:p-8 ${photoId ? 'pointer-events-none' : ''}`}>
+
+  // 隐藏标题中的装饰元素
+  {!isScrolled && !photoId && (
+    <motion.span layoutId='gallery-emoji'>🖼️</motion.span>
+  )}
+  ```
+
+- **用户体验改进效果**:
+
+  - ✅ **专注的全屏体验**: 全屏模式下所有背景交互被禁用
+  - ✅ **流畅的动画过渡**: 自然的缩放动画，无异常拉伸
+  - ✅ **纯净的视觉效果**: 纯黑色背景，无白色遮挡
+  - ✅ **正确的层级关系**: 全屏内容始终在最顶层
+  - ✅ **一致的交互逻辑**: 全屏时只能与全屏组件交互
+
+- **技术架构优化**:
+
+  ```typescript
+  // 状态驱动的条件渲染
+  const photoId = searchParams.get("photoId");
+  const isFullscreen = !!photoId;
+
+  // 组件级别的状态传递
+  <MagneticHover disabled={isFullscreen} />
+  <FloatingElements visible={!isFullscreen} />
+  <MainContent interactive={!isFullscreen} />
+
+  // 层级管理策略
+  const Z_INDEX = {
+    NORMAL: 1,
+    HOVER: 50,
+    MODAL: 9999,
+  };
+  ```
+
+- **性能优化考虑**:
+
+  - **避免不必要的重渲染**: 使用条件渲染而非样式隐藏
+  - **减少动画计算**: 全屏模式下暂停背景动画
+  - **内存管理**: 及时清理事件监听器和动画实例
+  - **渲染优化**: 使用 CSS transform 而非布局属性
+
+- **调试技巧总结**:
+
+  - **层级问题**: 使用浏览器开发者工具的 3D 视图查看层叠关系
+  - **动画冲突**: 检查相同 layoutId 的使用，避免 Framer Motion 布局冲突
+  - **状态传递**: 使用 React DevTools 确认 props 正确传递
+  - **样式调试**: 使用 computed styles 查看最终应用的样式
+
+- **最佳实践提炼**:
+
+  - **状态驱动设计**: 用全局状态控制不同模式下的组件行为
+  - **组件职责分离**: 每个组件只关心自己的状态，通过 props 接收外部控制
+  - **层级管理规范**: 建立清晰的 z-index 层级体系，避免随意设置
+  - **动画系统设计**: 避免 layoutId 冲突，合理使用 Framer Motion 的布局动画
+  - **用户体验优先**: 技术实现服务于用户体验，而非炫技
+
+- **适用场景扩展**:
+
+  - **模态框系统**: 任何需要全屏覆盖的组件都可以应用类似模式
+  - **图片查看器**: 画廊、作品集、电商产品图等场景
+  - **视频播放器**: 全屏播放时的界面管理
+  - **游戏界面**: 不同游戏状态下的 UI 显示控制
+
+- **经验反思**:
+
+  - **用户体验的细节决定品质**: 看似小的交互问题会严重影响使用感受
+  - **状态管理的重要性**: 复杂交互需要清晰的状态管理策略
+  - **组件设计要考虑组合使用**: 单个组件可能工作正常，但组合使用时出现问题
+  - **测试覆盖交互场景**: 不仅要测试功能，还要测试不同状态下的交互体验

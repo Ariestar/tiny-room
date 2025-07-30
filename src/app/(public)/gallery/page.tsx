@@ -121,10 +121,10 @@ function GalleryClient() {
 	}
 
 	return (
-		<div className='p-4 md:p-8'>
+		<div className="p-4 md:p-8">
 			<h1 className='text-7xl font-bold tracking-tight mb-10 text-center font-display'>
 				Gallery
-				{!isScrolled && (
+				{!isScrolled && !photoId && ( // 全屏模式时隐藏标题中的emoji
 					<motion.span layoutId='gallery-emoji' className='inline-block ml-4'>
 						🖼️
 					</motion.span>
@@ -132,8 +132,8 @@ function GalleryClient() {
 			</h1>
 			<Masonry
 				breakpointCols={breakpointColumnsObj}
-				className='flex w-auto -ml-2' // Reduced gap
-				columnClassName='pl-2 bg-clip-padding relative' // Reduced gap + relative positioning for z-index context
+				className={`masonry-grid flex w-auto -ml-2 ${photoId ? 'pointer-events-none' : ''}`} // 只对瀑布流禁用交互
+				columnClassName='masonry-grid_column pl-2 bg-clip-padding' // Reduced gap, 移除 relative
 			>
 				{images.map((image, i) => {
 					// 确定图片类型（风景或人像）
@@ -146,15 +146,16 @@ function GalleryClient() {
 					const magneticStrength = getMagneticStrength("gallery");
 
 					return (
-						<div key={image.key} className='mb-2 relative' style={{ isolation: 'isolate' }}> {/* 外层容器确保正确的事件处理和层级隔离 */}
-							<ParallaxItem
-								layer={parallaxLayer}
+						<div key={image.key} className='mb-2 gallery-image-item'> {/* 添加特殊的 CSS 类 */}
+							<MagneticHover
+								strength={magneticStrength}
+								scaleOnHover={1.03}
+								showHalo={true}
+								disabled={!!photoId} // 全屏模式时禁用磁悬浮效果
+								className="block" // 确保是块级元素
 							>
-								<MagneticHover
-									strength={magneticStrength}
-									scaleOnHover={1.03}
-									showHalo={true}
-									className="block" // 确保是块级元素
+								<ParallaxItem
+									layer={parallaxLayer}
 								>
 									<BreathingAnimation
 										contentType={contentType}
@@ -169,7 +170,6 @@ function GalleryClient() {
 											<div className='p-1 rounded-lg bg-card border border-border/20 shadow-sm cursor-pointer group/card'>
 												<motion.div
 													className='relative w-full h-auto overflow-hidden rounded-md'
-													layoutId={`card-${image.key}`}
 												>
 													<Image
 														src={image.url}
@@ -184,8 +184,8 @@ function GalleryClient() {
 											</div>
 										</motion.div>
 									</BreathingAnimation>
-								</MagneticHover>
-							</ParallaxItem>
+								</ParallaxItem>
+							</MagneticHover>
 						</div>
 					);
 				})}
@@ -202,7 +202,7 @@ function GalleryClient() {
 				onClose={handleClose}
 			/>
 			<AnimatePresence>
-				{isScrolled && (
+				{isScrolled && !photoId && ( // 全屏模式时隐藏右下角图标
 					<motion.div
 						layoutId='gallery-emoji'
 						className='fixed bottom-8 right-8 z-50 cursor-pointer'
