@@ -72,7 +72,7 @@ export default function Home() {
 						<p className='text-lg text-gray-600'>探索我们的设计系统和组件库</p>
 					</div>
 
-					<div className='grid md:grid-cols-3 gap-8 max-w-4xl mx-auto'>
+					<div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto'>
 						{/* 组件展示卡片 */}
 						<a
 							href='/ui-showcase/components'
@@ -99,6 +99,35 @@ export default function Home() {
 							</h3>
 							<p className='text-gray-600 leading-relaxed'>
 								Button、Input、Card 等基础组件和高级组件的完整展示
+							</p>
+						</a>
+
+						{/* Timeline展示卡片 */}
+						<a
+							href='/ui-showcase/timeline'
+							className='group bg-white rounded-3xl p-8 shadow-soft hover:shadow-medium transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.02] no-underline border border-border opacity-0 animate-slide-up'
+							style={{ animationDelay: "1.0s", animationFillMode: "forwards" }}
+						>
+							<div className='w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300'>
+								<svg
+									className='w-8 h-8 text-white'
+									fill='none'
+									stroke='currentColor'
+									viewBox='0 0 24 24'
+								>
+									<path
+										strokeLinecap='round'
+										strokeLinejoin='round'
+										strokeWidth={2}
+										d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'
+									/>
+								</svg>
+							</div>
+							<h3 className='text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors'>
+								时间线
+							</h3>
+							<p className='text-gray-600 leading-relaxed'>
+								美化后的博客时间线组件，展示文章的时间轴布局
 							</p>
 						</a>
 

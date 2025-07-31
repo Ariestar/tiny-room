@@ -24,7 +24,7 @@ export function MagneticHover({
     children,
     strength = 0.15,
     scaleOnHover = 1.03,
-    showHalo = true,
+    showHalo = false,
     haloColor,
     rotationIntensity = 0.05,
     className = "",
