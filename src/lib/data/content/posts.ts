@@ -61,8 +61,9 @@ export function getSortedPostsData() {
       slug,
       title: (matterResult.data as { title?: string }).title || slug,
       date:
+        (matterResult.data as { "date created"?: string })["date created"] ||
         (matterResult.data as { date?: string }).date ||
-        stats.birthtime.toISOString(),
+        stats.mtime.toISOString(),
       status: (matterResult.data as { status?: string }).status || "draft",
       description:
         (matterResult.data as { description?: string }).description || "",
@@ -179,7 +180,10 @@ export const getPostBySlug = cache(
     return {
       slug,
       title: (data.title as string) || slug,
-      date: (data.date as string) || stats.birthtime.toISOString(),
+      date:
+        (data["date created"] as string) ||
+        (data.date as string) ||
+        stats.mtime.toISOString(),
       tags: (data.tags as string[]) || [],
       contentHtml: processedContent.toString(),
       content: content, // Return raw content
