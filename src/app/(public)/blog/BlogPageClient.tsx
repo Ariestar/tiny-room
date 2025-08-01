@@ -30,7 +30,7 @@ export default function BlogPageClient({ posts }: { posts: Post[] }) {
 	return (
 		<div className="container-prose">
 			{/* 页面标题 */}
-			<PageTitle title="Blog" emoji="💬" className="text-center" />
+			<PageTitle title="Blog" emoji="✒️" className="text-center" />
 
 			<motion.p
 				className="text-xl text-muted-foreground mb-8 text-center"

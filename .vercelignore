@@ -1,0 +1,4 @@
+# Vercel Ignore File
+
+# Ignore development-only routes
+src/app/(dev)

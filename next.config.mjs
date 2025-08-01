@@ -56,6 +56,16 @@ const nextConfig = {
 	images: {
 		remotePatterns,
 	},
+	webpack: (config, { webpack, isServer, dev }) => {
+		if (process.env.NODE_ENV === "production") {
+			config.plugins.push(
+				new webpack.IgnorePlugin({
+					resourceRegExp: /src\/app\/\(dev\)\//,
+				})
+			);
+		}
+		return config;
+	},
 };
 
 export default nextConfig;

@@ -11,10 +11,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FullscreenCarousel } from "@/components/feature/gallery/FullscreenCarousel";
 import Loading from "@/components/ui/Loading";
 import {
-	ParallaxItem,
 	MagneticHover,
 	BreathingAnimation,
-	getParallaxLayer,
 	getAnimationDelay,
 	getMagneticStrength
 } from "@/components/animation";
@@ -100,9 +98,8 @@ function GalleryClient() {
 
 	const breakpointColumnsObj = {
 		default: 3, // More columns on larger screens for density
-		1500: 4,
-		1100: 3,
-		700: 2,
+		3500: 3,
+		1500: 2,
 		500: 1,
 	};
 
@@ -123,7 +120,7 @@ function GalleryClient() {
 			<PageTitle title="Gallery" emoji="🖼️" className="text-center" />
 			<Masonry
 				breakpointCols={breakpointColumnsObj}
-				className={`masonry-grid flex w-auto -ml-2 ${photoId ? 'pointer-events-none' : ''}`} // 只对瀑布流禁用交互
+				className={`masonry-grid flex w-auto ${photoId ? 'pointer-events-none' : ''}`} // 只对瀑布流禁用交互
 				columnClassName='masonry-grid_column pl-2 bg-clip-padding' // Reduced gap, 移除 relative
 			>
 				{images.map((image, i) => {

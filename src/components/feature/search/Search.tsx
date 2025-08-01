@@ -5,30 +5,40 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { SearchButton } from "./SearchButton";
 import { SearchModal } from "./SearchModal";
 
-export function Search() {
+interface SearchProps {
+	showIcon?: boolean;
+	showText?: boolean;
+	showShortcut?: boolean;
+}
+
+export function Search({ showIcon, showText, showShortcut }: SearchProps) {
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 
 	const openSearch = () => setIsSearchOpen(true);
 	const closeSearch = () => setIsSearchOpen(false);
 
-	// 全局快捷键
 	useHotkeys(
 		"cmd+k, ctrl+k",
-		e => {
+		(e) => {
 			e.preventDefault();
-			openSearch();
+			setIsSearchOpen(prev => !prev);
 		},
 		{ enableOnFormTags: true }
 	);
 
 	return (
 		<>
-			<SearchButton onClick={openSearch} />
+			<SearchButton
+				onClick={openSearch}
+				showIcon={showIcon}
+				showText={showText}
+				showShortcut={showShortcut}
+			/>
 			<SearchModal isOpen={isSearchOpen} onClose={closeSearch} />
 		</>
 	);
 }
 
-// 导出子组件供独立使用
+// Re-export sub-components for individual use
 export { SearchButton } from "./SearchButton";
 export { SearchModal } from "./SearchModal";

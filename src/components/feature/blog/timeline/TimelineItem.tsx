@@ -142,7 +142,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                     disabled={disabled}
                     yearColor={post.nodeColor}
                     isHovered={isHovered}
-                    className={`
+                    className={` 
                         min-w-0
                         ${isMobile ? 'col-start-2 p-4' : 'col-start-3 p-6'}
                     `}

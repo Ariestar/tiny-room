@@ -70,19 +70,7 @@ export const TimelineLayout: React.FC<TimelineLayoutProps> = ({
     }
 
     return (
-        <div ref={containerRef} className="relative max-w-6xl mx-auto py-12 overflow-hidden">
-            {/* 背景装饰层 */}
-            <TimelineBackground
-                scrollYProgress={scrollYProgress}
-                disabled={disabled}
-                isMobile={isMobile}
-                backgroundY={backgroundY}
-                timelineY={timelineY}
-                decorationY={decorationY}
-                floatingY={floatingY}
-                rotate={rotate}
-                rotateReverse={rotateReverse}
-            />
+        <div ref={containerRef} className="relative max-w-6xl mx-auto py-12">
 
             {/* 主要内容网格 */}
             <div

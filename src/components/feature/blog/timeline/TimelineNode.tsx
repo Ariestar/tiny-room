@@ -18,7 +18,6 @@ interface TimelineNodeProps {
 
 /**
  * 时间线节点组件
- * 包含圆点和连接线，带有视差效果
  */
 export const TimelineNode: React.FC<TimelineNodeProps> = ({
     post,
@@ -65,7 +64,7 @@ export const TimelineNode: React.FC<TimelineNodeProps> = ({
                 {/* 新增: 连接卡片的短线 */}
                 {!isMobile && (
                     <motion.div
-                        className="absolute left-1/2 top-[1.1rem] h-0.5 -translate-y-1/2 -z-10"
+                        className="absolute left-1/2 top-[1.1rem] h-0.5 -translate-y-1/2"
                         style={{
                             backgroundColor: post.nodeColor,
                             width: 'calc(100% + 1rem)'
@@ -80,7 +79,7 @@ export const TimelineNode: React.FC<TimelineNodeProps> = ({
                     />
                 )}
                 {/* 连接线 */}
-                <div className="absolute left-1/2 top-8 w-0.5 h-full -translate-x-1/2 -z-10"
+                <div className="absolute left-1/2 top-8 w-0.5 h-full -translate-x-1/2"
                     style={{
                         background: post.nodeColor,
                     }}
@@ -89,7 +88,7 @@ export const TimelineNode: React.FC<TimelineNodeProps> = ({
                 <motion.div
                     className={`
                         relative rounded-full border-4 border-background shadow-lg 
-                        z-10 top-2
+                       top-2
                         ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}
                     `}
                     style={{

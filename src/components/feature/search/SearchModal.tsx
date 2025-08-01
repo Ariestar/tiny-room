@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import ReactDOM from "react-dom";
 import { useRouter } from "next/navigation";
 import { useHotkeys } from "react-hotkeys-hook";
 import { AnimatedDiv } from "@/components/animation/AnimatedDiv";
 
+// ... (interfaces remain the same)
 interface SearchResult {
 	slug: string;
 	title: string;
@@ -30,19 +32,37 @@ interface SearchModalProps {
 	onClose: () => void;
 }
 
+
 export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 	const [query, setQuery] = useState("");
 	const [results, setResults] = useState<SearchResult[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [selectedIndex, setSelectedIndex] = useState(0);
 	const [error, setError] = useState<string | null>(null);
+	const [isMounted, setIsMounted] = useState(false);
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const resultsRef = useRef<HTMLDivElement>(null);
 	const debounceRef = useRef<NodeJS.Timeout>();
 	const router = useRouter();
 
-	// 滚动到选中项
+	useEffect(() => {
+		setIsMounted(true);
+	}, []);
+
+	// Effect to disable body scroll when modal is open
+	useEffect(() => {
+		if (isOpen) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = 'unset';
+		}
+		// Cleanup function
+		return () => {
+			document.body.style.overflow = 'unset';
+		};
+	}, [isOpen]);
+
 	const scrollToResult = (index: number) => {
 		if (resultsRef.current) {
 			const resultElements = resultsRef.current.querySelectorAll("[data-result-index]");
@@ -56,23 +76,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 		}
 	};
 
-	// 快捷键支持
-	useHotkeys(
-		"cmd+k, ctrl+k",
-		e => {
-			e.preventDefault();
-			if (!isOpen) {
-				// 这里需要父组件处理打开
-			} else {
-				onClose();
-			}
-		},
-		{ enableOnFormTags: true }
-	);
-
 	useHotkeys("escape", onClose, { enabled: isOpen, enableOnFormTags: true });
 
-	// 键盘导航
+	// ... (rest of the hooks and functions remain the same)
 	useHotkeys(
 		"up",
 		e => {
@@ -110,7 +116,6 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 		{ enabled: isOpen, enableOnFormTags: true }
 	);
 
-	// 搜索函数
 	const performSearch = useCallback(async (searchQuery: string) => {
 		if (!searchQuery.trim() || searchQuery.length < 2) {
 			setResults([]);
@@ -140,7 +145,6 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 		}
 	}, []);
 
-	// 防抖搜索
 	useEffect(() => {
 		if (debounceRef.current) {
 			clearTimeout(debounceRef.current);
@@ -157,7 +161,6 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 		};
 	}, [query, performSearch]);
 
-	// 焦点管理
 	useEffect(() => {
 		if (isOpen && inputRef.current) {
 			setTimeout(() => {
@@ -166,7 +169,6 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 		}
 	}, [isOpen]);
 
-	// 选中项滚动
 	useEffect(() => {
 		if (resultsRef.current) {
 			const selectedElement = resultsRef.current.children[selectedIndex] as HTMLElement;
@@ -198,7 +200,6 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 		let highlightedText = "";
 		let lastIndex = 0;
 
-		// 合并重叠的索引
 		const sortedIndices = indices.sort((a, b) => a[0] - b[0]);
 		const mergedIndices: number[][] = [];
 
@@ -226,17 +227,12 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 		return highlightedText;
 	};
 
-	if (!isOpen) return null;
 
-	return (
-		<div className='fixed inset-0 z-150 flex items-start justify-center pt-20'>
-			{/* 背景遮罩 */}
+	const modalContent = isOpen ? (
+		<div className='fixed inset-0 z-[10000] flex items-start justify-center pt-20'>
 			<div className='absolute inset-0 bg-black/50 backdrop-blur-sm' onClick={onClose} />
-
-			{/* 搜索框容器 */}
 			<AnimatedDiv duration={0.1} animation='slideUp' className='relative w-full max-w-2xl mx-4'>
 				<div className='bg-background border border-border rounded-lg shadow-lg overflow-hidden'>
-					{/* 搜索输入框 */}
 					<div className='flex items-center px-4 py-3 border-b border-border'>
 						<svg
 							className='w-5 h-5 text-muted-foreground mr-3'
@@ -263,23 +259,18 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 							<div className='animate-spin w-4 h-4 border-2 border-primary border-t-transparent rounded-full ml-3' />
 						)}
 					</div>
-
-					{/* 搜索结果 */}
 					<div ref={resultsRef} className='max-h-96 overflow-y-auto'>
 						{error && <div className='px-4 py-8 text-center text-red-500'>{error}</div>}
-
 						{!error && query.length >= 2 && !isLoading && results.length === 0 && (
 							<div className='px-4 py-8 text-center text-muted-foreground'>
 								没有找到相关文章
 							</div>
 						)}
-
 						{!error && query.length < 2 && (
 							<div className='px-4 py-8 text-center text-muted-foreground'>
 								请输入至少 2 个字符开始搜索
 							</div>
 						)}
-
 						{results.map((result, index) => (
 							<div
 								key={result.slug}
@@ -324,8 +315,6 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 							</div>
 						))}
 					</div>
-
-					{/* 快捷键提示 */}
 					{results.length > 0 && (
 						<div className='px-4 py-2 border-t border-border bg-muted/50'>
 							<div className='flex justify-between text-xs text-muted-foreground'>
@@ -355,5 +344,11 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 				</div>
 			</AnimatedDiv>
 		</div >
-	);
+	) : null;
+
+	if (!isMounted) {
+		return null;
+	}
+
+	return ReactDOM.createPortal(modalContent, document.body);
 }

@@ -3,10 +3,10 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { ReactNode } from "react";
 import { ThemeRegistry } from "@/components/layout/ThemeRegistry";
-import { Header } from "@/components/layout/Header";
 import "@/styles/globals.css";
 import { fonts } from "@/lib/ui/font";
 import { generateMetadata as generateSEOMetadata } from "@/lib/system/seo/seo";
+import { AppShell } from '@/components/layout/AppShell';
 
 const inter = Inter({ subsets: ["latin"] });
 const bevan = Bevan({
@@ -52,10 +52,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				className={`${inter.className} ${fonts.lxgwWenkai.variable} ${fonts.bookerly.variable} ${bevan.variable} bg-background text-foreground antialiased`}
 			>
 				<ThemeRegistry attribute='class' defaultTheme='system' enableSystem>
-					<div className='relative flex min-h-dvh flex-col'>
-						<Header />
+					<AppShell>
 						<main className='flex-1'>{children}</main>
-					</div>
+					</AppShell>
 				</ThemeRegistry>
 			</body>
 		</html>

@@ -18,7 +18,6 @@ interface MagneticHoverProps {
 
 /**
  * 磁吸悬停组件
- * 简化版本：元素保持在原位，只提升 z-index，避免布局问题
  */
 export function MagneticHover({
     children,
@@ -64,7 +63,7 @@ export function MagneticHover({
                     width: 100%;
                     height: 100%;
                     pointer-events: none;
-                    z-index: 9998;
+                    z-index: 200;
                 `;
                 document.body.appendChild(container);
             }
