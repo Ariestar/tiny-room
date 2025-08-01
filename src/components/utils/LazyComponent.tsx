@@ -2,7 +2,7 @@
 
 import { lazy, Suspense, ComponentType, ReactNode } from "react";
 import { motion } from "framer-motion";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 // 懒加载组件的配置选项
 interface LazyComponentOptions {

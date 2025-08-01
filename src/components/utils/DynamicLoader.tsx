@@ -2,7 +2,7 @@
 
 import React, { Suspense, lazy, ComponentType } from 'react';
 import { motion } from 'framer-motion';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { useAnimationPerformance } from '@/hooks/useAnimationPerformance';
 
 interface DynamicLoaderProps {
