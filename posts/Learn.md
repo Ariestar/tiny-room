@@ -1986,3 +1986,53 @@
     - 对于应用级外壳（App Shell）布局，优先考虑使用 Flexbox 或 Grid 而不是传统的 position: fixed + margin 模式。
     - lex-1 + min-w-0 是实现自适应内容区域的黄金组合。
     - 将滚动区域限制在主内容 main 部分，而不是整个 ody，是现代 Web 应用布局的常见最佳实践。
+### 视差背景元素分布优化 (2025-08-02)
+
+- **问题背景**: ParallaxBackground 组件生成的背景元素位置完全随机 (Math.random())，导致元素在视觉上容易聚集、扎堆，分布不均匀，影响美感。
+
+- **核心挑战**: 如何在保留随机性的同时，确保背景元素在整个视口内能够均匀分散？
+
+- **解决方案：“虚拟网格”算法**:
+  - **核心思想**: 将屏幕空间划分为虚拟网格（例如4x3），强制每个元素落在不同的单元格中，从而保证宏观上的均匀分布。
+  - **实现步骤**:
+    1. **定义网格**: 在代码中定义网格的行数和列数（gridRows, gridCols）。
+    2. **创建并打乱单元格索引**: 生成一个从   到 总单元格数-1 的索引数组，并使用 Fisher-Yates 算法随机打乱其顺序。
+    3. **分配单元格**: 遍历需要创建的元素，从打乱后的索引数组中依次取出唯一的单元格索引分配给每个元素。
+    4. **格内随机定位**: 根据单元格索引计算出该格的	op和left边界，然后在此边界内再次使用 Math.random() 计算元素的最终精确位置。
+
+  `	ypescript
+  // 核心逻辑
+  const gridRows = 3;
+  const gridCols = 4;
+  const totalCells = gridRows * gridCols;
+
+  // 创建并打乱索引
+  const cellIndices = Array.from({ length: totalCells }, (_, i) => i);
+  // ... Fisher-Yates shuffle logic ...
+
+  // 为每个元素分配单元格并计算位置
+  for (let i = 0; i < elementCount; i++) {
+      const cellIndex = cellIndices[i];
+      const row = Math.floor(cellIndex / gridCols);
+      const col = cellIndex % gridCols;
+
+      const cellWidth = 90 / gridCols;
+      const cellHeight = 90 / gridRows;
+
+      // 在单元格内部随机
+      const left = col * cellWidth + (Math.random() * cellWidth * 0.7);
+      const top = row * cellHeight + (Math.random() * cellHeight * 0.7);
+
+      newElements.push({ top: ${top}%, left: ${left}%, ... });
+  }
+  `
+
+- **重构优势**:
+  - **分布均匀**: 从根本上解决了元素聚集的问题，实现了宏观上的均匀分布。
+  - **保留随机感**: 每个元素在其单元格内的位置仍然是随机的，保留了自然、不做作的视觉效果。
+  - **可控性强**: 可以通过调整网格的行/列数轻松地控制元素的疏密程度。
+
+- **经验总结**:
+    - 纯粹的随机 (Math.random()) 并不等同于视觉上的均匀分布。
+    - 对于需要在空间上均匀分布的随机元素，引入分而治之的策略（如网格系统、分块）是一种非常有效的解决方案。
+    - 该方法既保证了整体的和谐布局，又保留了局部的随机细节。

@@ -151,6 +151,9 @@ function GalleryClient() {
 										onClick={() => handleImageClick(image.key)}
 										onViewportEnter={() => preloadImage(image.key, image.url)}
 										className="block" // 确保是块级元素
+										initial={{ opacity: 0, y: 20 }}
+										animate={{ opacity: 1, y: 0 }}
+										transition={{ duration: 0.2, ease: "easeInOut", delay: animationDelay * 0.1 }}
 									>
 										<div className='p-1 rounded-lg bg-card border border-border/20 shadow-sm cursor-pointer group/card'>
 											<motion.div

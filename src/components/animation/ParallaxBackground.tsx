@@ -3,7 +3,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { motion, useTransform, MotionValue } from "framer-motion";
 
-// 定义装饰元素的属性类型
 interface DecoElement {
     id: number;
     top: string;
@@ -24,13 +23,13 @@ interface ParallaxBackgroundProps {
 }
 
 const gradients = [
-    "from-blue-400/10 to-purple-400/10",
-    "from-pink-400/10 to-rose-400/10",
-    "from-cyan-400/10 to-blue-400/10",
-    "from-green-400/10 to-teal-400/10",
-    "from-orange-400/10 to-yellow-400/10",
-    "from-rose-400/10 to-red-400/10",
-    "from-indigo-400/10 to-violet-400/10",
+    "bg-gradient-to-r from-blue-400/10 to-purple-400/10",
+    "bg-gradient-to-r from-pink-400/10 to-rose-400/10",
+    "bg-gradient-to-r from-cyan-400/10 to-blue-400/10",
+    "bg-gradient-to-r from-green-400/10 to-teal-400/10",
+    "bg-gradient-to-r from-orange-400/10 to-yellow-400/10",
+    "bg-gradient-to-r from-rose-400/10 to-red-400/10",
+    "bg-gradient-to-r from-indigo-400/10 to-violet-400/10",
 ];
 
 const blurs = ["blur-lg", "blur-xl", "blur-2xl"];
@@ -57,17 +56,44 @@ export const ParallaxBackground: React.FC<ParallaxBackgroundProps> = ({
         if (!isMounted || disabled || isMobile) return [];
 
         const newElements: Omit<DecoElement, 'id'>[] = [];
-        for (let i = 0; i < elementCount; i++) {
+
+        const gridRows = 3;
+        const gridCols = 4;
+        const totalCells = gridRows * gridCols;
+
+        const cellIndices = Array.from({ length: totalCells }, (_, i) => i);
+
+        // Shuffle the cell indices (Fisher-Yates shuffle)
+        for (let i = cellIndices.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [cellIndices[i], cellIndices[j]] = [cellIndices[j], cellIndices[i]];
+        }
+
+        const cellWidth = 90 / gridCols; // Use 90 to leave margins at the edges
+        const cellHeight = 90 / gridRows;
+
+        const count = Math.min(elementCount, totalCells);
+
+        for (let i = 0; i < count; i++) {
+            const cellIndex = cellIndices[i];
+            const row = Math.floor(cellIndex / gridCols);
+            const col = cellIndex % gridCols;
+
+            // Calculate position within the cell, with some randomness
+            const left = col * cellWidth + (Math.random() * cellWidth * 0.7);
+            const top = row * cellHeight + (Math.random() * cellHeight * 0.7);
+
             newElements.push({
-                top: `${Math.random() * 90}%`,
-                left: `${Math.random() * 90}%`,
-                size: Math.random() * 200 + 50, // 50px to 250px
+                top: `${top}%`,
+                left: `${left}%`,
+                size: Math.random() * 150 + 50, // 50px to 200px
                 gradient: gradients[Math.floor(Math.random() * gradients.length)],
                 blur: blurs[Math.floor(Math.random() * blurs.length)],
-                parallaxDepth: Math.random() * 100 + 20, // 20% to 120%
-                rotationSpeed: Math.random() * 180 - 90, // -90 to 90 degrees
+                parallaxDepth: Math.random() * 80 + 20, // 20% to 100%
+                rotationSpeed: Math.random() * 120 - 60, // -60 to 60 degrees
             });
         }
+
         return newElements.map((el, i) => ({ ...el, id: i }));
     }, [isMounted, elementCount, disabled, isMobile]);
 

@@ -79,6 +79,8 @@ export const TimelinePostCard: React.FC<TimelinePostCardProps> = ({
                 stiffness: 200,
                 damping: 25,
             }}
+            whileHover={{ scale: 1.01, transition: { duration: 0.1, ease: "easeInOut" } }}
+            whileTap={{ scale: 0.99, transition: { duration: 0.1, ease: "easeInOut" } }}
         >
             {/* 连接线到时间轴 - 从左侧连接到时间线 */}
             <motion.div

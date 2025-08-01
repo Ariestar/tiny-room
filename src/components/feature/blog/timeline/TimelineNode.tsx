@@ -97,6 +97,7 @@ export const TimelineNode: React.FC<TimelineNodeProps> = ({
                     }}
                     animate={{ scale: isHovered ? 1.3 : 1 }}
                     transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    whileTap={{ scale: 0.99, transition: { duration: 0.1, ease: "easeInOut" } }}
                 />
             </div>
         </motion.div>

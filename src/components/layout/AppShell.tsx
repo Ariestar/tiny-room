@@ -24,11 +24,13 @@ const NavLinks = ({ isCollapsed }: { isCollapsed: boolean }) => {
         <nav className="flex flex-col space-y-2">
             {NAV_LINKS.map((link, index) => (
                 <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    key={link.href}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.2, ease: "easeOut", delay: index * 0.1 }}
-                    whileHover={{ scale: 1.05, transition: { duration: 0.1, ease: "easeInOut" } }}
-                    whileTap={{ scale: 0.95, transition: { duration: 0.1, ease: "easeInOut" } }}
+                    className="cursor-pointer"
+                    whileHover={{ scale: 1.1, transition: { duration: 0.1, ease: "easeInOut" } }}
+                    whileTap={{ scale: 0.9, transition: { duration: 0.1, ease: "easeInOut" } }}
                 >
                     <Link
                         key={link.href}

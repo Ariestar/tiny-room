@@ -55,6 +55,7 @@ export const TimelineYearLabel: React.FC<TimelineYearLabelProps> = ({
                 stiffness: 200,
                 damping: 20
             }}
+
         >
             <div className="relative group">
                 {/* 年份标签背景光晕 */}
@@ -66,17 +67,18 @@ export const TimelineYearLabel: React.FC<TimelineYearLabelProps> = ({
                 />
 
                 {/* 年份标签主体 */}
-                <div
+                <motion.div
                     className={`
                         relative whitespace-nowrap bg-background/80 backdrop-blur-md rounded-2xl 
-                        shadow-lg border font-bold transition-all duration-300
-                        group-hover:shadow-xl group-hover:scale-105
-                        px-5 py-3 text-base
+                        shadow-lg border font-bold
+                        px-5 py-3 text-base cursor-pointer
                     `}
                     style={{
                         borderColor: `${post.nodeColor}40`,
                         color: post.nodeColor,
                     }}
+                    whileHover={{ scale: 1.05, transition: { duration: 0.1, ease: "easeInOut" } }}
+                    whileTap={{ scale: 0.95, transition: { duration: 0.1, ease: "easeInOut" } }}
                 >
                     <div className="flex items-center gap-2">
                         <span className="text-2xl font-black">{post.year}</span>
@@ -86,7 +88,7 @@ export const TimelineYearLabel: React.FC<TimelineYearLabelProps> = ({
                             </span>
                         </div>
                     </div>
-                </div>
+                </motion.div>
             </div>
         </motion.div>
     );
