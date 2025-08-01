@@ -15,6 +15,7 @@ interface TimelinePostCardProps {
     post: PostData;
     index: number;
     isLeft: boolean; // 是否在时间线左侧
+    isHovered: boolean;
     disabled?: boolean;
     yearColor?: string; // 年份颜色
 }
@@ -27,6 +28,7 @@ export const TimelinePostCard: React.FC<TimelinePostCardProps> = ({
     post,
     index,
     isLeft,
+    isHovered,
     disabled = false,
     yearColor,
 }) => {

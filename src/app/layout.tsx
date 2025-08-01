@@ -1,13 +1,21 @@
+import { Bevan } from 'next/font/google';
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { ReactNode } from "react";
 import { ThemeRegistry } from "@/components/layout/ThemeRegistry";
 import { Header } from "@/components/layout/Header";
 import "@/styles/globals.css";
-import { fonts } from "@/lib/ui/styles";
+import { fonts } from "@/lib/ui/font";
 import { generateMetadata as generateSEOMetadata } from "@/lib/system/seo/seo";
 
 const inter = Inter({ subsets: ["latin"] });
+const bevan = Bevan({
+	weight: '400',
+	subsets: ['latin'],
+	variable: '--font-bevan',
+	display: 'swap',
+});
+
 
 // 视口配置
 export const viewport: Viewport = {
@@ -41,7 +49,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				/>
 			</head>
 			<body
-				className={`${inter.className} ${fonts.lxgwWenkai.variable} ${fonts.bookerly.variable} bg-background text-foreground antialiased`}
+				className={`${inter.className} ${fonts.lxgwWenkai.variable} ${fonts.bookerly.variable} ${bevan.variable} bg-background text-foreground antialiased`}
 			>
 				<ThemeRegistry attribute='class' defaultTheme='system' enableSystem>
 					<div className='relative flex min-h-dvh flex-col'>
