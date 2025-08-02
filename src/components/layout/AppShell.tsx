@@ -36,7 +36,7 @@ const NavLinks = ({ isCollapsed }: { isCollapsed: boolean }) => {
                         key={link.href}
                         href={link.href as any}
                         className={cn(
-                            "p-2 rounded-md flex items-center",
+                            "p-2 rounded-xl flex items-center",
                             isCollapsed ? "justify-center" : "",
                             pathname.startsWith(link.href)
                                 ? "bg-primary text-primary-foreground"

@@ -5,6 +5,7 @@ import "@/styles/prose.css";
 import { PageTransition } from "@/components/animation/PageTransition";
 import { TableOfContents } from "@/components/feature/blog/TableOfContents";
 import { ArticleMetadata } from "@/components/feature/blog/ArticleMetadata";
+import { ViewTracker } from "@/components/ui/ViewTracker";
 
 type Props = {
 	params: {
@@ -43,6 +44,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
 	return (
 		<>
+			{/* 自动追踪页面浏览量 */}
+			<ViewTracker slug={decodedSlug} />
+
 			{/* 浮动TOC - 桌面端，移到PageTransition外面 */}
 			<aside className='hidden lg:block fixed top-20 right-4 w-64 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-lg border border-gray-200 dark:border-gray-700 shadow-xl p-4 max-h-[calc(100vh-10rem)] overflow-y-auto transition-all duration-300 hover:shadow-2xl'>
 				<TableOfContents toc={post.toc} />

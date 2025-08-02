@@ -17,62 +17,7 @@ interface TimelineItemProps {
     yearGroups: any[];
 }
 
-/**
- * 视差卡片组件
- * 为每个时间线卡片添加独特的视差效果
- */
-const ParallaxCard: React.FC<{
-    children: React.ReactNode;
-    index: number;
-    scrollYProgress: any;
-    disabled: boolean;
-    isMobile: boolean;
-    className?: string;
-    style?: React.CSSProperties;
-}> = ({
-    children,
-    index,
-    scrollYProgress,
-    disabled,
-    isMobile,
-    className,
-    style
-}) => {
-        // 为每个卡片创建独特的视差效果
-        const cardY = useTransform(
-            scrollYProgress,
-            [0, 1],
-            ["0%", `${-10 + (index % 4) * 5}%`]
-        );
 
-        const cardScale = useTransform(
-            scrollYProgress,
-            [0, 0.5, 1],
-            [1, 1.03, 0.97]
-        );
-
-        return (
-            <motion.div
-                className={className}
-                style={{
-                    ...style,
-                    y: disabled || isMobile ? 0 : cardY,
-                    scale: disabled || isMobile ? 1 : cardScale,
-                }}
-                initial={{ opacity: 0, x: 30, y: 20 }}
-                animate={{ opacity: 1, x: 0, y: 0 }}
-                transition={{
-                    delay: index * 0.03 + 0.2,
-                    duration: 0.6,
-                    type: "spring",
-                    stiffness: 200,
-                    damping: 25
-                }}
-            >
-                {children}
-            </motion.div>
-        );
-    };
 
 /**
  * 时间线项目组件
@@ -144,7 +89,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                     isHovered={isHovered}
                     className={` 
                         min-w-0
-                        ${isMobile ? 'col-start-2 p-4' : 'col-start-3 p-6'}
+                        ${isMobile ? 'col-start-2 p-4' : 'col-start-3 py-6 px-12'}
                     `}
                     style={{ gridRow: index + 1 }}
                 />

@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Badge from "@/components/ui/Badge";
+import ViewCounter from "@/components/ui/ViewCounter";
 import { MagneticHover, BreathingAnimation } from "@/components/animation";
 import type { TimelinePost } from "./types";
 import type { getSortedPostsData } from "@/lib/data/content/posts";
@@ -18,6 +19,8 @@ interface TimelinePostCardProps {
     isHovered: boolean;
     disabled?: boolean;
     yearColor?: string; // 年份颜色
+    className?: string; // 外部样式类
+    style?: React.CSSProperties; // 外部样式
 }
 
 /**
@@ -31,6 +34,8 @@ export const TimelinePostCard: React.FC<TimelinePostCardProps> = ({
     isHovered,
     disabled = false,
     yearColor,
+    className,
+    style,
 }) => {
     // 获取年份颜色，如果没有提供则使用默认颜色
     const nodeColor = 'nodeColor' in post ? post.nodeColor : yearColor || '#3b82f6';
@@ -53,7 +58,7 @@ export const TimelinePostCard: React.FC<TimelinePostCardProps> = ({
     const scale = useTransform(
         scrollYProgress,
         [0, 0.5, 1],
-        [0.9, 1, 0.9]
+        [0.7, 1.1, 0.7]
     );
     const opacity = useTransform(
         scrollYProgress,
@@ -65,10 +70,11 @@ export const TimelinePostCard: React.FC<TimelinePostCardProps> = ({
     return (
         <motion.div
             ref={cardRef}
-            className="relative w-full group/card"
+            className={`relative w-full group/card ${className || ''}`}
             style={{
                 scale: disabled ? 1 : scale,
-                opacity: disabled ? 1 : opacity
+                opacity: disabled ? 1 : opacity,
+                ...style
             }}
             initial={{ opacity: 0, x: isLeft !== undefined ? (isLeft ? -50 : 50) : 0, y: 20 }}
             animate={{ opacity: 1, x: 0, y: 0 }}
@@ -115,7 +121,7 @@ export const TimelinePostCard: React.FC<TimelinePostCardProps> = ({
                 >
                     <Link href={`/blog/${post.slug}`} className="block group">
                         {/* 卡片主体 */}
-                        <div className="relative m-4 bg-card/80 backdrop-blur-sm border border-border/30 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden group-hover:border-border/50">
+                        <div className="relative bg-card/80 backdrop-blur-sm border border-border/30 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden group-hover:border-border/50 -translate-y-16">
                             {/* 背景装饰渐变 */}
                             <div
                                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -170,22 +176,25 @@ export const TimelinePostCard: React.FC<TimelinePostCardProps> = ({
 
                                 {/* 文章信息 */}
                                 <motion.div
-                                    className="flex items-center justify-between text-sm text-muted-foreground"
+                                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 text-sm text-muted-foreground"
                                     style={{ y: disabled ? 0 : infoY }}
                                 >
-                                    <time
-                                        dateTime={post.date}
-                                        className="flex items-center gap-1.5 font-medium"
-                                    >
-                                        <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                        {new Date(post.date).toLocaleDateString("zh-CN", {
-                                            year: "numeric",
-                                            month: "short",
-                                            day: "numeric",
-                                        })}
-                                    </time>
+                                    <div className="flex items-center gap-3 sm:gap-4">
+                                        <time
+                                            dateTime={post.date}
+                                            className="flex items-center gap-1.5 font-medium"
+                                        >
+                                            <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                            {new Date(post.date).toLocaleDateString("zh-CN", {
+                                                year: "numeric",
+                                                month: "short",
+                                                day: "numeric",
+                                            })}
+                                        </time>
+                                        <ViewCounter slug={post.slug} />
+                                    </div>
                                     <span className="flex items-center gap-1.5 font-medium">
                                         <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />

@@ -4,7 +4,7 @@ import React, { useMemo, useRef } from "react";
 import { useScroll, useTransform } from "framer-motion";
 import { useResponsive } from "@/hooks/useResponsive";
 import { getYearGroups } from "@/lib/data/content/timeline";
-import { TimelineBackground } from "./TimelineBackground";
+
 import { TimelineEmptyState } from "./TimelineEmptyState";
 import { TimelineItem } from "./TimelineItem";
 import { TimelineFooter } from "./TimelineFooter";
@@ -35,11 +35,8 @@ export const TimelineLayout: React.FC<TimelineLayoutProps> = ({
         offset: ["start end", "end start"]
     });
 
-    // 不同层级的视差变换
-    const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "150%"]); // 从 80% 增加到 120%
-    const timelineY = useTransform(scrollYProgress, [0, 1], ["0%", "80%"]);   // 从 30% 增加到 50%
-    const decorationY = useTransform(scrollYProgress, [0, 1], ["0%", "-150%"]); // 从 -50% 增加到 -100%
-    const floatingY = useTransform(scrollYProgress, [0, 1], ["0%", "300%"]);  // 从 150% 增加到 250%
+    // 视差变换效果
+    const decorationY = useTransform(scrollYProgress, [0, 1], ["0%", "-150%"]);
 
     // 旋转效果
     const rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
@@ -70,15 +67,15 @@ export const TimelineLayout: React.FC<TimelineLayoutProps> = ({
     }
 
     return (
-        <div ref={containerRef} className="relative max-w-6xl mx-auto py-12">
+        <div ref={containerRef} className="relative w-full max-w-none py-12">
 
             {/* 主要内容网格 */}
             <div
                 className={`
-                    relative grid items-start 
+                    relative grid items-start mx-auto
                     ${isMobile
-                        ? 'grid-cols-[32px_1fr] px-4'
-                        : 'grid-cols-[auto_48px_1fr] max-w-5xl mx-auto'
+                        ? 'grid-cols-[32px_1fr] max-w-4xl px-4'
+                        : 'grid-cols-[200px_48px_1fr] max-w-7xl px-24'
                     }
                 `}
             >

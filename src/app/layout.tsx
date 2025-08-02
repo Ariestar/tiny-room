@@ -2,6 +2,7 @@ import { Bevan } from 'next/font/google';
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { ReactNode } from "react";
+import { Analytics } from '@vercel/analytics/react';
 import { ThemeRegistry } from "@/components/layout/ThemeRegistry";
 import "@/styles/globals.css";
 import { fonts } from "@/lib/ui/font";
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 						<main className='flex-1'>{children}</main>
 					</AppShell>
 				</ThemeRegistry>
+				<Analytics />
 			</body>
 		</html>
 	);

@@ -28,7 +28,7 @@ export default function BlogPageClient({ posts }: { posts: Post[] }) {
 	}, []);
 
 	return (
-		<div className="container-prose">
+		<div className="w-full max-w-none px-4 sm:px-6 lg:px-8">
 			{/* 页面标题 */}
 			<PageTitle title="Blog" emoji="✒️" className="text-center" />
 
