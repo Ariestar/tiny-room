@@ -6,12 +6,13 @@ import { PageTransition } from "@/components/animation/PageTransition";
 import { TableOfContents } from "@/components/feature/blog/TableOfContents";
 import { ArticleMetadata } from "@/components/feature/blog/ArticleMetadata";
 import { ViewTracker } from "@/components/ui/ViewTracker";
-
-type Props = {
-	params: {
-		slug: string;
-	};
-};
+import { BreadcrumbNav } from "@/components/layout/BreadcrumbNav";
+import { SocialShare } from "@/components/feature/blog/SocialShare";
+import { RelatedPosts } from "@/components/feature/blog/RelatedPosts";
+import { FAQ } from "@/components/feature/blog/FAQ";
+import { ArticleStructuredData } from "@/components/seo/EnhancedStructuredData";
+import { SEOAnalyzer } from "@/components/seo/SEOAnalyzer";
+import { PerformanceMonitor } from "@/components/analytics/PerformanceMonitor";
 
 export async function generateStaticParams() {
 	const slugs = getAllPostSlugs();
@@ -42,18 +43,52 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 		return notFound();
 	}
 
+	const currentUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/blog/${decodedSlug}`;
+
 	return (
 		<>
 			{/* 自动追踪页面浏览量 */}
 			<ViewTracker slug={decodedSlug} />
 
-			{/* 浮动TOC - 桌面端，移到PageTransition外面 */}
+			{/* SEO 结构化数据 */}
+			<ArticleStructuredData
+				title={post.title}
+				description={post.description || post.content.slice(0, 150)}
+				url={currentUrl}
+				datePublished={post.date}
+				dateModified={post.date}
+				tags={post.tags}
+				image={post.image}
+			/>
+
+			{/* 开发环境 SEO 分析器 */}
+			{/* {process.env.NODE_ENV === 'development' && (
+				<SEOAnalyzer
+					title={post.title}
+					content={post.content}
+				/>
+			)} */}
+
+			{/* 开发环境性能监控 */}
+			{/* {process.env.NODE_ENV === 'development' && <PerformanceMonitor />} */}
+
+			{/* 浮动TOC - 桌面端 */}
 			<aside className='hidden lg:block fixed top-20 right-4 w-64 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-lg border border-gray-200 dark:border-gray-700 shadow-xl p-4 max-h-[calc(100vh-10rem)] overflow-y-auto transition-all duration-300 hover:shadow-2xl'>
 				<TableOfContents toc={post.toc} />
 			</aside>
 
 			<div className='container mx-auto max-w-4xl px-4 py-12'>
 				<PageTransition transitionType="slide">
+					{/* 面包屑导航 */}
+					<BreadcrumbNav
+						items={[
+							{ name: '首页', url: '/' },
+							{ name: '博客', url: '/blog' },
+							{ name: post.title, url: `/blog/${decodedSlug}`, isActive: true }
+						]}
+						className="mb-8"
+					/>
+
 					{/* 移动端TOC - 在内容前显示 */}
 					<div className='lg:hidden mb-8'>
 						<div className='bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700'>
@@ -75,10 +110,47 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 								className='mb-8 pb-6 border-b border-gray-200 dark:border-gray-700 text-center'
 							/>
 
+							{/* 社交分享 - 文章顶部 */}
+							<div className="mb-8">
+								<SocialShare
+									url={currentUrl}
+									title={post.title}
+									description={post.description || post.content.slice(0, 150)}
+									variant="minimal"
+									className="justify-center"
+								/>
+							</div>
+
 							<article
 								className='text-lg leading-relaxed'
 								dangerouslySetInnerHTML={{ __html: post.contentHtml }}
 							/>
+
+							{/* 社交分享 - 文章底部 */}
+							<div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+								<SocialShare
+									url={currentUrl}
+									title={post.title}
+									description={post.description || post.content.slice(0, 150)}
+									variant="default"
+								/>
+							</div>
+
+							{/* FAQ 组件 - 针对特定标签 */}
+							{post.tags?.some(tag => ['React', 'Next.js', 'JavaScript', 'TypeScript'].includes(tag)) && (
+								<div className="mt-12">
+									<FAQ />
+								</div>
+							)}
+
+							{/* 相关文章推荐 */}
+							<div className="mt-12">
+								<RelatedPosts
+									slug={decodedSlug}
+									tags={post.tags || []}
+									limit={3}
+								/>
+							</div>
 						</div>
 					</main>
 				</PageTransition>

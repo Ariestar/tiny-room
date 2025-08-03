@@ -7,11 +7,13 @@ interface SocialShareProps {
     url: string;
     title: string;
     description?: string;
+    image?: string; // Add missing image prop
+    tags?: string[]; // Add tags prop (alias for hashtags)
     hashtags?: string[];
     className?: string;
     showLabels?: boolean;
     size?: "sm" | "md" | "lg";
-    variant?: "default" | "minimal" | "floating";
+    variant?: "default" | "minimal" | "floating" | "compact"; // Add compact variant
     onShare?: (platform: string) => void;
 }
 
@@ -58,8 +60,9 @@ const CheckIcon = ({ className }: { className?: string }) => (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
     </svg>
-);// 社交平
-台配置
+);
+
+// 社交平台配置
 const SHARE_PLATFORMS: SharePlatform[] = [
     {
         name: "Twitter",
@@ -284,8 +287,9 @@ export function SocialShare({
             )}
         </div>
     );
-}// 便捷
-的预设组件
+}
+
+// 便捷的预设组件
 export function BlogPostShare({
     slug,
     title,

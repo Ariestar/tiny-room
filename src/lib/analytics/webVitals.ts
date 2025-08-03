@@ -1,22 +1,11 @@
 "use client";
 
-import {
-  getCLS,
-  getFID,
-  getFCP,
-  getLCP,
-  getTTFB,
-  onCLS,
-  onFID,
-  onFCP,
-  onLCP,
-  onTTFB,
-} from "web-vitals";
+import { onCLS, onINP, onFCP, onLCP, onTTFB } from "web-vitals";
 
 // Web Vitals 指标接口
 export interface WebVitalsMetric {
   id: string;
-  name: "CLS" | "FID" | "FCP" | "LCP" | "TTFB";
+  name: "CLS" | "INP" | "FCP" | "LCP" | "TTFB";
   value: number;
   delta: number;
   rating: "good" | "needs-improvement" | "poor";
@@ -127,7 +116,7 @@ export class WebVitalsMonitor {
 
     // 监听各项指标
     onCLS(this.handleMetric.bind(this));
-    onFID(this.handleMetric.bind(this));
+    onINP(this.handleMetric.bind(this));
     onFCP(this.handleMetric.bind(this));
     onLCP(this.handleMetric.bind(this));
     onTTFB(this.handleMetric.bind(this));
@@ -160,7 +149,6 @@ export class WebVitalsMonitor {
       rating: metric.rating,
       timestamp: Date.now(),
       url: window.location.href,
-      userAgent: navigator.userAgent,
       ...getDeviceInfo(),
     };
 
@@ -171,7 +159,7 @@ export class WebVitalsMonitor {
     }
 
     // 立即发送关键指标
-    if (["CLS", "FID", "LCP"].includes(metric.name)) {
+    if (["CLS", "INP", "LCP"].includes(metric.name)) {
       sendMetric(webVitalsMetric);
     }
   }
@@ -289,13 +277,13 @@ export const getWebVitalsMonitor = () => globalMonitor;
 // 手动获取所有指标
 export const getAllWebVitals = async (): Promise<{
   cls: number;
-  fid: number;
+  inp: number;
   fcp: number;
   lcp: number;
   ttfb: number;
 }> => {
   return new Promise((resolve) => {
-    const metrics = { cls: 0, fid: 0, fcp: 0, lcp: 0, ttfb: 0 };
+    const metrics = { cls: 0, inp: 0, fcp: 0, lcp: 0, ttfb: 0 };
     let collected = 0;
     const total = 5;
 
@@ -306,27 +294,28 @@ export const getAllWebVitals = async (): Promise<{
       }
     };
 
-    getCLS((metric) => {
+    // 使用 onXXX 函数来获取指标
+    onCLS((metric: any) => {
       metrics.cls = metric.value;
       checkComplete();
     });
 
-    getFID((metric) => {
-      metrics.fid = metric.value;
+    onINP((metric: any) => {
+      metrics.inp = metric.value;
       checkComplete();
     });
 
-    getFCP((metric) => {
+    onFCP((metric: any) => {
       metrics.fcp = metric.value;
       checkComplete();
     });
 
-    getLCP((metric) => {
+    onLCP((metric: any) => {
       metrics.lcp = metric.value;
       checkComplete();
     });
 
-    getTTFB((metric) => {
+    onTTFB((metric: any) => {
       metrics.ttfb = metric.value;
       checkComplete();
     });
@@ -341,14 +330,14 @@ export const getAllWebVitals = async (): Promise<{
 // 性能评分函数
 export const getPerformanceScore = (metrics: {
   cls: number;
-  fid: number;
+  inp: number;
   fcp: number;
   lcp: number;
   ttfb: number;
 }): number => {
   const weights = {
     lcp: 0.25,
-    fid: 0.25,
+    inp: 0.25,
     cls: 0.25,
     fcp: 0.15,
     ttfb: 0.1,
@@ -356,7 +345,7 @@ export const getPerformanceScore = (metrics: {
 
   const scores = {
     lcp: metrics.lcp <= 2500 ? 100 : metrics.lcp <= 4000 ? 50 : 0,
-    fid: metrics.fid <= 100 ? 100 : metrics.fid <= 300 ? 50 : 0,
+    inp: metrics.inp <= 200 ? 100 : metrics.inp <= 500 ? 50 : 0, // INP thresholds
     cls: metrics.cls <= 0.1 ? 100 : metrics.cls <= 0.25 ? 50 : 0,
     fcp: metrics.fcp <= 1800 ? 100 : metrics.fcp <= 3000 ? 50 : 0,
     ttfb: metrics.ttfb <= 800 ? 100 : metrics.ttfb <= 1800 ? 50 : 0,
@@ -364,7 +353,7 @@ export const getPerformanceScore = (metrics: {
 
   return Math.round(
     scores.lcp * weights.lcp +
-      scores.fid * weights.fid +
+      scores.inp * weights.inp +
       scores.cls * weights.cls +
       scores.fcp * weights.fcp +
       scores.ttfb * weights.ttfb

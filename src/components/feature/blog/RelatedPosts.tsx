@@ -3,8 +3,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Card } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
+import Card from "@/components/ui/Card";
+import Badge from "@/components/ui/Badge";
 
 interface PostData {
     slug: string;
@@ -24,8 +24,12 @@ interface RelatedPostData extends PostData {
 }
 
 interface RelatedPostsProps {
+    slug?: string; // Add slug prop for current post
+    currentSlug?: string; // Alternative name for slug
+    tags?: string[]; // Add tags prop for filtering
+    limit?: number; // Alternative name for maxResults
     currentPost?: PostData;
-    allPosts: PostData[];
+    allPosts?: PostData[];
     maxResults?: number;
     context?: "detail" | "homepage";
     className?: string;
@@ -140,14 +144,21 @@ function calculateHomepageScore(post: PostData): number {
 }
 
 export function RelatedPosts({
+    slug,
+    currentSlug,
+    tags,
+    limit,
     currentPost,
-    allPosts,
+    allPosts = [],
     maxResults = 5,
     context = "detail",
     className = "",
     title,
     showRelevanceScore = false,
 }: RelatedPostsProps) {
+    // 处理新的 props
+    const currentPostSlug = slug || currentSlug;
+    const maxItems = limit || maxResults;
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -157,6 +168,11 @@ export function RelatedPosts({
     }, []);
 
     const relatedPosts = useMemo(() => {
+        // 如果没有提供 allPosts，返回空数组（组件会显示占位内容）
+        if (!allPosts || allPosts.length === 0) {
+            return [];
+        }
+
         if (context === "homepage") {
             // 首页场景：推荐热门和最新文章
             return allPosts
@@ -167,7 +183,26 @@ export function RelatedPosts({
                     similarity: 0,
                 }))
                 .sort((a, b) => b.relevanceScore - a.relevanceScore)
-                .slice(0, maxResults);
+                .slice(0, maxItems);
+        }
+
+        // 简化的相关文章推荐（基于 slug 和 tags）
+        if (currentPostSlug && tags) {
+            return allPosts
+                .filter(post => post.slug !== currentPostSlug) // 排除当前文章
+                .map(post => {
+                    const commonTags = tags.filter(tag => post.tags.includes(tag));
+                    const tagScore = commonTags.length / Math.max(tags.length, post.tags.length, 1);
+                    return {
+                        ...post,
+                        relevanceScore: tagScore,
+                        matchedTags: commonTags,
+                        similarity: tagScore,
+                    };
+                })
+                .filter(post => post.relevanceScore > 0) // 只显示有相关标签的文章
+                .sort((a, b) => b.relevanceScore - a.relevanceScore)
+                .slice(0, maxItems);
         }
 
         if (!currentPost) return [];
@@ -192,9 +227,24 @@ export function RelatedPosts({
             })
             .sort((a, b) => b.relevanceScore - a.relevanceScore)
             .slice(0, maxResults);
-    }, [currentPost, allPosts, maxResults, context]);
+    }, [currentPost, allPosts, maxItems, context, currentPostSlug, tags]);
 
     const defaultTitle = context === "homepage" ? "推荐阅读" : "相关文章";
+
+    // 如果没有相关文章，显示占位内容
+    if (!isLoading && relatedPosts.length === 0) {
+        return (
+            <div className={`space-y-4 ${className}`}>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                    {title || defaultTitle}
+                </h3>
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                    <p>暂无相关文章推荐</p>
+                    <p className="text-sm mt-2">更多精彩内容正在路上...</p>
+                </div>
+            </div>
+        );
+    }
 
     if (isLoading) {
         return (

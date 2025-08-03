@@ -25,7 +25,8 @@ interface FAQItem {
 }
 
 interface FAQProps {
-    items: FAQItem[];
+    items?: FAQItem[]; // Make items optional
+    topic?: string; // Add topic prop for auto-generating FAQ
     title?: string;
     description?: string;
     searchable?: boolean;
@@ -33,8 +34,58 @@ interface FAQProps {
     className?: string;
 }
 
+// 预设的FAQ数据
+const getDefaultFAQItems = (topic?: string): FAQItem[] => {
+    const reactFAQ: FAQItem[] = [
+        {
+            id: "react-1",
+            question: "什么是React？",
+            answer: "React是一个用于构建用户界面的JavaScript库，由Facebook开发。它采用组件化的开发方式，让开发者可以创建可重用的UI组件。",
+            category: "基础"
+        },
+        {
+            id: "react-2",
+            question: "React的主要特点是什么？",
+            answer: "React的主要特点包括：虚拟DOM、组件化架构、单向数据流、JSX语法、丰富的生态系统等。",
+            category: "基础"
+        },
+        {
+            id: "react-3",
+            question: "什么是JSX？",
+            answer: "JSX是JavaScript的语法扩展，允许在JavaScript代码中编写类似HTML的标记。它使React组件的编写更加直观和易读。",
+            category: "语法"
+        }
+    ];
+
+    const nextjsFAQ: FAQItem[] = [
+        {
+            id: "nextjs-1",
+            question: "什么是Next.js？",
+            answer: "Next.js是一个基于React的全栈框架，提供了服务端渲染、静态站点生成、API路由等功能。",
+            category: "基础"
+        },
+        {
+            id: "nextjs-2",
+            question: "Next.js的主要优势是什么？",
+            answer: "Next.js提供了开箱即用的SSR/SSG、自动代码分割、优化的性能、内置CSS支持等特性。",
+            category: "特性"
+        }
+    ];
+
+    switch (topic?.toLowerCase()) {
+        case 'react':
+            return reactFAQ;
+        case 'next.js':
+        case 'nextjs':
+            return nextjsFAQ;
+        default:
+            return reactFAQ; // 默认返回React FAQ
+    }
+};
+
 export function FAQ({
     items,
+    topic,
     title = "常见问题",
     description,
     searchable = true,
@@ -45,11 +96,14 @@ export function FAQ({
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
+    // 使用传入的items或根据topic生成默认items
+    const faqItems = items || getDefaultFAQItems(topic);
+
     // 获取所有分类
-    const categories = Array.from(new Set(items.map(item => item.category).filter(Boolean)));
+    const categories = Array.from(new Set(faqItems.map(item => item.category).filter(Boolean)));
 
     // 过滤FAQ项目
-    const filteredItems = items.filter(item => {
+    const filteredItems = faqItems.filter(item => {
         const matchesSearch = !searchQuery ||
             item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.answer.toLowerCase().includes(searchQuery.toLowerCase());
@@ -123,8 +177,8 @@ export function FAQ({
                             <button
                                 onClick={() => setSelectedCategory("all")}
                                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCategory === "all"
-                                        ? "bg-blue-500 text-white"
-                                        : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                                    ? "bg-blue-500 text-white"
+                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                                     }`}
                             >
                                 全部
@@ -134,8 +188,8 @@ export function FAQ({
                                     key={category}
                                     onClick={() => setSelectedCategory(category!)}
                                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCategory === category
-                                            ? "bg-blue-500 text-white"
-                                            : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                                         }`}
                                 >
                                     {category}

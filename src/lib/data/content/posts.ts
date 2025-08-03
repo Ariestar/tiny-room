@@ -37,6 +37,9 @@ export type PostData = {
   status: string; // Add status
   toc: TocEntry[]; // Add table of contents
   readingTime: string; // Add reading time
+  description?: string; // Add description field
+  image?: string; // Add image field
+  coverImage?: string | null; // Add cover image field
 };
 
 export function getSortedPostsData() {
@@ -190,6 +193,9 @@ export const getPostBySlug = cache(
       status: (data.status as string) || "draft", // Return status
       toc: (processedContent.data.toc as TocEntry[]) || [], // Return toc
       readingTime: readingTime(fileContents).text, // Calculate and return reading time
+      description: (data.description as string) || content.slice(0, 150), // Add description
+      image: (data.image as string) || (data.coverImage as string) || undefined, // Add image
+      coverImage: (data.coverImage as string) || null, // Add cover image
     };
   }
 );

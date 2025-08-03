@@ -13,7 +13,8 @@ import {
 interface SEOAnalyzerProps {
     content: string;
     title: string;
-    description: string;
+    description?: string; // Make description optional
+    url?: string; // Add url prop
     targetKeywords?: string[];
     className?: string;
 }
@@ -21,7 +22,8 @@ interface SEOAnalyzerProps {
 export function SEOAnalyzer({
     content,
     title,
-    description,
+    description = "",
+    url,
     targetKeywords = [],
     className = "",
 }: SEOAnalyzerProps) {
@@ -114,7 +116,7 @@ export function SEOAnalyzer({
                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
                             <div
                                 className={`h-3 rounded-full transition-all duration-500 ${seoScore.overall >= 80 ? 'bg-green-500' :
-                                        seoScore.overall >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                                    seoScore.overall >= 60 ? 'bg-yellow-500' : 'bg-red-500'
                                     }`}
                                 style={{ width: `${seoScore.overall}%` }}
                             />
@@ -295,7 +297,7 @@ export function SEOScoreCard({
             <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                 <div
                     className={`h-2 rounded-full transition-all duration-500 ${seoScore.overall >= 80 ? 'bg-green-500' :
-                            seoScore.overall >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                        seoScore.overall >= 60 ? 'bg-yellow-500' : 'bg-red-500'
                         }`}
                     style={{ width: `${seoScore.overall}%` }}
                 />

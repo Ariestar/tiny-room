@@ -308,7 +308,7 @@ export function diversifyRecommendations(
 
   // 首先选择评分最高的
   selected.push(remaining.shift()!);
-  usedTags.add(...selected[0].tags);
+  selected[0].tags.forEach((tag) => usedTags.add(tag));
   if (selected[0].category) usedCategories.add(selected[0].category);
 
   while (selected.length < limit && remaining.length > 0) {
@@ -331,7 +331,7 @@ export function diversifyRecommendations(
 
     const selectedPost = remaining.splice(bestIndex, 1)[0];
     selected.push(selectedPost);
-    usedTags.add(...selectedPost.tags);
+    selectedPost.tags.forEach((tag) => usedTags.add(tag));
     if (selectedPost.category) usedCategories.add(selectedPost.category);
   }
 
