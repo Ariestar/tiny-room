@@ -243,8 +243,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 			},
 		};
 
+		if (asChild) {
+			return (
+				<Slot ref={ref} className={buttonClasses} {...props}>
+					{children}
+				</Slot>
+			);
+		}
+
 		return (
-			<Comp
+			<motion.button
 				ref={ref}
 				className={buttonClasses}
 				animate={controls}
@@ -263,7 +271,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 						children
 					)
 				) : (
-					<>
+					<div className="contents">
 						{variant === "gradient" && (
 							<motion.div
 								className='absolute inset-0 bg-gradient-to-r from-gradient-end to-gradient-start'
@@ -286,9 +294,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 								<span className={cn("ml-2", iconSizes[size])}>{rightIcon}</span>
 							)}
 						</motion.div>
-					</>
+					</div>
 				)}
-			</Comp>
+			</motion.button>
 		);
 	}
 );
