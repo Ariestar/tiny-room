@@ -12,7 +12,7 @@ import { motion } from 'framer-motion';
 
 const NAV_LINKS = [
     // 示例：为每个链接添加图标
-    { href: '/blog', label: '博客', icon: '📝' },
+    { href: '/blog', label: '博客', icon: '✒️' },
     { href: '/gallery', label: '相册', icon: '🖼️' },
     { href: '/projects', label: '项目', icon: '💼' },
     { href: '/dashboard', label: '仪表盘', icon: '📊' },
@@ -98,10 +98,18 @@ const MobileTopBar = () => {
 
 export const AppShell = ({ children }: { children: React.ReactNode }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const pathname = usePathname();
+
+    // 定义需要隐藏侧边栏的路径规则 (使用正则表达式)
+    const hiddenSidebarPaths = [
+        /^\/blog\/.+/, // 匹配所有博客文章详情页，如 /blog/some-post
+    ];
+
+    const showSidebar = !hiddenSidebarPaths.some(pattern => pattern.test(pathname));
 
     return (
-        <div className="min-h-screen bg-background text-foreground lg:flex">
-            <DesktopSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+        <div className={cn("min-h-screen bg-background text-foreground", showSidebar && "lg:flex")}>
+            {showSidebar && <DesktopSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />}
             <div className="flex flex-col flex-1 w-full min-w-0">
                 <MobileTopBar />
                 <main className="flex-1 overflow-y-auto">

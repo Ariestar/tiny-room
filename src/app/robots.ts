@@ -1,13 +1,13 @@
 import { MetadataRoute } from "next";
-import { generateRobotsTxt } from "@/lib/system/seo/seo";
+import { generateRobotsTxt } from "@/lib/seo/seo";
 
 export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-      disallow: ["/admin/", "/api/", "/_next/", "/private/"],
-    },
-    sitemap: "https://tinyroom.dev/sitemap.xml",
-  };
+	return {
+		rules: {
+			userAgent: "*",
+			allow: "/",
+			disallow: ["/admin/", "/api/", "/_next/", "/private/"],
+		},
+		sitemap: "https://tinyroom.dev/sitemap.xml",
+	};
 }

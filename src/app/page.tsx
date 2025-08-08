@@ -20,21 +20,17 @@ import { InteractiveEasterEggs } from "@/components/feature/contact/InteractiveE
 import { ScrollRevealContainer, ScrollRevealItem } from "@/components/animation/ScrollReveal";
 import { HomepageStructuredData } from "@/components/seo/StructuredData";
 import { useState, useEffect } from "react";
-import { generateMetadata as generateSEOMetadata } from "@/lib/system/seo/seo";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo/seo";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import { Suspense } from "react";
-import { CompatibilityTester } from "@/components/dev/CompatibilityTester";
-import { TestingDashboard } from "@/components/dev/TestingDashboard";
 
 
-// 注意：客户端组件不能导出 metadata，元数据已移至 layout.tsx
 export default function Home() {
 	// 状态管理
 	const [posts, setPosts] = useState([]);
 	const [projects, setProjects] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
-	const [error, setError] = useState(null);
+	const [error, setError] = useState<Error | null>(null);
 
 	// 获取数据
 	useEffect(() => {
@@ -52,7 +48,8 @@ export default function Home() {
 				setProjects(projectsResponse);
 			} catch (err) {
 				console.error('Error fetching data:', err);
-				setError(err);
+				const e = err instanceof Error ? err : new Error(String(err));
+				setError(e);
 				// 设置默认数据以防止页面崩溃
 				setPosts([]);
 				setProjects([]);
@@ -391,9 +388,6 @@ export default function Home() {
 
 			</main>
 
-			{/* 开发环境测试工具 */}
-			<CompatibilityTester />
-			<TestingDashboard />
 		</ErrorBoundary>
 	);
 }

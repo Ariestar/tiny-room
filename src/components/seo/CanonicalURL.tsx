@@ -1,4 +1,4 @@
-import { baseSEOConfig } from '@/lib/system/seo/seo';
+import { baseSEOConfig } from '@/lib/seo/seo';
 
 interface CanonicalURLProps {
     path?: string;

@@ -3,7 +3,7 @@
  * Enhanced Structured Data Component for SEO
  */
 
-import { baseSEOConfig } from '@/lib/system/seo/seo';
+import { baseSEOConfig } from '@/lib/seo/seo';
 
 interface FAQItem {
     question: string;

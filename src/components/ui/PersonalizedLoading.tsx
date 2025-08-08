@@ -163,8 +163,8 @@ function SkeletonLoader({ size }: { size: string }) {
 }
 
 // 旋转加载器
-function SpinnerLoader({ size }: { size: string }) {
-    const sizeClasses = {
+function SpinnerLoader({ size }: { size: 'sm' | 'md' | 'lg' }) {
+    const sizeClasses: Record<'sm' | 'md' | 'lg', string> = {
         sm: "w-6 h-6",
         md: "w-8 h-8",
         lg: "w-12 h-12"
@@ -180,8 +180,8 @@ function SpinnerLoader({ size }: { size: string }) {
 }
 
 // 点点加载器
-function DotsLoader({ size }: { size: string }) {
-    const dotSize = {
+function DotsLoader({ size }: { size: 'sm' | 'md' | 'lg' }) {
+    const dotSize: Record<'sm' | 'md' | 'lg', string> = {
         sm: "w-2 h-2",
         md: "w-3 h-3",
         lg: "w-4 h-4"
@@ -209,8 +209,8 @@ function DotsLoader({ size }: { size: string }) {
 }
 
 // 波浪加载器
-function WaveLoader({ size }: { size: string }) {
-    const barHeight = {
+function WaveLoader({ size }: { size: 'sm' | 'md' | 'lg' }) {
+    const barHeight: Record<'sm' | 'md' | 'lg', string> = {
         sm: "h-4",
         md: "h-6",
         lg: "h-8"
@@ -237,7 +237,7 @@ function WaveLoader({ size }: { size: string }) {
 }
 
 // 脉冲加载器
-function PulseLoader({ size }: { size: string }) {
+function PulseLoader({ size }: { size: 'sm' | 'md' | 'lg' }) {
     const pulseSize = {
         sm: "w-8 h-8",
         md: "w-12 h-12",

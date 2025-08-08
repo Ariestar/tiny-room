@@ -16,7 +16,7 @@ interface OptimizedImageProps extends Omit<ImageProps, 'placeholder'> {
     skeletonClassName?: string;
     enableBlur?: boolean;
     blurDataURL?: string;
-    aspectRatio?: 'square' | '16:9' | '4:3' | '3:2' | 'auto';
+    aspectRatio?: 'square' | '16:9' | '4:3' | '3:2' | '3:4' | 'auto';
     objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
     priority?: boolean;
     quality?: number;
@@ -60,6 +60,8 @@ const getResponsiveSizes = (aspectRatio?: string): string => {
             return '(max-width: 640px) 100vw, (max-width: 1024px) 70vw, 50vw';
         case '3:2':
             return '(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 55vw';
+        case '3:4':
+            return '(max-width: 640px) 100vw, (max-width: 1024px) 65vw, 45vw';
         default:
             return '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw';
     }
@@ -76,6 +78,8 @@ const getAspectRatioStyle = (aspectRatio?: string) => {
             return 'aspect-[4/3]';
         case '3:2':
             return 'aspect-[3/2]';
+        case '3:4':
+            return 'aspect-[3/4]';
         default:
             return '';
     }

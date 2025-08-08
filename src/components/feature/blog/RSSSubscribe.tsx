@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { baseSEOConfig } from "@/lib/system/seo/seo";
+import { baseSEOConfig } from "@/lib/seo/seo";
 
 interface RSSSubscribeProps {
     className?: string;

@@ -245,8 +245,6 @@ function ImageCard({
                                 height={image.height}
                                 className="transition-transform duration-500 group-hover:scale-110"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                enableLazyLoading={true}
-                                loadingAnimation="blur"
                                 quality={80}
                                 aspectRatio={isPortrait ? "3:4" : isLandscape ? "4:3" : "square"}
                             />
@@ -413,7 +411,6 @@ function ImageModal({
                                 objectFit="contain"
                                 priority={true}
                                 quality={95}
-                                enableLazyLoading={false}
                             />
                         </div>
 
@@ -498,7 +495,6 @@ export function CompactGalleryPreview({
                         height={200}
                         className="transition-transform duration-300 group-hover:scale-110"
                         aspectRatio="square"
-                        enableLazyLoading={true}
                         quality={75}
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
@@ -506,6 +502,6 @@ export function CompactGalleryPreview({
             ))}
         </div>
     );
-}// 
-默认导出
+}
+
 export default GalleryPreview;

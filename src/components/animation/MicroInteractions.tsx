@@ -375,7 +375,7 @@ export function InteractiveButton({
                 onClick={onClick}
                 disabled={disabled}
                 type={type}
-                {...htmlProps}
+                {...(htmlProps as any)}
             >
                 {children}
             </motion.button>

@@ -164,11 +164,11 @@ export function SmartNavigation({
                         {/* 导航区域 */}
                         <div className="flex-1 flex justify-center">
                             <Navigation
-                                items={itemsWithActive}
-                                variant={variant}
+                                items={itemsWithActive as any}
+                                variant={variant as any}
                                 size="md"
                                 align="center"
-                                onItemClick={onItemClick}
+                                onItemClick={onItemClick as any}
                                 className="max-w-2xl"
                             />
                         </div>

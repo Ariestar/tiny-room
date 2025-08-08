@@ -5,9 +5,9 @@ import matter from "gray-matter";
 
 const postsDirectory = path.join(process.cwd(), "posts");
 
-export async function POST(req: NextRequest, { params }: { params: { slug: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
 	try {
-		const { slug } = params;
+		const { slug } = await params;
 		const { status } = await req.json();
 
 		if (!status || (status !== "publish" && status !== "draft")) {

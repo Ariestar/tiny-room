@@ -201,15 +201,6 @@ export const DynamicComponents = {
         }
     ),
 
-    // 开发工具 - 仅开发环境
-    ImagePerformanceMonitor: createDynamicComponent(
-        () => import('@/components/dev/ImagePerformanceMonitor'),
-        {
-            fallback: null,
-            ssr: false
-        }
-    ),
-
     PerformanceOptimizedWrapper: createDynamicComponent(
         () => import('@/components/animation/PerformanceOptimizedWrapper'),
         {

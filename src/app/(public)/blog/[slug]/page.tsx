@@ -11,8 +11,6 @@ import { SocialShare } from "@/components/feature/blog/SocialShare";
 import { RelatedPosts } from "@/components/feature/blog/RelatedPosts";
 import { FAQ } from "@/components/feature/blog/FAQ";
 import { ArticleStructuredData } from "@/components/seo/EnhancedStructuredData";
-import { SEOAnalyzer } from "@/components/seo/SEOAnalyzer";
-import { PerformanceMonitor } from "@/components/analytics/PerformanceMonitor";
 
 export async function generateStaticParams() {
 	const slugs = getAllPostSlugs();
@@ -73,9 +71,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 			{/* {process.env.NODE_ENV === 'development' && <PerformanceMonitor />} */}
 
 			{/* 浮动TOC - 桌面端 */}
-			<aside className='hidden lg:block fixed top-20 right-4 w-64 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-lg border border-gray-200 dark:border-gray-700 shadow-xl p-4 max-h-[calc(100vh-10rem)] overflow-y-auto transition-all duration-300 hover:shadow-2xl'>
-				<TableOfContents toc={post.toc} />
-			</aside>
+			{post.toc && post.toc.length > 0 && (
+				<aside className='hidden lg:block fixed top-20 right-4 w-64 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-lg border border-gray-200 dark:border-gray-700 shadow-xl p-4 max-h-[calc(100vh-10rem)] overflow-y-auto transition-all duration-300 hover:shadow-2xl'>
+					<TableOfContents toc={post.toc} />
+				</aside>
+			)}
 
 			<div className='container mx-auto max-w-4xl px-4 py-12'>
 				<PageTransition transitionType="slide">
@@ -105,21 +105,17 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
 							<ArticleMetadata
 								date={post.date}
-								readingTime={post.readingTime || "未知"}
+								readingTime={post.readingTime || 0}
 								tags={post.tags}
-								className='mb-8 pb-6 border-b border-gray-200 dark:border-gray-700 text-center'
+								url={currentUrl}
+								title={post.title}
+								description={post.description || post.content.slice(0, 150)}
+								showShare={true}
+								className='mb-8 text-center'
 							/>
 
-							{/* 社交分享 - 文章顶部 */}
-							<div className="mb-8">
-								<SocialShare
-									url={currentUrl}
-									title={post.title}
-									description={post.description || post.content.slice(0, 150)}
-									variant="minimal"
-									className="justify-center"
-								/>
-							</div>
+							{/* 分隔线 */}
+							<div className="border-t border-gray-200 dark:border-gray-700 mb-8"></div>
 
 							<article
 								className='text-lg leading-relaxed'
@@ -128,12 +124,29 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
 							{/* 社交分享 - 文章底部 */}
 							<div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-								<SocialShare
-									url={currentUrl}
-									title={post.title}
-									description={post.description || post.content.slice(0, 150)}
-									variant="default"
-								/>
+								{/* 桌面端分享 */}
+								<div className="hidden sm:block">
+									<SocialShare
+										url={currentUrl}
+										title={post.title}
+										description={post.description || post.content.slice(0, 150)}
+										hashtags={post.tags}
+										variant="default"
+										showLabels={true}
+									/>
+								</div>
+
+								{/* 移动端分享 */}
+								<div className="block sm:hidden">
+									<SocialShare
+										url={currentUrl}
+										title={post.title}
+										description={post.description || post.content.slice(0, 150)}
+										hashtags={post.tags}
+										variant="mobile"
+										showLabels={true}
+									/>
+								</div>
 							</div>
 
 							{/* FAQ 组件 - 针对特定标签 */}
@@ -148,7 +161,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 								<RelatedPosts
 									slug={decodedSlug}
 									tags={post.tags || []}
-									limit={3}
 								/>
 							</div>
 						</div>

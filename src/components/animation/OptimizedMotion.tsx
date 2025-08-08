@@ -113,17 +113,17 @@ OptimizedMotionContainer.displayName = 'OptimizedMotionContainer';
 /**
  * 优化的文本动画组件
  */
-export const OptimizedTextMotion = forwardRef<HTMLElement, {
+export const OptimizedTextMotion = forwardRef<HTMLDivElement, {
     children: ReactNode;
-    as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span';
-    variant?: 'slideUp' | 'slideDown' | 'fadeIn' | 'scaleIn';
+    as?: React.ElementType;
+    variant?: 'slideUp' | 'slideDown' | 'fadeIn' | 'scale';
     delay?: number;
     className?: string;
-}>(({ children, as: Component = 'div', variant = 'slideUp', delay = 0, className = "" }, ref) => {
+}>(({ children, as: Component = 'p', variant = 'slideUp', delay = 0, className = "" }, ref) => {
     const { getVariants, getTransition } = useOptimizedAnimation();
 
     const variants = getVariants(performantVariants[variant]);
-    const transition = getTransition({ ...performantTransitions.default, delay });
+    const transition = getTransition({ ...performantTransitions.smooth, delay });
 
     return (
         <motion.div
@@ -175,7 +175,7 @@ export const OptimizedButtonMotion = forwardRef<HTMLButtonElement, {
             disabled={disabled}
             whileHover={hoverVariants[variant]}
             whileTap={tapVariants[variant]}
-            transition={performantTransitions.fast}
+            transition={performantTransitions.quick}
             style={{
                 willChange: 'transform',
                 transform: 'translateZ(0)'

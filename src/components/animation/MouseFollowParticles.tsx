@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import {
     prefersReducedMotion,
     createResponsiveAnimationConfig,
-    AnimationPerformanceMonitor,
     createThrottledAnimationTrigger
 } from "@/lib/ui/animations";
 
@@ -58,13 +57,7 @@ export function MouseFollowParticles({
     const [particles, setParticles] = useState<Particle[]>([]);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [isMouseInside, setIsMouseInside] = useState(false);
-    const animationMonitor = AnimationPerformanceMonitor.getInstance();
     const isReducedMotion = prefersReducedMotion();
-
-    // 如果用户偏好减少动画，返回简化版本
-    if (!enabled || isReducedMotion) {
-        return null;
-    }
 
     // 根据性能调整粒子数量
     const optimizedParticleCount = Math.min(particleCount, 15);
@@ -110,11 +103,7 @@ export function MouseFollowParticles({
             initialParticles.push(createParticle(i, 0, 0));
         }
         setParticles(initialParticles);
-
-        // 注册动画监控
-        animationMonitor.startAnimation();
-        return () => animationMonitor.endAnimation();
-    }, [enabled, optimizedParticleCount, createParticle, animationMonitor]);
+    }, [enabled, optimizedParticleCount, createParticle]);
 
     // 鼠标事件处理 - 优化版本
     useEffect(() => {
@@ -199,7 +188,9 @@ export function MouseFollowParticles({
         };
     }, [enabled, isMouseInside, mousePosition, followStrength]);
 
-    if (!enabled) return null;
+    if (!enabled || isReducedMotion) {
+        return null;
+    }
 
     return (
         <div

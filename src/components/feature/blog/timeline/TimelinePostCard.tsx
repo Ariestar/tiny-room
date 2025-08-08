@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Badge from "@/components/ui/Badge";
@@ -41,6 +41,7 @@ export const TimelinePostCard: React.FC<TimelinePostCardProps> = ({
     const nodeColor = 'nodeColor' in post ? post.nodeColor : yearColor || '#3b82f6';
 
     const cardRef = useRef<HTMLDivElement>(null);
+    const [isCardHovered, setIsCardHovered] = useState(false);
 
     // 卡片内部视差效果
     const { scrollYProgress } = useScroll({
@@ -55,7 +56,7 @@ export const TimelinePostCard: React.FC<TimelinePostCardProps> = ({
     const decorationRotate = useTransform(scrollYProgress, [0, 1], [0, 180]);
 
     // 新增：基于滚动位置的缩放和透明度变换
-    const scale = useTransform(
+    const baseScale = useTransform(
         scrollYProgress,
         [0, 0.5, 1],
         [0.7, 1.1, 0.7]
@@ -66,17 +67,22 @@ export const TimelinePostCard: React.FC<TimelinePostCardProps> = ({
         [0.7, 1, 0.7]
     );
 
+    // 创建相对hover缩放效果 - 基于当前滚动缩放值
+    const currentScale = useTransform(baseScale, (value) =>
+        isCardHovered ? value * 1.02 : value
+    );
+
 
     return (
         <motion.div
             ref={cardRef}
             className={`relative w-full group/card ${className || ''}`}
             style={{
-                scale: disabled ? 1 : scale,
+                scale: disabled ? 1 : currentScale,
                 opacity: disabled ? 1 : opacity,
                 ...style
             }}
-            initial={{ opacity: 0, x: isLeft !== undefined ? (isLeft ? -50 : 50) : 0, y: 20 }}
+            initial={{ opacity: 0, x: isLeft !== undefined ? (isLeft ? -50 : 50) : 0, y: 0 }}
             animate={{ opacity: 1, x: 0, y: 0 }}
             transition={{
                 delay: index * 0.05,
@@ -85,23 +91,7 @@ export const TimelinePostCard: React.FC<TimelinePostCardProps> = ({
                 stiffness: 200,
                 damping: 25,
             }}
-            whileHover={{ scale: 1.01, transition: { duration: 0.1, ease: "easeInOut" } }}
-            whileTap={{ scale: 0.99, transition: { duration: 0.1, ease: "easeInOut" } }}
         >
-            {/* 连接线到时间轴 - 从左侧连接到时间线 */}
-            <motion.div
-                className="absolute w-6 h-0.5 left-0 -translate-x-full top-8"
-                style={{
-                    background: `linear-gradient(to left, ${nodeColor}80, transparent)`,
-                }}
-                initial={{ scaleX: 0, originX: 1 }}
-                animate={{ scaleX: 1 }}
-                transition={{
-                    delay: index * 0.05 + 0.3,
-                    duration: 0.4,
-                    ease: "easeOut"
-                }}
-            />
 
             <MagneticHover
                 strength={0.3}
@@ -121,7 +111,17 @@ export const TimelinePostCard: React.FC<TimelinePostCardProps> = ({
                 >
                     <Link href={`/blog/${post.slug}`} className="block group">
                         {/* 卡片主体 */}
-                        <div className="relative bg-card/80 backdrop-blur-sm border border-border/30 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden group-hover:border-border/50 -translate-y-16">
+                        <motion.div
+                            className="relative bg-card/80 backdrop-blur-sm border border-border/30 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden group-hover:border-border/50"
+                            whileHover={{
+                                scale: 1.02,
+                                transition: { duration: 0.2, ease: "circInOut" }
+                            }}
+                            whileTap={{
+                                scale: 0.98,
+                                transition: { duration: 0.1, ease: "circInOut" }
+                            }}
+                        >
                             {/* 背景装饰渐变 */}
                             <div
                                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -203,7 +203,7 @@ export const TimelinePostCard: React.FC<TimelinePostCardProps> = ({
                                     </span>
                                 </motion.div>
                             </div>
-                        </div>
+                        </motion.div>
 
                     </Link>
                 </BreathingAnimation>

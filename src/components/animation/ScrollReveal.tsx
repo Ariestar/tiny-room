@@ -69,6 +69,8 @@ export function ScrollRevealContainer({
     rootMargin?: string;
     triggerOnce?: boolean;
     className?: string;
+    role?: string;
+    "aria-label"?: string;
     staggerChildren?: number;
     delayChildren?: number;
 }) {
@@ -112,6 +114,11 @@ export function ScrollRevealItem({
 }: {
     children: ReactNode;
     className?: string;
+    role?: string;
+    tabIndex?: number;
+    "aria-label"?: string;
+    onKeyDown?: (e: any) => void;
+    onClick?: () => void;
 }) {
     const itemVariants = scrollAnimationVariants.item;
 
@@ -163,19 +170,10 @@ export function ScrollRevealCounter({
         >
             {prefix}
             <motion.span
-                initial={{ textContent: from }}
-                animate={isInView ? { textContent: to } : { textContent: from }}
-                transition={{
-                    duration,
-                    ease: "easeOut",
-                    delay: 0.2
-                }}
-                onUpdate={(latest: any) => {
-                    if (ref.current) {
-                        const value = Math.round(latest.textContent);
-                        ref.current.textContent = `${prefix}${value}${suffix}`;
-                    }
-                }}
+                initial={{ opacity: 0 }}
+                animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+                transition={{ duration, ease: "easeOut", delay: 0.2 }}
+                ref={ref as any}
             />
             {suffix}
         </motion.span>

@@ -3,7 +3,7 @@
  * Structured Data Component for SEO
  */
 
-import { generateStructuredData } from '@/lib/system/seo/seo';
+import { generateStructuredData } from '@/lib/seo/seo';
 
 interface StructuredDataProps {
     data: Parameters<typeof generateStructuredData>[0];

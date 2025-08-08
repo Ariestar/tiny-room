@@ -6,9 +6,9 @@ import matter from "gray-matter";
 const postsDirectory = path.join(process.cwd(), "posts");
 
 // Handler for updating a post's content
-export async function PUT(req: NextRequest, { params }: { params: { slug: string } }) {
+export async function PUT(req: NextRequest, context: any) {
 	try {
-		const { slug } = params;
+		const { slug } = context.params;
 		const { content: newContent } = await req.json();
 
 		if (typeof newContent !== "string") {
@@ -39,9 +39,9 @@ export async function PUT(req: NextRequest, { params }: { params: { slug: string
 }
 
 // Handler for deleting a post
-export async function DELETE(req: NextRequest, { params }: { params: { slug: string } }) {
+export async function DELETE(req: NextRequest, context: any) {
 	try {
-		const { slug } = params;
+		const { slug } = context.params;
 		const fullPath = path.join(postsDirectory, `${slug}.md`);
 
 		if (!fs.existsSync(fullPath)) {

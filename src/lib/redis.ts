@@ -41,4 +41,17 @@ export const REDIS_KEYS = {
   popular: "popular:posts",
   totalViews: "total:views",
   dailyViews: (date: string) => `daily:${date}`,
+
+  // 分享相关键名
+  shareCount: (slug: string, platform: string) => `share:${slug}:${platform}`,
+  totalShares: (slug: string) => `share:${slug}:total`,
+  dailyShares: (slug: string, date: string) => `share:${slug}:daily:${date}`,
+  weeklyShares: (slug: string, week: string) => `share:${slug}:weekly:${week}`,
+  monthlyShares: (slug: string, month: string) =>
+    `share:${slug}:monthly:${month}`,
+  lastShared: (slug: string) => `share:${slug}:last`,
+  shareEvents: (slug: string) => `share:${slug}:events`,
+  globalShares: "share:global:total",
+  popularContent: "share:popular:content",
+  platformStats: "share:platform:stats",
 } as const;

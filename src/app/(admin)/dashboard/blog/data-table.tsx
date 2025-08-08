@@ -33,6 +33,24 @@ export type Post = {
 	date: string;
 };
 
+// A new component for the actions cell to use hooks correctly
+const ActionsCell: React.FC<{ row: { original: Post } }> = ({ row }) => {
+	const post = row.original;
+	const router = useRouter();
+
+	return (
+		<div className='text-right'>
+			<Button
+				variant='outline'
+				size='sm'
+				onClick={() => router.push(`/dashboard/blog/edit/${post.slug}`)}
+			>
+				Edit
+			</Button>
+		</div>
+	);
+};
+
 export const columns: ColumnDef<Post>[] = [
 	{
 		id: "select",
@@ -80,22 +98,7 @@ export const columns: ColumnDef<Post>[] = [
 	{
 		id: "actions",
 		enableHiding: false,
-		cell: ({ row }) => {
-			const post = row.original;
-			const router = useRouter();
-
-			return (
-				<div className='text-right'>
-					<Button
-						variant='outline'
-						size='sm'
-						onClick={() => router.push(`/dashboard/blog/edit/${post.slug}`)}
-					>
-						Edit
-					</Button>
-				</div>
-			);
-		},
+		cell: ({ row }) => <ActionsCell row={row} />,
 	},
 ];
 

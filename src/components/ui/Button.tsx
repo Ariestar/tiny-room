@@ -244,8 +244,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 		};
 
 		if (asChild) {
+			// 使用 asChild 时透传 props 到 Slot，但避免将 motion 的 style 类型传入 Slot 导致类型冲突
+			const { style, ...restProps } = props as any;
 			return (
-				<Slot ref={ref} className={buttonClasses} {...props}>
+				<Slot ref={ref as any} className={buttonClasses} {...(restProps as any)}>
 					{children}
 				</Slot>
 			);

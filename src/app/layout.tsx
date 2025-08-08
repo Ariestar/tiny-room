@@ -6,7 +6,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { ThemeRegistry } from "@/components/layout/ThemeRegistry";
 import "@/styles/globals.css";
 import { fonts } from "@/lib/ui/font";
-import { generateMetadata as generateSEOMetadata } from "@/lib/system/seo/seo";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo/seo";
 import { AppShell } from '@/components/layout/AppShell';
 
 const inter = Inter({ subsets: ["latin"] });

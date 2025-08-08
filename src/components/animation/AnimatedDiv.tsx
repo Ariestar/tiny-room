@@ -58,10 +58,12 @@ export const AnimatedDiv = React.forwardRef<HTMLDivElement, AnimatedDivProps>(
 
 			const newVariants: Variants = {};
 
-			Object.keys(animationVariants).forEach(key => {
-				const variant = animationVariants[key];
+			const variantEntries = Object.entries(
+				animationVariants as unknown as Record<string, any>
+			);
+			for (const [key, variant] of variantEntries) {
 				if (typeof variant === "object" && variant !== null) {
-					newVariants[key] = {
+					(newVariants as any)[key] = {
 						...variant,
 						transition: {
 							// @ts-ignore
@@ -71,9 +73,9 @@ export const AnimatedDiv = React.forwardRef<HTMLDivElement, AnimatedDivProps>(
 						},
 					};
 				} else {
-					newVariants[key] = variant;
+					(newVariants as any)[key] = variant;
 				}
-			});
+			}
 
 			return newVariants;
 		}, [animation, variants, delay, duration, disableAnimation]);

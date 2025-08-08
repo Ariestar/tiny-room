@@ -13,7 +13,7 @@ import {
 } from "@/lib/ui/images";
 import { useAnimationPerformance } from "@/hooks/useAnimationPerformance";
 
-interface EnhancedImageProps extends Omit<ImageProps, 'placeholder' | 'quality'> {
+interface EnhancedImageProps extends Omit<ImageProps, 'placeholder' | 'quality' | 'onError' | 'onLoadingComplete'> {
     src: string;
     alt: string;
     width?: number;
@@ -37,7 +37,7 @@ interface EnhancedImageProps extends Omit<ImageProps, 'placeholder' | 'quality'>
     lazyOffset?: string;
 
     // 响应式
-    aspectRatio?: 'square' | '16:9' | '4:3' | '3:2' | 'auto';
+    aspectRatio?: 'square' | '16:9' | '4:3' | '3:2' | '3:4' | 'auto';
     responsivePreset?: keyof typeof ResponsiveImageCalculator.presets;
 
     // 错误处理
@@ -104,7 +104,9 @@ export function EnhancedImage({
     const [loadStartTime, setLoadStartTime] = useState<number>(0);
 
     const containerRef = useRef<HTMLDivElement>(null);
-    const { shouldAnimate, createOptimizedConfig } = useAnimationPerformance();
+    const perf = useAnimationPerformance();
+    const createOptimizedConfig = perf ? (perf as any).createOptimizedConfig ?? ((cfg: any) => cfg) : ((cfg: any) => cfg);
+    const shouldAnimate = true;
 
     // 获取优化的图片源
     const getOptimizedSrc = useCallback((originalSrc: string): string => {
@@ -236,6 +238,8 @@ export function EnhancedImage({
                 return 'aspect-[4/3]';
             case '3:2':
                 return 'aspect-[3/2]';
+            case '3:4':
+                return 'aspect-[3/4]';
             default:
                 return '';
         }

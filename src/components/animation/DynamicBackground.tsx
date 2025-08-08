@@ -6,7 +6,6 @@ import { cn } from "@/lib/shared/utils";
 import {
     prefersReducedMotion,
     createResponsiveAnimationConfig,
-    AnimationPerformanceMonitor,
     createThrottledAnimationTrigger
 } from "@/lib/ui/animations";
 
@@ -38,7 +37,6 @@ export function DynamicBackground({
 }: DynamicBackgroundProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-    const animationMonitor = AnimationPerformanceMonitor.getInstance();
     const isReducedMotion = prefersReducedMotion();
 
     // 优化的鼠标跟随效果 - 使用节流
@@ -125,12 +123,6 @@ function GradientGridBackground({
         duration: intensity === "high" ? 20 : intensity === "medium" ? 30 : 40
     });
 
-    const animationMonitor = AnimationPerformanceMonitor.getInstance();
-
-    useEffect(() => {
-        animationMonitor.startAnimation();
-        return () => animationMonitor.endAnimation();
-    }, [animationMonitor]);
 
     return (
         <div className="absolute inset-0">
@@ -254,12 +246,6 @@ function GridBackground({ intensity }: { intensity: string }) {
 function GeometricBackground({ intensity }: { intensity: string }) {
     const shapeCount = intensity === "high" ? 8 : intensity === "medium" ? 6 : 4;
     const shapes = Array.from({ length: shapeCount }, (_, i) => i);
-    const animationMonitor = AnimationPerformanceMonitor.getInstance();
-
-    useEffect(() => {
-        animationMonitor.startAnimation();
-        return () => animationMonitor.endAnimation();
-    }, [animationMonitor]);
 
     return (
         <div className="absolute inset-0">

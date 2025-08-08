@@ -133,7 +133,7 @@ export function FAQ({
         <div className={`max-w-4xl mx-auto ${className}`}>
             {/* 结构化数据 */}
             <FAQStructuredData
-                faqItems={items.map(item => ({
+                faqItems={faqItems.map(item => ({
                     question: item.question,
                     answer: item.answer
                 }))}

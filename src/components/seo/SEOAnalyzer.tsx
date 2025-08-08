@@ -264,7 +264,7 @@ export function SEOScoreCard({
 
     useEffect(() => {
         if (content && title) {
-            const score = generateSEOScore(content, title, description, targetKeywords);
+            const score = generateSEOScore(content, title, description ?? "", targetKeywords ?? []);
             setSeoScore(score);
         }
     }, [content, title, description, targetKeywords]);
