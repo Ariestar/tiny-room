@@ -36,7 +36,7 @@ export function PageTitle({ title, className, emoji }: PageTitleProps) {
         <h1
             ref={titleRef}
             className={cn(
-                'text-6xl font-bevan font-bold my-2 text-foreground',
+                'text-6xl font-title font-bold my-2 text-foreground',
                 'py-4',
                 className
             )}

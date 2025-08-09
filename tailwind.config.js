@@ -180,9 +180,11 @@ module.exports = {
 
 			// 现代化字体系统
 			fontFamily: {
-				bevan: ["var(--font-bevan)"],
+				bevan: ["var(--font-bevan)", ...fontFamily.serif],
+				daHei: ["var(--font-da-hei)", ...fontFamily.sans],
 				lxgw: ["var(--font-lxgw-wenkai)", ...fontFamily.sans],
 				bookerly: ["var(--font-bookerly)", ...fontFamily.serif],
+				title: ["var(--font-bevan)", "var(--font-da-hei)", ...fontFamily.serif],
 				blog: ["var(--font-bookerly)", "var(--font-lxgw-wenkai)", ...fontFamily.serif], // 中英文混排：英文优先Bookerly，中文回退霞鹜文楷
 				sans: ["system-ui", "sans-serif"],
 				serif: ["Times New Roman", "serif"],

@@ -11,6 +11,7 @@ import { SocialShare } from "@/components/feature/blog/SocialShare";
 import { RelatedPosts } from "@/components/feature/blog/RelatedPosts";
 import { FAQ } from "@/components/feature/blog/FAQ";
 import { ArticleStructuredData } from "@/components/seo/EnhancedStructuredData";
+import { PageTitle } from "@/components/ui/PageTitle";
 
 export async function generateStaticParams() {
 	const slugs = getAllPostSlugs();
@@ -72,8 +73,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
 			{/* 浮动TOC - 桌面端 */}
 			{post.toc && post.toc.length > 0 && (
-				<aside className='hidden lg:block fixed top-20 right-4 w-64 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-lg border border-gray-200 dark:border-gray-700 shadow-xl p-4 max-h-[calc(100vh-10rem)] overflow-y-auto transition-all duration-300 hover:shadow-2xl'>
-					<TableOfContents toc={post.toc} />
+				<aside className='hidden  lg:block fixed top-0 h-full w-64 z-50 bg-transparent rounded-lg scrollbar-none overflow-y-auto transition-all duration-300 '>
+					<TableOfContents toc={post.toc} position="left" />
 				</aside>
 			)}
 
@@ -92,16 +93,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 					{/* 移动端TOC - 在内容前显示 */}
 					<div className='lg:hidden mb-8'>
 						<div className='bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700'>
-							<TableOfContents toc={post.toc} />
+							<TableOfContents toc={post.toc} position="left" />
 						</div>
 					</div>
 
 					{/* 居中的主内容 */}
 					<main className='w-full'>
 						<div className='prose prose-zinc mx-auto dark:prose-invert lg:prose-lg font-blog max-w-3xl'>
-							<h1 className='mb-6 text-3xl font-bold text-center' id='page-title'>
-								{post.title}
-							</h1>
+							<PageTitle title={post.title} className="text-center text-foreground font-blog" />
 
 							<ArticleMetadata
 								date={post.date}
@@ -157,12 +156,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 							)}
 
 							{/* 相关文章推荐 */}
-							<div className="mt-12">
-								<RelatedPosts
-									slug={decodedSlug}
-									tags={post.tags || []}
-								/>
-							</div>
+							<div className="mt-12"></div>
+							<RelatedPosts
+								slug={decodedSlug}
+								tags={post.tags || []}
+							/>
 						</div>
 					</main>
 				</PageTransition>

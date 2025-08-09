@@ -5,7 +5,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<>
 			{children}
-			<ScrollToTopButton emoji="↑" />
+			<ScrollToTopButton className="bottom-8 left-8" emoji="↑" />
 		</>
 	);
 }

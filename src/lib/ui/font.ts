@@ -12,7 +12,14 @@ const bookerly = localFont({
 	variable: "--font-bookerly",
 });
 
+const daHei = localFont({
+	src: "../../assets/fonts/ZiHunDaHei-Heavy.ttf",
+	display: "swap",
+	variable: "--font-da-hei",
+});
+
 export const fonts = {
 	lxgwWenkai,
 	bookerly,
+	daHei,
 };

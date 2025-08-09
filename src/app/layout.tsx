@@ -50,7 +50,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				/>
 			</head>
 			<body
-				className={`${inter.className} ${fonts.lxgwWenkai.variable} ${fonts.bookerly.variable} ${bevan.variable} bg-background text-foreground antialiased`}
+				className={`  ${fonts.daHei.variable} ${inter.className} ${fonts.lxgwWenkai.variable} ${fonts.bookerly.variable} ${bevan.variable} bg-background text-foreground antialiased`}
 			>
 				<ThemeRegistry attribute='class' defaultTheme='system' enableSystem>
 					<AppShell>
