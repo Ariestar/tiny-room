@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
 			allow: "/",
 			disallow: ["/admin/", "/api/", "/_next/", "/private/"],
 		},
-		sitemap: "https://tinyroom.dev/sitemap.xml",
+		sitemap: process.env.NEXT_PUBLIC_SITE_URL + "/sitemap.xml",
 	};
 }
