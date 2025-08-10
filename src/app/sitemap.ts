@@ -22,17 +22,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
 		url: `${process.env.NEXT_PUBLIC_SITE_URL}/projects/${project.id}`,
 		lastModified: new Date(),
 		changeFrequency: "daily" as const,
-		priority: 0.6,
+		priority: 0.8,
 	}));
 
 	// 获取gallery
 	const gallery = getSortedGalleryData();
-	const galleryEntries = gallery.map(gallery => ({
-		url: `${process.env.NEXT_PUBLIC_SITE_URL}/gallery/${gallery.id}`,
+	const galleryEntries = gallery.map((galleryItem: { id: string }) => ({
+		url: `${process.env.NEXT_PUBLIC_SITE_URL}/gallery/${galleryItem.id}`,
 		lastModified: new Date(),
 		changeFrequency: "daily" as const,
 		priority: 0.9,
 	}));
 
-	return [...baseEntries, ...blogEntries, ...projectEntries];
+	return [...baseEntries, ...blogEntries, ...projectEntries, ...galleryEntries];
 }

@@ -1883,5 +1883,5 @@ bug 修复
 - 移动端检测调用：AnimationPerformanceTester 中 isMobile/isTablet 改为函数调用；screen.refreshRate 改为 (screen as any).refreshRate 的安全访问。  
 - Image 性能监控显示：ImagePerformanceMonitor 中 count 显示改为 Number(count)，避免 ReactNode 类型报错。
 - Button.tsx 在 asChild 分支避免把 motion 的 style 透传进 Slot，防止样式类型冲突。
-- SmartNavigation 与 Navigation 类型不匹配通过最小断言修正；src/components/layout/index.ts 改为 export { default as Navigation } 与 default as TopNavigation，匹配实际默认导出。
+	- SmartNavigation 与 Navigation 类型不匹配通过最小断言修正；src/components/layout/index.ts 改为 export { default as Navigation } 与 default as TopNavigation，匹配实际默认导出。
 - SEOAnalyzer：generateSEOScore 参数的 description 与 targetKeywords 在 undefined 时做默认值，避免类型不匹配。

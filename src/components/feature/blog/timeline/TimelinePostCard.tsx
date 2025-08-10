@@ -154,7 +154,7 @@ export const TimelinePostCard: React.FC<TimelinePostCardProps> = ({
                                     className="flex flex-wrap gap-2 mb-4"
                                     style={{ y: disabled ? 0 : tagsY }}
                                 >
-                                    {post.tags.map((tag, tagIndex) => (
+                                    {post.tags.map((tag: string, tagIndex: number) => (
                                         <motion.div
                                             key={tag}
                                             initial={{ opacity: 0, scale: 0.8 }}
