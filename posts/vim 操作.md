@@ -1,8 +1,8 @@
 ---
-tags: vim 操作 
+tags: vim 操作 键盘
 status: publish
 date created: 2025-08-07 18:37:04
-date modified: 2025-08-10 02:10:04
+date modified: 2025-08-10 11:26:26
 ---
 
 1. 移动
