@@ -16,6 +16,8 @@ import {
 	getAnimationDelay,
 	getMagneticStrength
 } from "@/components/animation";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import PersonalizedLoading from "@/components/ui/PersonalizedLoading";
 
 // Define and export a type for the image data
 export type R2Image = {
@@ -106,7 +108,7 @@ function GalleryClient() {
 	if (loading) {
 		return (
 			<div className='flex items-center justify-center h-[80vh]'>
-				<Loading size='xl' />
+				<PersonalizedLoading variant="skeleton" />
 			</div>
 		);
 	}

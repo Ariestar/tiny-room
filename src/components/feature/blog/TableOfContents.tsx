@@ -11,143 +11,117 @@ interface TocProps {
 	position?: 'left' | 'right';
 }
 
-const itemVariants = {
-	hidden: { opacity: 0, x: 20 },
-	visible: (delay: number) => ({
-		opacity: 1,
-		x: 0,
-		transition: {
-			delay, // Apply calculated delay
-			duration: 0.2,
-			ease: "easeOut",
-		},
-	}),
-};
-
 export function TableOfContents({ toc, position = 'right' }: TocProps) {
 	const [isMounted, setIsMounted] = useState(false);
+	const [isHovered, setIsHovered] = useState(false);
+	const [mouseY, setMouseY] = useState<number | null>(null);
+	const [nearestIndex, setNearestIndex] = useState<number | null>(null);
 	const tocContainerRef = useRef<HTMLDivElement>(null);
-	const activeItemRef = useRef<HTMLAnchorElement>(null);
-	const [isTocHovered, setIsTocHovered] = useState(false);
-
-	// --- New Animation Delay Calculation ---
-	const animationDelayMap = new Map<string, number>();
-	const itemsByDepth: { [depth: number]: TocEntry[] } = {};
-
-	// 1. Group items by depth
-	toc.forEach(item => {
-		if (!itemsByDepth[item.depth]) {
-			itemsByDepth[item.depth] = [];
-		}
-		itemsByDepth[item.depth].push(item);
-	});
-
-	const sortedDepths = Object.keys(itemsByDepth).map(Number).sort((a, b) => a - b);
-	const depthToLevelIndex = new Map(sortedDepths.map((depth, index) => [depth, index]));
-
-	// 2. Define stagger timings
-	const LEVEL_STAGGER = 0.1;  // Delay between each level
-	const ITEM_STAGGER = 0.02; // Short delay between items of the same level
-
-	// 3. Calculate and map delay for each item
-	toc.forEach(item => {
-		const levelIndex = depthToLevelIndex.get(item.depth) ?? 0;
-		const itemsInSameLevel = itemsByDepth[item.depth] || [];
-		const indexInLevel = itemsInSameLevel.indexOf(item);
-
-		const delay = (levelIndex * LEVEL_STAGGER) + (indexInLevel * ITEM_STAGGER);
-		animationDelayMap.set(item.url, delay);
-	});
-	// --- End of Animation Logic ---
+	const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
 	const ids = toc.map(item => item.url.substring(1));
 	const activeId = useScrollspy(
 		ids.map(id => `#${id}`),
-		{
-			rootMargin: "0% 0% -80% 0%",
-		}
+		{ rootMargin: "0% 0% -80% 0%" }
 	);
 
+	useEffect(() => { setIsMounted(true); }, []);
+
 	useEffect(() => {
-		setIsMounted(true);
-	}, []);
+		const container = tocContainerRef.current;
+		if (!container) return;
+		const activeIndex = toc.findIndex(i => i.url.substring(1) === activeId);
+		const activeEl = activeIndex >= 0 ? itemRefs.current[activeIndex] : null;
+		if (!activeEl) return;
+		const containerHeight = container.clientHeight;
+		const itemOffsetTop = activeEl.offsetTop;
+		const itemHeight = activeEl.clientHeight;
+		const scrollTop = itemOffsetTop - (containerHeight / 2) + (itemHeight / 2);
+		container.scrollTo({ top: scrollTop, behavior: 'smooth' });
+	}, [activeId, toc]);
 
-	// 当激活项改变时，滚动到居中位置
-	useEffect(() => {
-		if (activeItemRef.current && tocContainerRef.current) {
-			const container = tocContainerRef.current;
-			const activeItem = activeItemRef.current;
+	if (!toc.length || !isMounted) return null;
 
-			const containerHeight = container.clientHeight;
-			const itemOffsetTop = activeItem.offsetTop;
-			const itemHeight = activeItem.clientHeight;
-
-			// 计算居中位置
-			const scrollTop = itemOffsetTop - (containerHeight / 2) + (itemHeight / 2);
-
-			container.scrollTo({
-				top: scrollTop,
-				behavior: 'smooth'
-			});
-		}
-	}, [activeId]);
-
-	if (!toc.length || !isMounted) {
-		return null;
-	}
-
-	// 找到最小的depth作为基准
 	const minDepth = Math.min(...toc.map(item => item.depth));
 
 	return (
 		<div className='space-y-4 h-full'>
 			<motion.div
 				ref={tocContainerRef}
-				className='relative h-full space-y-2 overflow-y-auto scrollbar-none scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent'
-				onMouseEnter={() => setIsTocHovered(true)}
-				onMouseLeave={() => setIsTocHovered(false)}
-				initial="hidden"
-				animate="visible"
+				className='relative h-full space-y-2 overflow-y-auto scrollbar-none flex flex-col justify-center'
+				onHoverStart={() => setIsHovered(true)}
+				onHoverEnd={() => { setIsHovered(false); setMouseY(null); setNearestIndex(null); }}
+				onMouseMove={(e) => {
+					setMouseY(e.clientY);
+					let minD = Number.POSITIVE_INFINITY;
+					let minIdx: number | null = null;
+					itemRefs.current.forEach((el, idx) => {
+						if (!el) return;
+						const rect = el.getBoundingClientRect();
+						const centerY = rect.top + rect.height / 2;
+						const d = Math.abs(centerY - e.clientY);
+						if (d < minD) { minD = d; minIdx = idx; }
+					});
+					setNearestIndex(minIdx);
+				}}
 			>
-				{toc.map(item => {
+				{toc.map((item, index) => {
 					const relativeDepth = item.depth - minDepth;
 					const isActive = item.url.substring(1) === activeId;
-					const animationDelay = animationDelayMap.get(item.url) ?? 0;
+					const baseWidthEm = 2 - relativeDepth * 0.5; // 初始线条长度（em）
+					const indentRem = 1.5 + relativeDepth * 0.5; // 文本缩进
+
+					// 基于鼠标位置的距离放大：按与鼠标 Y 的距离非线性（近快远慢）衰减
+					let distanceScale = 1;
+					if (mouseY !== null) {
+						const el = itemRefs.current[index];
+						if (el) {
+							distanceScale = el && mouseY !== null
+								? 1 + 0.12 * Math.pow(Math.max(0, 1 - Math.abs((el.getBoundingClientRect().top + el.getBoundingClientRect().height / 2) - mouseY) / 50), 0.3)
+								: 1;
+						}
+					}
 					return (
 						<motion.a
 							key={item.url}
-							ref={isActive ? activeItemRef : null}
+							ref={(el) => { itemRefs.current[index] = el; }}
 							href={item.url}
 							className="group relative flex items-center no-underline h-6 mb-1"
-							custom={animationDelay}
-							variants={itemVariants}
+							initial={{ opacity: 0, x: 12 }}
+							animate={{ opacity: 1, x: 0 }}
+							transition={{ delay: index * 0.015, duration: 0.22, ease: "easeOut" }}
 						>
-							{/* line */}
-							<span
+							{/* level line */}
+							<motion.span
 								className={cn(
-									"absolute top-1/2 -translate-y-1/2 transition-all duration-75 ease-in-out",
+									"absolute top-1/2 -translate-y-1/2 transition-all duration-fast ease-in-out",
 									position === 'left' ? 'left-0' : 'right-0',
-									isActive ? "bg-gray-900 h-1" : "bg-gray-300 dark:bg-gray-600 h-0.5"
+									isActive ? "bg-gray-900 dark:bg-gray-200 h-1" : "bg-gray-300 dark:bg-gray-600 h-0.5",
 								)}
-								style={{
-									width: isTocHovered ? '5px' : `${4 - relativeDepth * 1}em`,
-								}}
+								style={{ width: isHovered ? `${indentRem - 1}em` : `${baseWidthEm}em`, height: `${baseWidthEm}` }}
 							/>
 
 							{/* title */}
-							<span
+							<motion.span
 								className={cn(
-									"w-full transition-opacity duration-300 ease-in-out text-sm py-1",
+									"w-full text-sm py-1",
 									position === 'left' ? 'text-left' : 'text-right',
-									isActive ? "text-foreground font-semibold" : "text-muted-foreground",
-									isTocHovered ? 'block' : 'hidden'
+									index === nearestIndex ? "text-black dark:text-white font-semibold" : (isActive ? "text-foreground font-semibold" : "text-muted-foreground")
 								)}
 								style={{
-									[position === 'left' ? 'paddingLeft' : 'paddingRight']: `${0.5 + relativeDepth * 0.5}rem`,
+									[position === 'left' ? 'paddingLeft' : 'paddingRight']: `${indentRem}rem`,
+									// transformOrigin: position === 'left' ? 'center center' : 'center center',
 								}}
+								initial={{ opacity: 0, x: position === 'left' ? -4 : 4 }}
+								animate={{
+									opacity: isHovered ? 1 : 0,
+									x: isHovered ? 0 : (position === 'left' ? -4 : 4),
+									scale: isHovered ? distanceScale : 1,
+								}}
+								transition={{ duration: 0.1, ease: "easeOut" }}
 							>
 								{item.title}
-							</span>
+							</motion.span>
 						</motion.a>
 					);
 				})}

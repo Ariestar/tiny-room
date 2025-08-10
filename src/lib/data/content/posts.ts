@@ -62,7 +62,7 @@ export function getSortedPostsData() {
 		// Ensure tags are always an array
 		let tags = matterResult.data.tags || [];
 		if (typeof tags === "string") {
-			tags = tags.split(/, ?/);
+			tags = tags.split(/, *| +/);
 		}
 
 		// Combine the data with the id
@@ -118,7 +118,7 @@ export const getPostBySlug = cache(async (slug: string): Promise<PostData | null
 	// Ensure tags are always an array
 	let tags_processed = data.tags || [];
 	if (typeof tags_processed === "string") {
-		tags_processed = tags_processed.split(/, ?/);
+		tags_processed = tags_processed.split(/, *| +/);
 	}
 
 	const processedContent = await unified()

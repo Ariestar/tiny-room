@@ -73,7 +73,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
 			{/* 浮动TOC - 桌面端 */}
 			{post.toc && post.toc.length > 0 && (
-				<aside className='hidden  lg:block fixed top-0 h-full w-64 z-50 bg-transparent rounded-lg scrollbar-none overflow-y-auto transition-all duration-300 '>
+				<aside className='hidden 2xl:block fixed top-0 h-full w-72 z-50 bg-transparent rounded-lg scrollbar-none overflow-y-auto transition-all duration-300 '>
 					<TableOfContents toc={post.toc} position="left" />
 				</aside>
 			)}
@@ -90,16 +90,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 						className="mb-8"
 					/>
 
-					{/* 移动端TOC - 在内容前显示 */}
-					<div className='lg:hidden mb-8'>
-						<div className='bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700'>
-							<TableOfContents toc={post.toc} position="left" />
-						</div>
-					</div>
-
 					{/* 居中的主内容 */}
 					<main className='w-full'>
-						<div className='prose prose-zinc mx-auto dark:prose-invert lg:prose-lg font-blog max-w-3xl'>
+						<div className='prose prose-sm prose-zinc mx-auto dark:prose-invert lg:prose-lg font-blog max-w-3xl'>
 							<PageTitle title={post.title} className="text-center text-foreground font-blog" />
 
 							<ArticleMetadata
@@ -117,7 +110,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 							<div className="border-t border-gray-200 dark:border-gray-700 mb-8"></div>
 
 							<article
-								className='text-lg leading-relaxed'
+								className='leading-relaxed'
 								dangerouslySetInnerHTML={{ __html: post.contentHtml }}
 							/>
 
