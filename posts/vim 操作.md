@@ -2,8 +2,10 @@
 tags: vim 操作 键盘
 status: publish
 date created: 2025-08-07 18:37:04
-date modified: 2025-08-10 11:26:26
+date modified: 2025-08-12 16:57:18
 ---
+
+# 插入模式操作
 
 1. 移动
 	- h j k l：左、下、上、右移动。
