@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, StatCard } from "@/components/ui";
 import { BarChart, PenSquare, Eye, Users, GitBranch, Star, GitFork, Activity } from "lucide-react";
