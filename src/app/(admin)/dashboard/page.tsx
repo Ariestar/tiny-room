@@ -1,65 +1,110 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, StatCard } from "@/components/ui";
 import { BarChart, PenSquare, Eye, Users, GitBranch, Star, GitFork, Activity } from "lucide-react";
-import { auth } from "@/auth";
 import { Button } from "@/components/ui";
 import { cn } from "@/lib/shared/utils";
 import Link from "next/link";
 
-const stats = [
-	{
-		name: "总访问量",
-		value: "12,345",
-		change: "+5.4%",
-		changeType: "positive",
-		icon: <Eye className='w-6 h-6 text-muted-foreground' />,
-	},
-	{
-		name: "总收入",
-		value: "¥8,765",
-		change: "+12.1%",
-		changeType: "positive",
-		icon: <BarChart className='w-6 h-6 text-muted-foreground' />,
-	},
-	{
-		name: "新文章",
-		value: "3",
-		change: " ",
-		changeType: "neutral",
-		icon: <PenSquare className='w-6 h-6 text-muted-foreground' />,
-	},
-	{
-		name: "新用户",
-		value: "21",
-		change: "-2.3%",
-		changeType: "negative",
-		icon: <Users className='w-6 h-6 text-muted-foreground' />,
-	},
-];
+interface AnalyticsStats {
+	totalViews: number;
+	todayViews: number;
+	popularPosts: Array<{ slug: string; views: number }>;
+	dailyStats: Array<{ date: string; views: number }>;
+}
 
-const recentActivities = [
-	{
-		id: 1,
-		icon: <Eye className='w-4 h-4' />,
-		description: '用户 "Alex" 评论了您的文章 "Next.js 15 新特性"',
-		time: "2小时前",
-	},
-	{
-		id: 2,
-		icon: <Eye className='w-4 h-4' />,
-		description: '用户 "Jane" 评论了您的文章 "Framer Motion 深度指南"',
-		time: "3小时前",
-	},
-	{
-		id: 3,
-		icon: <Eye className='w-4 h-4' />,
-		description: '用户 "Bob" 评论了您的文章 "Tailwind CSS 深度指南"',
-		time: "4小时前",
-	},
-];
+interface ShareStats {
+	summary: {
+		totalShares: number;
+		topPlatforms: Array<{ platform: string; count: number }>;
+	};
+}
 
-const DashboardPage = async () => {
-	const session = await auth();
+interface ProjectStats {
+	totalRepos: number;
+	totalStars: number;
+	totalForks: number;
+	recentlyActive: number;
+}
+
+// Removed server-side data fetching function
+
+
+const DashboardPage = () => {
+	const [analytics, setAnalytics] = useState<AnalyticsStats | null>(null);
+	const [shares, setShares] = useState<ShareStats | null>(null);
+	const [projects, setProjects] = useState<ProjectStats | null>(null);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				setLoading(true);
+
+				const [analyticsRes, sharesRes, projectsRes] = await Promise.allSettled([
+					fetch('/api/analytics/stats', { cache: 'no-store' }),
+					fetch('/api/analytics/share', { cache: 'no-store' }),
+					fetch('/api/projects/stats', { cache: 'no-store' })
+				]);
+
+				if (analyticsRes.status === 'fulfilled' && analyticsRes.value.ok) {
+					setAnalytics(await analyticsRes.value.json());
+				}
+
+				if (sharesRes.status === 'fulfilled' && sharesRes.value.ok) {
+					setShares(await sharesRes.value.json());
+				}
+
+				if (projectsRes.status === 'fulfilled' && projectsRes.value.ok) {
+					setProjects(await projectsRes.value.json());
+				}
+			} catch (error) {
+				console.error('Failed to fetch dashboard data:', error);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchData();
+	}, []);
+
+	const statsCards = [
+		{
+			name: "总浏览量",
+			value: analytics?.totalViews?.toLocaleString() || "0",
+			change: analytics ? "+100%" : "暂无数据",
+			changeType: analytics ? "positive" : "neutral",
+			icon: <Eye className='w-6 h-6 text-muted-foreground' />,
+		},
+		{
+			name: "今日浏览量",
+			value: analytics?.todayViews?.toLocaleString() || "0",
+			change: analytics ? "今日" : "暂无数据",
+			changeType: analytics ? "positive" : "neutral",
+			icon: <Activity className='w-6 h-6 text-muted-foreground' />,
+		},
+		{
+			name: "分享总量",
+			value: shares?.summary?.totalShares?.toLocaleString() || "0",
+			change: shares?.summary?.topPlatforms?.[0]?.platform || "暂无数据",
+			changeType: shares ? "positive" : "neutral",
+			icon: <BarChart className='w-6 h-6 text-muted-foreground' />,
+		},
+		{
+			name: "活跃项目",
+			value: projects?.recentlyActive?.toString() || "0",
+			change: projects ? "30天内更新" : "暂无数据",
+			changeType: projects ? "positive" : "neutral",
+			icon: <GitBranch className='w-6 h-6 text-muted-foreground' />,
+		},
+	];
+
+	// Build recent activities from analytics data
+	const recentActivitiesFromData = analytics?.popularPosts?.slice(0, 3).map((post, i) => ({
+		id: i + 1,
+		icon: <Eye className='w-4 h-4' />,
+		description: `文章 "${post.slug}" 获得了 ${post.views} 次浏览`,
+		time: "最近",
+	})) || [];
 
 	return (
 		<div className='p-6'>
@@ -75,7 +120,7 @@ const DashboardPage = async () => {
 
 			{/* Stats Cards */}
 			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6'>
-				{stats.map(stat => (
+				{statsCards.map(stat => (
 					<Card key={stat.name}>
 						<CardHeader className='flex flex-row items-center justify-between pb-2'>
 							<CardTitle className='text-sm font-medium'>{stat.name}</CardTitle>
@@ -114,28 +159,28 @@ const DashboardPage = async () => {
 				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
 					<StatCard
 						title="总仓库数"
-						value="--"
-						subtitle="加载中..."
+						value={projects?.totalRepos || 0}
+						subtitle={projects ? "GitHub 仓库" : "未连接"}
 						icon={GitBranch}
 						variant="default"
 					/>
 					<StatCard
 						title="总星标数"
-						value="--"
-						subtitle="加载中..."
+						value={projects?.totalStars || 0}
+						subtitle={projects ? "获得星标" : "未连接"}
 						icon={Star}
 						variant="default"
 					/>
 					<StatCard
 						title="总分叉数"
-						value="--"
-						subtitle="加载中..."
+						value={projects?.totalForks || 0}
+						subtitle={projects ? "项目分叉" : "未连接"}
 						icon={GitFork}
 						variant="default"
 					/>
 					<StatCard
 						title="最近活跃"
-						value="--"
+						value={projects?.recentlyActive || 0}
 						subtitle="30天内更新"
 						icon={Activity}
 						variant="highlighted"
@@ -151,21 +196,27 @@ const DashboardPage = async () => {
 					</CardHeader>
 					<CardContent>
 						<ul className='space-y-4'>
-							{recentActivities.map(activity => (
-								<li key={activity.id} className='flex items-center space-x-4'>
-									<div className='p-2 bg-secondary rounded-full'>
-										{activity.icon}
-									</div>
-									<div>
-										<p className='font-medium text-foreground'>
-											{activity.description}
-										</p>
-										<p className='text-sm text-muted-foreground'>
-											{activity.time}
-										</p>
-									</div>
+							{recentActivitiesFromData.length > 0 ? (
+								recentActivitiesFromData.map(activity => (
+									<li key={activity.id} className='flex items-center space-x-4'>
+										<div className='p-2 bg-secondary rounded-full'>
+											{activity.icon}
+										</div>
+										<div>
+											<p className='font-medium text-foreground'>
+												{activity.description}
+											</p>
+											<p className='text-sm text-muted-foreground'>
+												{activity.time}
+											</p>
+										</div>
+									</li>
+								))
+							) : (
+								<li className='text-center text-muted-foreground py-8'>
+									暂无最近活动数据
 								</li>
-							))}
+							)}
 						</ul>
 					</CardContent>
 				</Card>

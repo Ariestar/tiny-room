@@ -8,20 +8,16 @@ import {
 	Button,
 	Badge,
 	Loading,
-	GitHubConfigModal,
 	ProjectCardSkeleton,
 	StatCardSkeleton
 } from "@/components/ui";
+import ContributionHeatmap from "@/components/feature/projects/ContributionHeatmap";
 import {
-	githubService,
 	GitHubRepository,
 	calculateTotalStats,
 	filterRepositories,
 	sortRepositories
 } from "@/lib/data/api/github";
-
-// Mock data for development - replace with real API calls
-const mockRepositories: GitHubRepository[] = [];
 
 export default function DashboardProjectsPage() {
 	const [repositories, setRepositories] = useState<GitHubRepository[]>([]);
@@ -35,8 +31,6 @@ export default function DashboardProjectsPage() {
 	const [selectedRepos, setSelectedRepos] = useState<Set<string>>(new Set());
 	const [repoSettings, setRepoSettings] = useState<Record<string, { isVisible: boolean; isFeatured: boolean }>>({});
 
-	// GitHub configuration state
-	const [showGitHubConfig, setShowGitHubConfig] = useState(false);
 
 	// Sync monitoring state
 	const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
@@ -108,16 +102,14 @@ export default function DashboardProjectsPage() {
 			setLoading(true);
 			setError(null);
 
-			// Check if GitHub token is configured
-			const token = githubService.getToken();
-			if (!token) {
-				setRepositories([]);
-				setError("GitHub token not configured. Please configure your GitHub token to sync repositories.");
-				return;
+			// Fetch repositories via server proxy (requires GitHub OAuth via NextAuth)
+			const res = await fetch('/api/github/repos', { cache: 'no-store' });
+			if (!res.ok) {
+				const data = await res.json().catch(() => ({}));
+				const msg = data?.error || `Failed to load repositories (HTTP ${res.status})`;
+				throw new Error(msg);
 			}
-
-			// Fetch repositories from GitHub API
-			const repos = await githubService.getUserRepositories();
+			const repos: GitHubRepository[] = await res.json();
 			setRepositories(repos);
 
 			// Store sync timestamp
@@ -135,14 +127,14 @@ export default function DashboardProjectsPage() {
 		try {
 			setSyncStatus('syncing');
 
-			// Check if GitHub token is configured
-			const token = githubService.getToken();
-			if (!token) {
-				throw new Error("GitHub token not configured");
+			// Fetch repositories from server proxy
+			const res = await fetch('/api/github/repos', { cache: 'no-store' });
+			if (!res.ok) {
+				const data = await res.json().catch(() => ({}));
+				const msg = data?.error || `Failed to sync repositories (HTTP ${res.status})`;
+				throw new Error(msg);
 			}
-
-			// Fetch repositories from GitHub API
-			const repos = await githubService.getUserRepositories();
+			const repos: GitHubRepository[] = await res.json();
 			setRepositories(repos);
 
 			// Store sync timestamp
@@ -250,11 +242,7 @@ export default function DashboardProjectsPage() {
 		// TODO: Save to localStorage or API
 	};
 
-	// GitHub configuration functions
-	const handleGitHubConfigSave = (token: string) => {
-		// Token is already saved in the modal, just refresh data
-		handleSync();
-	};
+	// GitHub configuration removed: using NextAuth OAuth + server proxy
 
 	// Calculate statistics
 	const stats = calculateTotalStats(repositories);
@@ -401,9 +389,7 @@ export default function DashboardProjectsPage() {
 							'Sync GitHub'
 						)}
 					</Button>
-					<Button onClick={() => setShowGitHubConfig(true)}>
-						Configure GitHub
-					</Button>
+					{/* GitHub configuration button removed: using NextAuth OAuth token via server proxy */}
 				</div>
 			</div>
 
@@ -519,6 +505,9 @@ export default function DashboardProjectsPage() {
 					variant="highlighted"
 				/>
 			</div>
+
+			{/* Contribution Heatmap */}
+			<ContributionHeatmap className="mb-6" />
 
 			{/* Filters */}
 			<FilterBar
@@ -667,12 +656,7 @@ export default function DashboardProjectsPage() {
 				</div>
 			)}
 
-			{/* GitHub Configuration Modal */}
-			<GitHubConfigModal
-				isOpen={showGitHubConfig}
-				onClose={() => setShowGitHubConfig(false)}
-				onSave={handleGitHubConfigSave}
-			/>
+			{/* GitHubConfigModal removed */}
 		</div>
 	);
 }

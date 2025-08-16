@@ -98,9 +98,6 @@ export type { StatCardProps, TrendData, TrendDirection } from "./StatCard";
 export { default as FilterBar } from "./FilterBar";
 export type { FilterBarProps, FilterOption, FilterType } from "./FilterBar";
 
-export { default as GitHubConfigModal } from "./GitHubConfigModal";
-export type { GitHubConfigModalProps } from "./GitHubConfigModal";
-
 export { default as ProjectCardSkeleton } from "./ProjectCardSkeleton";
 export type { ProjectCardSkeletonProps } from "./ProjectCardSkeleton";
 

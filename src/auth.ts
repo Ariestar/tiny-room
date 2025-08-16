@@ -15,6 +15,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 		GitHub({
 			clientId: process.env.GITHUB_ID,
 			clientSecret: process.env.GITHUB_SECRET,
+			authorization: {
+				params: {
+					scope: "repo user:email", // repo 权限用于访问私有仓库，user:email 用于获取用户信息
+				},
+			},
 		}),
 	],
 	callbacks: {
@@ -44,12 +49,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 			if (token.sub && session.user) {
 				session.user.id = token.sub;
 			}
+			// 如需在客户端显示连接状态，可选择性暴露（不用于前端直接调用 GitHub）
+			// @ts-expect-error custom field
+			session.githubAccessToken = token.githubAccessToken as string | undefined;
 			return session;
 		},
-		async jwt({ token, user }) {
+		async jwt({ token, user, account }) {
 			// Add user id to the JWT token on sign-in
 			if (user) {
 				token.id = user.id;
+			}
+			// 首次 GitHub 登录时写入 OAuth 令牌到 JWT，供服务端代理使用
+			if (account?.provider === "github" && account.access_token) {
+				token.githubAccessToken = account.access_token as string;
 			}
 			return token;
 		},

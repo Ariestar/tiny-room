@@ -40,6 +40,7 @@ declare module "next-auth/jwt" {
 	 */
 	interface JWT {
 		id?: string;
+		githubAccessToken?: string;
 		// 后续可添加自定义字段，如：
 		// role?: string;
 	}
