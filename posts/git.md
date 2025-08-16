@@ -3,7 +3,7 @@ tags:
   - Coding/git
   - 版本管理
 date created: 2023-07-26 10:55:15
-date modified: 2025-08-15 19:12:40
+date modified: 2025-08-16 11:00:00
 status: publish
 ---
 
@@ -140,3 +140,19 @@ git push <name> <local_branch>:<remote_branch>
 git branch --set-upstream-to=<name>:<remote_branch> # 设置默认的remote分支
 git push origin --delete serverfix # 删除
 ```
+
+## rebase
+
+rebase 会寻找与目标分支的差别（也就是自两者共同祖先之后的所有变化），应用在目标分支上，然后当前分支会移动到主分支上
+
+应用的对象也可以指定为其他分支
+```shell
+git rebase --onto master server client # 将 client从 server 分支分歧之后的补丁， 然后把这些补丁在 master 分支上重放一遍，让 client 看起来像直接基于 master 修改一样
+```
+
+rebase 能保持提交历史整洁，没有乱七八糟的 merge 分支；同时，项目维护者也能省去 merge 的麻烦，直接 fast-forward 即可
+
+rebase 准则：**如果提交存在于你的仓库之外，而别人可能基于这些提交进行开发，那么不要执行变基。**
+
+# 服务器上的 git
+
