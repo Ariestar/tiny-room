@@ -3,7 +3,7 @@ tags:
   - Coding/git
   - 版本管理
 date created: 2023-07-26 10:55:15
-date modified: 2025-08-16 11:00:00
+date modified: 2025-08-16 11:38:48
 status: publish
 ---
 
@@ -156,3 +156,23 @@ rebase 准则：**如果提交存在于你的仓库之外，而别人可能基�
 
 # 服务器上的 git
 
+## git 分布式 workflow
+
+### 集中式
+
+git 可以实现传统的集中式工作流，只需要指定一个中心集线器（仓库）即可
+
+### 集成管理者
+
+git 也可以实现集成管理者工作流，因为 git 支持多远程仓库，也就可以从中央仓库 fork 出多个远程仓库，实现某个 feature 之后，请求中央仓库 pull 自己实现的 fork 版本。  
+这也是如同 github 这样的 hub-based 工具常用的 pr (pull request) 模式
+
+### 主管副管工作流
+
+[主管副管工作流](https://git-scm.com/book/zh/v2/ch00/wfdiag_c)  
+这是多仓库流程的变种，如同 linux 这样的超大型项目，会指定主管（dictator）与副管（lieutenant），这样的分级更易于管理，副管将一些分支合并，主管再合并副管提交的分支
+
+
+---
+
+[[如何写好 git commit]]
