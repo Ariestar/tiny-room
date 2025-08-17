@@ -3,7 +3,7 @@ tags:
   - git
   - 版本管理
 date created: 2025-08-16 14:37:26
-date modified: 2025-08-16 14:38:27
+date modified: 2025-08-16 19:33:02
 status: publish
 ---
 
@@ -137,6 +137,8 @@ git branch -d <branch>
 git clone --shallow
 git remote add <name> <remote_URL>
 git push <name> <local_branch>:<remote_branch>
+git remote prune origin # 清理本地不存在的远程分支
+git branch --unset-upstream
 git branch --set-upstream-to=<name>:<remote_branch> # 设置默认的remote分支
 git push origin --delete serverfix # 删除
 ```
