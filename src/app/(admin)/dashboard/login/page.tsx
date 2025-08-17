@@ -17,7 +17,12 @@ export default function LoginPage() {
 					<Button
 						className='w-full'
 						size='lg'
-						onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
+						onClick={() => {
+							const callbackUrl = typeof window !== 'undefined'
+								? `${window.location.origin}/dashboard`
+								: "/dashboard";
+							signIn("github", { callbackUrl });
+						}}
 					>
 						<Github className='mr-2 h-5 w-5' />
 						使用 GitHub 登录

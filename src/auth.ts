@@ -11,6 +11,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 	pages: {
 		signIn: "/dashboard/login",
 	},
+	// 确保在生产环境中使用正确的 URL
+	trustHost: true,
 	providers: [
 		GitHub({
 			clientId: process.env.GITHUB_ID,

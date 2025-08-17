@@ -55,7 +55,12 @@ export default function DashboardClientLayout({ children }: { children: React.Re
 		href: "#",
 		label: "登出",
 		icon: <LogOut />,
-		onClick: () => signOut({ callbackUrl: "/dashboard/login" }),
+		onClick: () => {
+			const callbackUrl = typeof window !== 'undefined'
+				? `${window.location.origin}/dashboard/login`
+				: "/dashboard/login";
+			signOut({ callbackUrl });
+		},
 	};
 	return (
 		<div className='flex h-screen bg-background text-foreground'>
