@@ -7,9 +7,11 @@ export function useScrollspy(selectors: string[], options?: IntersectionObserver
 	useEffect(() => {
 		const elements = selectors
 			.map(selector => {
-				const el = document.querySelector(selector);
+				// 提取ID部分，支持#开头的选择器
+				const id = selector.startsWith("#") ? selector.slice(1) : selector;
+				const el = document.getElementById(id);
 				if (!el) {
-					console.warn(`Scrollspy: selector '${selector}' not found`);
+					console.warn(`Scrollspy: element with id '${id}' not found`);
 				}
 				return el;
 			})
