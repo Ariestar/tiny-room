@@ -15,7 +15,7 @@ export function useScrollspy(selectors: string[], options?: IntersectionObserver
 				}
 				return el;
 			})
-			.filter((el): el is Element => el !== null);
+			.filter((el): el is HTMLElement => el !== null);
 
 		if (observer.current) {
 			observer.current.disconnect();
