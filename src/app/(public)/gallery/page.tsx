@@ -107,7 +107,7 @@ function GalleryClient() {
 
 	if (loading) {
 		return (
-			<div className='flex items-center justify-center h-[80vh]'>
+			<div className='flex items-center justify-center h-screen'>
 				<PersonalizedLoading variant="skeleton" />
 			</div>
 		);

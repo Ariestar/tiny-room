@@ -9,6 +9,6 @@
 
 ## bug
 
--   [ ] gallery loading 全屏
+-   [x] gallery loading 全屏
 -   [ ] dashboard github 链接
 -   [ ] 首页 z-index
