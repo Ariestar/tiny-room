@@ -5,9 +5,10 @@ tags:
   - 指令
   - 总结
 date created: 2025-07-16 00:36:48
-date modified: 2025-07-18 09:11:06
+date modified: 2025-08-20 10:34:23
 status: publish
 ---
+
 换源
 ```shell
 sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/termux-packages-24 stable main@' $PREFIX/etc/apt/sources.list
@@ -40,6 +41,7 @@ ufw enable # 开启防火墙
 ```
 
 ---
+
 tmux
 ```shell
 tmux new-session -s mc
