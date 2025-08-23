@@ -68,7 +68,7 @@ export function DynamicBackground({
         return (
             <div className={cn("relative overflow-hidden", className)}>
                 <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/10" />
-                <div className="relative z-10">{children}</div>
+                <div className="relative">{children}</div>
             </div>
         );
     }
@@ -102,7 +102,7 @@ export function DynamicBackground({
             <FloatingShapes intensity={intensity} />
 
             {/* 内容 */}
-            <div className="relative z-10">
+            <div className="relative">
                 {children}
             </div>
         </div>
@@ -151,25 +151,32 @@ function GradientGridBackground({
                 data-animation="gradient"
             />
 
-            {/* 动态网格 - 使用 transform 优化 */}
+            {/* 动态网格 - 以hero为中心，超出内容区域 */}
             <motion.div
-                className="absolute inset-0 opacity-30"
+                className="absolute opacity-40"
                 style={{
+                    // 网格尺寸超出hero区域，居中定位
+                    left: '-25vw',
+                    top: '-25vh',
+                    width: '150vw',
+                    height: '150vh',
                     backgroundImage: `
-						linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
-						linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)
+						linear-gradient(hsl(var(--border)) 1px, transparent 2px),
+						linear-gradient(90deg, hsl(var(--border)) 1px, transparent 2px)
 					`,
                     backgroundSize: "50px 50px",
                     willChange: "transform"
                 }}
                 animate={{
-                    x: [0, 50],
-                    y: [0, 50],
+                    // 四方向复杂随机移动模式
+                    x: [0, 35, -20, -35, 40, -15, 25, 0],
+                    y: [0, 20, 35, -25, -10, 30, -35, 0],
                 }}
                 transition={{
                     ...animationConfig,
                     repeat: Infinity,
-                    ease: "linear",
+                    ease: "easeInOut",
+                    // times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1], // 8个关键帧的时间分配
                 }}
                 onAnimationComplete={() => {
                     const element = document.querySelector('[data-animation="grid"]') as HTMLElement;
@@ -241,7 +248,7 @@ function GridBackground({ intensity }: { intensity: string }) {
 }
 
 /**
- * 几何图形背景组件 - 性能优化版本
+ * 几何图形背景组件 - 性能优化版本，增强随机移动
  */
 function GeometricBackground({ intensity }: { intensity: string }) {
     const shapeCount = intensity === "high" ? 8 : intensity === "medium" ? 6 : 4;
@@ -250,14 +257,23 @@ function GeometricBackground({ intensity }: { intensity: string }) {
     return (
         <div className="absolute inset-0">
             {shapes.map((i) => {
-                // 使用固定种子确保服务端和客户端一致
+                // 使用固定种子确保服务端和客户端一致，但增加更多随机变化
                 const leftPos = seededRandom(i * 500) * 100;
                 const topPos = seededRandom(i * 600) * 100;
-                const xMove = seededRandom(i * 700) * 50 - 25; // 减少移动范围
-                const yMove = seededRandom(i * 800) * 50 - 25;
+
+                // 创建随机路径点 - 8个关键帧形成不规则路径
+                const pathPoints = Array.from({ length: 8 }, (_, idx) => ({
+                    x: (seededRandom(i * 700 + idx * 100) - 0.5) * 60, // -30到30的随机移动
+                    y: (seededRandom(i * 800 + idx * 100) - 0.5) * 60,
+                }));
+
+                // 随机旋转方向和角度
+                const rotationDir = seededRandom(i * 900) > 0.5 ? 1 : -1;
+                const maxRotation = 180 + seededRandom(i * 950) * 180; // 180-360度随机
+
                 const animationConfig = createResponsiveAnimationConfig({
-                    duration: 15 + seededRandom(i * 900) * 5, // 减少动画时长
-                    delay: i * 1
+                    duration: 20 + seededRandom(i * 1000) * 15, // 20-35秒随机时长
+                    delay: i * 1.5
                 });
 
                 return (
@@ -272,15 +288,25 @@ function GeometricBackground({ intensity }: { intensity: string }) {
                             willChange: "transform"
                         }}
                         animate={{
-                            x: [0, xMove],
-                            y: [0, yMove],
-                            rotate: [0, 180], // 减少旋转角度
-                            scale: [1, 1.1, 1], // 减少缩放范围
+                            // 随机路径移动
+                            x: [0, ...pathPoints.map(p => p.x), 0],
+                            y: [0, ...pathPoints.map(p => p.y), 0],
+                            // 随机旋转
+                            rotate: [0, maxRotation * rotationDir * 0.3, maxRotation * rotationDir * 0.7, maxRotation * rotationDir],
+                            // 随机缩放变化
+                            scale: [
+                                1,
+                                1 + seededRandom(i * 1100) * 0.3,
+                                1 - seededRandom(i * 1200) * 0.2,
+                                1 + seededRandom(i * 1300) * 0.2,
+                                1
+                            ],
                         }}
                         transition={{
                             ...animationConfig,
                             repeat: Infinity,
                             ease: "easeInOut",
+                            times: [0, 0.2, 0.4, 0.6, 0.8, 1], // 控制动画时序
                         }}
                         onAnimationComplete={() => {
                             const element = document.querySelector(`[data-animation="shape-${i}"]`) as HTMLElement;

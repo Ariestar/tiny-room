@@ -96,7 +96,6 @@
 		"web-vitals": "^5.1.0"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.54.2",
 		"@tailwindcss/typography": "^0.5.16",
 		"@types/hast": "^3.0.4",
 		"@types/lodash": "^4.17.20",

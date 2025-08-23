@@ -29,8 +29,8 @@ const NavLinks = ({ isCollapsed }: { isCollapsed: boolean }) => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.2, ease: "easeOut", delay: index * 0.1 }}
                     className="cursor-pointer"
-                    whileHover={{ scale: 1.1, transition: { duration: 0.1, ease: "easeInOut" } }}
-                    whileTap={{ scale: 0.9, transition: { duration: 0.1, ease: "easeInOut" } }}
+                    whileHover={{ scale: 1.05, transition: { duration: 0.05, ease: "easeOut" } }}
+                    whileTap={{ scale: 0.95, transition: { duration: 0.05, ease: "easeOut" } }}
                 >
                     <Link
                         key={link.href}
@@ -55,7 +55,7 @@ const DesktopSidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean,
     return (
         <aside
             className={cn(
-                "hidden lg:flex h-screen flex-col justify-between items-center border-r border-border bg-background p-4 transition-all duration-300 ease-in-out group sticky top-0",
+                "hidden lg:flex h-screen flex-col justify-between items-center border-r border-border bg-background p-4 transition-all duration-300 ease-in-out group sticky top-0 z-50",
                 isCollapsed ? "w-20" : "w-36"
             )}
         >

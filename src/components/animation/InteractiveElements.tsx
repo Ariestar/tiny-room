@@ -20,32 +20,12 @@ const easterEggs = [
     {
         id: "confetti",
         trigger: "🎉",
-        message: "恭喜你发现了彩蛋！",
         effect: "confetti",
-    },
-    {
-        id: "rainbow",
-        trigger: "🌈",
-        message: "彩虹出现了！",
-        effect: "rainbow",
     },
     {
         id: "sparkles",
         trigger: "✨",
-        message: "闪闪发光！",
         effect: "sparkles",
-    },
-    {
-        id: "rocket",
-        trigger: "🚀",
-        message: "准备起飞！",
-        effect: "rocket",
-    },
-    {
-        id: "magic",
-        trigger: "🎭",
-        message: "魔法时刻！",
-        effect: "magic",
     },
 ];
 
@@ -71,7 +51,6 @@ export function InteractiveElements({
     const [clickCount, setClickCount] = useState(0);
     const [activeEasterEgg, setActiveEasterEgg] = useState<string | null>(null);
     const [currentActivity, setCurrentActivity] = useState(activityStatuses[0]);
-    const [showEasterEggHint, setShowEasterEggHint] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
     // 随机切换活动状态
@@ -86,22 +65,12 @@ export function InteractiveElements({
         return () => clearInterval(interval);
     }, [showActivityStatus]);
 
-    // 显示彩蛋提示
-    useEffect(() => {
-        if (!enableEasterEggs) return;
-
-        const timer = setTimeout(() => {
-            setShowEasterEggHint(true);
-        }, 5000); // 5秒后显示提示
-
-        return () => clearTimeout(timer);
-    }, [enableEasterEggs]);
-
     // 处理点击事件
     const handleClick = (event: React.MouseEvent) => {
         if (!enableEasterEggs) return;
 
         setClickCount((prev) => prev + 1);
+        console.log(clickCount);
 
         // 连续点击触发彩蛋
         if (clickCount >= 4) {
@@ -113,17 +82,10 @@ export function InteractiveElements({
 
     // 触发彩蛋效果
     const triggerEasterEgg = (eggId: string, event?: React.MouseEvent) => {
-        setActiveEasterEgg(eggId);
-
         // 创建特效
         if (event && containerRef.current) {
             createEffect(eggId, event.clientX, event.clientY);
         }
-
-        // 3秒后清除彩蛋状态
-        setTimeout(() => {
-            setActiveEasterEgg(null);
-        }, 3000);
     };
 
     // 创建特效
@@ -141,9 +103,6 @@ export function InteractiveElements({
                 break;
             case "sparkles":
                 createSparkles(relativeX, relativeY);
-                break;
-            case "rocket":
-                createRocket(relativeX, relativeY);
                 break;
             default:
                 break;
@@ -199,73 +158,62 @@ export function InteractiveElements({
 
     // 创建闪光效果
     const createSparkles = (x: number, y: number) => {
-        for (let i = 0; i < 10; i++) {
+        const sparkleCount = 5;
+        const sparkleTypes = ["✨", "⭐", "🌟"];
+
+        for (let i = 0; i < sparkleCount; i++) {
             const sparkle = document.createElement("div");
-            sparkle.innerHTML = "✨";
+            const sparkleType = sparkleTypes[Math.floor(Math.random() * sparkleTypes.length)];
+            sparkle.innerHTML = sparkleType;
+
+            // 随机分布在点击位置周围
+            const angle = (Math.PI * 2 * i) / sparkleCount;
+            const radius = 30 + Math.random() * 60;
+            const startX = x + Math.cos(angle) * radius;
+            const startY = y + Math.sin(angle) * radius;
+
             sparkle.style.position = "absolute";
-            sparkle.style.left = `${x + (Math.random() - 0.5) * 100}px`;
-            sparkle.style.top = `${y + (Math.random() - 0.5) * 100}px`;
-            sparkle.style.fontSize = `${12 + Math.random() * 8}px`;
+            sparkle.style.left = `${startX - 20}px`; // 居中偏移
+            sparkle.style.top = `${startY - 20}px`; // 居中偏移
+            sparkle.style.fontSize = `${12 + Math.random() * 12}px`;
             sparkle.style.pointerEvents = "none";
             sparkle.style.zIndex = "1000";
+            sparkle.style.filter = "drop-shadow(0 0 6px rgba(255, 215, 0, 0.8))";
+            sparkle.style.transform = "scale(0)";
+            sparkle.style.transition = "none";
 
             containerRef.current?.appendChild(sparkle);
 
-            // 动画
+            // 简洁优雅的动画
             let scale = 0;
             let opacity = 1;
+            const maxScale = 0.8 + Math.random() * 0.4;
 
             const animate = () => {
-                scale += 0.05;
-                opacity -= 0.02;
+                // 缩放动画 - 先放大再缩小
+                if (scale < maxScale) {
+                    scale += 0.1;
+                } else {
+                    scale -= 0.03;
+                    opacity -= 0.03;
+                }
 
                 sparkle.style.transform = `scale(${scale})`;
                 sparkle.style.opacity = opacity.toString();
 
-                if (opacity > 0) {
+                if (opacity > 0 && scale > 0) {
                     requestAnimationFrame(animate);
                 } else {
                     sparkle.remove();
                 }
             };
 
-            setTimeout(() => requestAnimationFrame(animate), i * 100);
+            // 随机开始时间，创造自然效果
+            setTimeout(() => requestAnimationFrame(animate), Math.random() * 300);
         }
     };
 
-    // 创建火箭效果
-    const createRocket = (x: number, y: number) => {
-        const rocket = document.createElement("div");
-        rocket.innerHTML = "🚀";
-        rocket.style.position = "absolute";
-        rocket.style.left = `${x}px`;
-        rocket.style.top = `${y}px`;
-        rocket.style.fontSize = "24px";
-        rocket.style.pointerEvents = "none";
-        rocket.style.zIndex = "1000";
 
-        containerRef.current?.appendChild(rocket);
-
-        // 火箭飞行动画
-        let posY = y;
-        let scale = 1;
-
-        const animate = () => {
-            posY -= 5;
-            scale += 0.02;
-
-            rocket.style.top = `${posY}px`;
-            rocket.style.transform = `scale(${scale}) rotate(-45deg)`;
-
-            if (posY > -50) {
-                requestAnimationFrame(animate);
-            } else {
-                rocket.remove();
-            }
-        };
-
-        requestAnimationFrame(animate);
-    };
 
     return (
         <div
@@ -273,26 +221,14 @@ export function InteractiveElements({
             className={cn("relative", className)}
             onClick={handleClick}
         >
-            {/* 彩蛋提示 */}
-            {enableEasterEggs && showEasterEggHint && !activeEasterEgg && (
-                <motion.div
-                    className="absolute top-4 right-4 bg-primary/10 text-primary px-3 py-2 rounded-lg text-sm cursor-pointer"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    onClick={() => setShowEasterEggHint(false)}
-                >
-                    💡 试试连续点击5次
-                </motion.div>
-            )}
-
             {/* 活动状态显示 */}
             {showActivityStatus && (
                 <motion.div
-                    className="absolute bottom-4 left-4 flex items-center gap-2 bg-card/80 backdrop-blur-sm px-4 py-2 rounded-full border border-border/50"
+                    className="absolute -bottom-14 left-4 flex items-center gap-2 bg-card/80 backdrop-blur-sm px-4 py-2 rounded-full border border-border/50"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1 }}
+                    onClick={(e) => e.stopPropagation()} // 阻止活动状态区域的点击事件冒泡
                 >
                     <motion.span
                         className="text-lg"
@@ -312,32 +248,9 @@ export function InteractiveElements({
                 </motion.div>
             )}
 
-            {/* 彩蛋消息显示 */}
-            <AnimatePresence>
-                {activeEasterEgg && (
-                    <motion.div
-                        className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                    >
-                        <motion.div
-                            className="bg-primary text-primary-foreground px-6 py-4 rounded-2xl text-xl font-bold shadow-lg"
-                            initial={{ scale: 0, rotate: -10 }}
-                            animate={{ scale: 1, rotate: 0 }}
-                            exit={{ scale: 0, rotate: 10 }}
-                            transition={{ type: "spring", damping: 15 }}
-                        >
-                            {easterEggs.find(egg => egg.id === activeEasterEgg)?.message}
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
             {/* 微交互触发区域 */}
-            {enableMicroInteractions && (
+            {/* {enableMicroInteractions && (
                 <div className="absolute inset-0 pointer-events-none">
-                    {/* 隐藏的交互热点 */}
                     {Array.from({ length: 5 }).map((_, i) => (
                         <motion.div
                             key={i}
@@ -345,18 +258,15 @@ export function InteractiveElements({
                             style={{
                                 left: `${20 + i * 15}%`,
                                 top: `${30 + (i % 2) * 40}%`,
+                                zIndex: 2,
                             }}
                             whileHover={{ scale: 1.2 }}
                             whileTap={{ scale: 0.8 }}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                const randomEgg = easterEggs[Math.floor(Math.random() * easterEggs.length)];
-                                triggerEasterEgg(randomEgg.id, e as any);
-                            }}
+                            onClick={handleClick}
                         />
                     ))}
                 </div>
-            )}
+            )} */}
         </div>
     );
 }
