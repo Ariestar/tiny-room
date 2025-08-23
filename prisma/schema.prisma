@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,18 +8,18 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?       @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
-  sessions      Session[]
+  albums        Album[]
+  galleryItems  GalleryItem[]
   posts         Post[]
   projects      Project[]
-  galleryItems  GalleryItem[]
-  albums        Album[]
   restaurants   Restaurant[]
+  sessions      Session[]
 }
 
 model Account {
@@ -34,15 +28,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -66,7 +59,7 @@ model VerificationToken {
 model Post {
   id        String   @id @default(cuid())
   title     String
-  content   String?  @db.Text
+  content   String?
   published Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -77,7 +70,7 @@ model Post {
 model Project {
   id          String   @id @default(cuid())
   title       String
-  description String?  @db.Text
+  description String?
   imageUrl    String?
   projectUrl  String?
   repoUrl     String?
@@ -91,49 +84,45 @@ model Project {
 model GalleryItem {
   id          String   @id @default(cuid())
   title       String
-  description String?  @db.Text
+  description String?
   imageUrl    String
-  size        Int?      // Size in bytes
-  format      String?   // e.g., "jpeg", "png"
   published   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
   authorId    String
-  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-
   albumId     String?
-  album       Album?   @relation(fields: [albumId], references: [id], onDelete: SetNull)
+  format      String?
+  size        Int?
+  album       Album?   @relation(fields: [albumId], references: [id])
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
 }
 
 model Album {
-  id          String   @id @default(cuid())
+  id          String        @id @default(cuid())
   name        String
-  description String?  @db.Text
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  description String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
   authorId    String
-  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  
+  author      User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
   items       GalleryItem[]
 }
 
 model Restaurant {
-  id           String    @id @default(cuid())
+  id           String   @id @default(cuid())
   name         String
   category     String
-  coordinates  Float[]
   address      String
   rating       Float?
   priceRange   String?
-  description  String?   @db.Text
+  description  String?
   tags         String[]
   phone        String?
   openingHours String?
   website      String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   authorId     String
-  author       User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  coordinates  Float[]
+  author       User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
 }
