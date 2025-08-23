@@ -48,8 +48,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 		},
 		async session({ session, token }) {
 			// Add user id and other token fields to the session
-			if (token.sub && session.user) {
-				session.user.id = token.sub;
+			if (token.id && session.user) {
+				session.user.id = token.id;
 			}
 			// 如需在客户端显示连接状态，可选择性暴露（不用于前端直接调用 GitHub）
 			// @ts-expect-error custom field
@@ -57,14 +57,41 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 			return session;
 		},
 		async jwt({ token, user, account }) {
-			// Add user id to the JWT token on sign-in
-			if (user) {
-				token.id = user.id;
+			// 首次登录时，使用 GitHub 的稳定 ID
+			if (account?.provider === "github" && account.providerAccountId) {
+				const githubUserId = `github_${account.providerAccountId}`;
+				token.id = githubUserId;
+
+				// 检查数据库中是否已存在该 GitHub 用户
+				try {
+					const existingUser = await prisma.user.findUnique({
+						where: { id: githubUserId },
+					});
+
+					if (!existingUser) {
+						// 创建新用户记录
+						await prisma.user.create({
+							data: {
+								id: githubUserId,
+								name: user?.name,
+								email: user?.email,
+								image: user?.image,
+							},
+						});
+						console.log("Created new GitHub user in database:", githubUserId);
+					} else {
+						console.log("Found existing GitHub user in database:", githubUserId);
+					}
+				} catch (error) {
+					console.error("Failed to create/find GitHub user in database:", error);
+				}
 			}
-			// 首次 GitHub 登录时写入 OAuth 令牌到 JWT，供服务端代理使用
+
+			// 写入 OAuth 令牌到 JWT
 			if (account?.provider === "github" && account.access_token) {
 				token.githubAccessToken = account.access_token as string;
 			}
+
 			return token;
 		},
 	},
