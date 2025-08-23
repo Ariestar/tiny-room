@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
-const postsDirectory = path.join(process.cwd(), "posts");
+const postsDirectory = path.join(process.cwd(), "src/assets/posts");
 
 // Handler for updating a post's content
 export async function PUT(req: NextRequest, context: any) {

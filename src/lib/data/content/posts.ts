@@ -25,7 +25,7 @@ import remarkDirective from "remark-directive";
 import remarkBreaks from "remark-breaks";
 // import rehypeMermaid from "rehype-mermaid";
 
-const postsDirectory = path.join(process.cwd(), "posts");
+const postsDirectory = path.join(process.cwd(), "src/assets/posts");
 
 export type PostData = {
 	slug: string;
