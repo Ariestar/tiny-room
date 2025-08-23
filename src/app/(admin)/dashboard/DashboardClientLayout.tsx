@@ -3,7 +3,7 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 import Navigation, { NavigationItem } from "@/components/layout/Navigation";
-import { LayoutDashboard, Pencil, Briefcase, ImageIcon, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Pencil, Briefcase, ImageIcon, Settings, LogOut, MapPin } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 export default function DashboardClientLayout({ children }: { children: React.ReactNode }) {
@@ -41,6 +41,13 @@ export default function DashboardClientLayout({ children }: { children: React.Re
 			label: "图库管理",
 			icon: <ImageIcon />,
 			active: pathname.startsWith("/dashboard/gallery"),
+		},
+		{
+			id: "foodmap",
+			href: "/dashboard/foodmap",
+			label: "美食地图",
+			icon: <MapPin />,
+			active: pathname.startsWith("/dashboard/foodmap"),
 		},
 		{
 			id: "settings",

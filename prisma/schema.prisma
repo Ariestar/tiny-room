@@ -25,6 +25,7 @@ model User {
   projects      Project[]
   galleryItems  GalleryItem[]
   albums        Album[]
+  restaurants   Restaurant[]
 }
 
 model Account {
@@ -116,4 +117,23 @@ model Album {
   author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   
   items       GalleryItem[]
+}
+
+model Restaurant {
+  id           String    @id @default(cuid())
+  name         String
+  category     String
+  coordinates  Float[]
+  address      String
+  rating       Float?
+  priceRange   String?
+  description  String?   @db.Text
+  tags         String[]
+  phone        String?
+  openingHours String?
+  website      String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  authorId     String
+  author       User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
 }
