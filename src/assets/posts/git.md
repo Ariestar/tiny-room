@@ -3,7 +3,7 @@ tags:
   - git
   - 版本管理
 date created: 2025-08-16 14:37:26
-date modified: 2025-08-16 19:33:02
+date modified: 2025-08-23 13:12:57
 status: publish
 ---
 
@@ -12,10 +12,10 @@ git log --all --graph --decorate --oneline # 以单行graph形式完整展示log
 git status (-s) # 查看git已track的文件状态（unmodified,modified,staged），-s表示short显示
 git checkout -
 git checkout (-f) <sha-flag|branch>
+git checkout -b <branch_name> # 创建并checkout到新分支
 git diff (sha-flag) <file.txt> # 查看文件相较于暂存区有什么变化
 git diff --staged/cached # 查看已暂存文件与最后一次提交的文件差异
 git branch # 列出所有branch，参数-vv: 详细列出
-git branch -b <branch_name> # 创建并checkout到新分支
 git merge
 git add (-p) # -p可以交互性添加某些change，这可以实现比如不添加print等测试代码
 git blame <filename> # 查看是谁更改的代码
@@ -26,7 +26,7 @@ git rm <filename> # 从暂存区中删除文件
 
 # git 基础
 
-## 提交到暂存区
+## 暂存区
 
 如果想同时将新增，修改，删除的文件添加到暂存区，可以使用 ==`git add -A`==，`git add .` 不包含删除文件  
 如果想跳过 add 到暂存区，可以直接使用 `git commit -a`
