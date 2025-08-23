@@ -152,7 +152,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
 		debounceRef.current = setTimeout(() => {
 			performSearch(query);
-		}, 300);
+		}, 600);
 
 		return () => {
 			if (debounceRef.current) {

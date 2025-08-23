@@ -5,6 +5,7 @@ import Input from '@/components/ui/Input'
 import Textarea from '@/components/ui/Textarea'
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
+import { RestaurantSearch } from './RestaurantSearch'
 import type { Restaurant, FoodCategory } from '@/types/foodmap'
 
 // API 输入数据类型（tags 是字符串而不是数组）
@@ -29,16 +30,16 @@ interface RestaurantFormProps {
 
 export function RestaurantForm({ onSubmit, onCancel, initialData }: RestaurantFormProps) {
     const [formData, setFormData] = useState({
-        name: initialData?.name || '',
+        name: initialData?.name?.toString() || '',
         category: initialData?.category || categories[0],
-        address: initialData?.address || '',
+        address: initialData?.address?.toString() || '',
         coordinates: initialData?.coordinates || [116.397428, 39.90923] as [number, number],
         rating: initialData?.rating?.toString() || '',
-        priceRange: initialData?.priceRange || priceRanges[0],
-        description: initialData?.description || '',
-        phone: initialData?.phone || '',
-        openingHours: initialData?.openingHours || '',
-        website: initialData?.website || '',
+        priceRange: initialData?.priceRange?.toString() || priceRanges[0],
+        description: initialData?.description?.toString() || '',
+        phone: initialData?.phone?.toString() || '',
+        openingHours: initialData?.openingHours?.toString() || '',
+        website: initialData?.website?.toString() || '',
         tags: initialData?.tags?.join(', ') || '',
     })
 
@@ -50,6 +51,25 @@ export function RestaurantForm({ onSubmit, onCancel, initialData }: RestaurantFo
         if (errors[field]) {
             setErrors(prev => ({ ...prev, [field]: '' }))
         }
+    }
+
+    // 处理搜索选择
+    const handleSearchSelect = (result: any) => {
+        setFormData(prev => ({
+            ...prev,
+            name: result.name?.toString() || '',
+            address: result.address?.toString() || '',
+            coordinates: result.coordinates,
+            phone: result.phone?.toString() || prev.phone
+        }))
+
+        // 清除相关错误
+        setErrors(prev => ({
+            ...prev,
+            name: '',
+            address: '',
+            coordinates: ''
+        }))
     }
 
     const validateForm = () => {
@@ -107,17 +127,17 @@ export function RestaurantForm({ onSubmit, onCancel, initialData }: RestaurantFo
 
         try {
             const restaurantData: RestaurantApiInput = {
-                name: formData.name.trim(),
+                name: formData.name?.toString().trim() || '',
                 category: formData.category as FoodCategory,
-                address: formData.address.trim(),
+                address: formData.address?.toString().trim() || '',
                 coordinates: formData.coordinates,
                 rating: formData.rating ? Number(formData.rating) : undefined,
                 priceRange: formData.priceRange,
-                description: formData.description.trim() || undefined,
-                phone: formData.phone.trim() || undefined,
-                openingHours: formData.openingHours.trim() || undefined,
-                website: formData.website.trim() || "",
-                tags: formData.tags ? formData.tags.trim() : undefined,
+                description: formData.description?.toString().trim() || undefined,
+                phone: formData.phone?.toString().trim() || undefined,
+                openingHours: formData.openingHours?.toString().trim() || undefined,
+                website: formData.website?.toString().trim() || "",
+                tags: formData.tags?.toString().trim() || undefined,
             }
 
             await onSubmit(restaurantData)
@@ -131,6 +151,17 @@ export function RestaurantForm({ onSubmit, onCancel, initialData }: RestaurantFo
     return (
         <Card className="p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
+                {/* 餐厅搜索 */}
+                <div>
+                    <label className="block text-sm font-medium mb-1">
+                        搜索餐厅 <span className="text-blue-500">💡</span>
+                    </label>
+                    <RestaurantSearch onSelect={handleSearchSelect} />
+                    <p className="text-xs text-muted-foreground mt-1">
+                        输入餐厅名称或地址，自动获取准确位置信息
+                    </p>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* 餐厅名称 */}
                     <div>
@@ -278,12 +309,13 @@ export function RestaurantForm({ onSubmit, onCancel, initialData }: RestaurantFo
                     </div>
 
                     {/* 坐标说明 */}
-                    <div className="bg-blue-50 p-3 rounded-md">
-                        <p className="text-sm text-blue-800">
+                    <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-md">
+                        <p className="text-sm text-blue-800 dark:text-blue-200">
                             💡 <strong>坐标获取方法：</strong>
                         </p>
-                        <ul className="text-xs text-blue-700 mt-2 space-y-1">
-                            <li>• 在百度地图/高德地图中搜索地址，右键点击位置获取坐标</li>
+                        <ul className="text-xs text-blue-700 dark:text-blue-300 mt-2 space-y-1">
+                            <li>• 使用上方搜索功能，自动获取准确坐标</li>
+                            <li>• 或手动在百度地图/高德地图中搜索地址，右键点击位置获取坐标</li>
                             <li>• 使用在线坐标转换工具</li>
                             <li>• 格式：经度在前，纬度在后（如：116.397428, 39.90923）</li>
                         </ul>

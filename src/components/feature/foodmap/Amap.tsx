@@ -8,6 +8,8 @@ interface AmapProps {
     restaurants: Restaurant[]
     mapStyle: string
     showSatellite: boolean
+    center?: [number, number] // 可选的地图中心点
+    onLocationUpdate?: (location: [number, number]) => void // 位置更新回调
 }
 
 // Set security token at the module level to ensure it's available before loader execution
@@ -19,7 +21,7 @@ if (typeof window !== 'undefined') {
 
 
 
-const Amap = ({ restaurants, mapStyle, showSatellite }: AmapProps) => {
+const Amap = ({ restaurants, mapStyle, showSatellite, center, onLocationUpdate }: AmapProps) => {
     const mapRef = useRef<HTMLDivElement>(null)
     const [mapInstance, setMapInstance] = useState<any>(null)
     const [AMap, setAMap] = useState<any>(null)
@@ -29,8 +31,6 @@ const Amap = ({ restaurants, mapStyle, showSatellite }: AmapProps) => {
     const activeInfoWindowRef = useRef<any>(null)
 
     useEffect(() => {
-        console.log("Reading AMAP Key:", process.env.NEXT_PUBLIC_AMAP_KEY);
-        console.log("Reading AMAP Security Token:", process.env.NEXT_PUBLIC_AMAP_SECURITY_TOKEN);
 
         AMapLoader.load({
             key: process.env.NEXT_PUBLIC_AMAP_KEY || '',
@@ -40,12 +40,38 @@ const Amap = ({ restaurants, mapStyle, showSatellite }: AmapProps) => {
             .then(loadedAMap => {
                 setAMap(loadedAMap)
                 if (mapRef.current) {
+                    // 使用传入的中心点，如果没有则尝试获取用户位置，最后才使用北京作为默认值
+                    const defaultCenter: [number, number] = center || [116.4074, 39.9042];
+
                     const map = new loadedAMap.Map(mapRef.current, {
                         zoom: 12,
-                        center: [116.4074, 39.9042],
+                        center: defaultCenter,
                         mapStyle: mapStyle,
                         preserveDrawingBuffer: true,
                     })
+
+                    // 如果没有传入中心点，尝试获取用户当前位置
+                    if (!center && navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                const userLocation: [number, number] = [
+                                    position.coords.longitude,
+                                    position.coords.latitude
+                                ];
+                                map.setCenter(userLocation);
+                                onLocationUpdate?.(userLocation);
+                                console.log('用户位置获取成功:', userLocation);
+                            },
+                            (error) => {
+                                console.warn('无法获取用户位置，使用默认位置:', error.message);
+                            },
+                            {
+                                enableHighAccuracy: true,
+                                timeout: 10000,
+                                maximumAge: 300000 // 5分钟缓存
+                            }
+                        );
+                    }
 
                     map.on('complete', () => {
                         setIsMapReady(true); // Set map ready state on 'complete' event
@@ -109,17 +135,16 @@ const Amap = ({ restaurants, mapStyle, showSatellite }: AmapProps) => {
         }
 
         const newMarkers: any[] = []
-        const wgs84Coords: [number, number][] = restaurants.map(r => [r.coordinates[1], r.coordinates[0]])
 
-        AMap.convertFrom(wgs84Coords, 'gps', (status: string, result: any) => {
-            if (status === 'complete' && result.info === 'ok') {
-                result.locations.forEach((gcj02Coord: any, index: number) => {
-                    const restaurant = restaurants[index];
-                    const isDarkMode = mapStyle.includes('dark');
+        // 高德地图API返回的坐标已经是GCJ-02格式，直接使用
+        restaurants.forEach((restaurant, index) => {
+            const gcj02Coord = restaurant.coordinates
 
-                    // --- 1. 定义所有需要的样式 ---
-                    const styles = {
-                        infoContainer: `
+            const isDarkMode = mapStyle.includes('dark');
+
+            // --- 1. 定义所有需要的样式 ---
+            const styles = {
+                infoContainer: `
                             background-color: ${isDarkMode ? 'hsl(0, 0%, 10%)' : 'hsl(0, 0%, 99%)'};
                             color: ${isDarkMode ? 'hsl(210, 40%, 98%)' : 'hsl(222.2, 84%, 10%)'};
                             padding: 16px; border-radius: 12px; width: 320px;
@@ -127,23 +152,23 @@ const Amap = ({ restaurants, mapStyle, showSatellite }: AmapProps) => {
                             border: 1px solid ${isDarkMode ? 'hsl(0, 0%, 14.9%)' : 'hsl(0, 0%, 89.8%)'};
                             font-family: 'Inter', sans-serif;
                         `,
-                        title: `font-weight: 600; font-size: 18px; margin-bottom: 4px;`,
-                        address: `font-size: 13px; color: ${isDarkMode ? 'hsl(0, 0%, 62.9%)' : 'hsl(0, 0%, 45.1%)'}; margin-bottom: 12px;`,
-                        detailsGrid: `display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; font-size: 14px; margin-bottom: 12px;`,
-                        icon: `display: inline-block; width: 1.5em; text-align: center;`,
-                        description: `margin-top: 12px; font-size: 14px; line-height: 1.6; color: ${isDarkMode ? 'hsl(0, 0%, 80%)' : 'hsl(0, 0%, 30%)'}; border-top: 1px solid ${isDarkMode ? 'hsl(0, 0%, 14.9%)' : 'hsl(0, 0%, 89.8%)'}; padding-top: 12px;`,
-                        tagsContainer: `display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;`,
-                        tag: `background-color: ${isDarkMode ? 'hsla(0, 0%, 98%, 0.1)' : 'hsla(0, 0%, 9%, 0.05)'}; color: ${isDarkMode ? 'hsl(0, 0%, 80%)' : 'hsl(0, 0%, 30%)'}; padding: 3px 10px; border-radius: 99px; font-size: 12px;`,
-                    };
+                title: `font-weight: 600; font-size: 18px; margin-bottom: 4px;`,
+                address: `font-size: 13px; color: ${isDarkMode ? 'hsl(0, 0%, 62.9%)' : 'hsl(0, 0%, 45.1%)'}; margin-bottom: 12px;`,
+                detailsGrid: `display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; font-size: 14px; margin-bottom: 12px;`,
+                icon: `display: inline-block; width: 1.5em; text-align: center;`,
+                description: `margin-top: 12px; font-size: 14px; line-height: 1.6; color: ${isDarkMode ? 'hsl(0, 0%, 80%)' : 'hsl(0, 0%, 30%)'}; border-top: 1px solid ${isDarkMode ? 'hsl(0, 0%, 14.9%)' : 'hsl(0, 0%, 89.8%)'}; padding-top: 12px;`,
+                tagsContainer: `display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;`,
+                tag: `background-color: ${isDarkMode ? 'hsla(0, 0%, 98%, 0.1)' : 'hsla(0, 0%, 9%, 0.05)'}; color: ${isDarkMode ? 'hsl(0, 0%, 80%)' : 'hsl(0, 0%, 30%)'}; padding: 3px 10px; border-radius: 99px; font-size: 12px;`,
+            };
 
-                    // --- 2. 构建详细的信息窗体内容 ---
-                    const detailRow = (icon: string, content: string | number | undefined | null, isLink = false, linkPrefix = '') => {
-                        if (!content) return '';
-                        const contentHtml = isLink ? `<a href="${linkPrefix}${content}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">${content}</a>` : content;
-                        return `<div><span style="${styles.icon}">${icon}</span></div><div>${contentHtml}</div>`;
-                    };
+            // --- 2. 构建详细的信息窗体内容 ---
+            const detailRow = (icon: string, content: string | number | undefined | null, isLink = false, linkPrefix = '') => {
+                if (!content) return '';
+                const contentHtml = isLink ? `<a href="${linkPrefix}${content}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">${content}</a>` : content;
+                return `<div><span style="${styles.icon}">${icon}</span></div><div>${contentHtml}</div>`;
+            };
 
-                    const infoWindowContent = `
+            const infoWindowContent = `
                         <div style="${styles.infoContainer}">
                             <h3 style="${styles.title}">${restaurant.name}</h3>
                             <p style="${styles.address}">${restaurant.address}</p>
@@ -159,71 +184,67 @@ const Amap = ({ restaurants, mapStyle, showSatellite }: AmapProps) => {
                         </div>
                     `;
 
-                    // --- 3. 创建自定义标记点图标 ---
-                    const markerColor = isDarkMode ? 'hsl(210, 40%, 98%)' : 'hsl(222.2, 84%, 10%)';
-                    const markerStrokeColor = isDarkMode ? 'hsl(0, 0%, 10%)' : 'hsl(0, 0%, 99%)';
-                    const markerSvg = `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="${markerColor}" stroke="${markerStrokeColor}" stroke-width="2"/></svg>`;
-                    const icon = new AMap.Icon({
-                        size: new AMap.Size(24, 24),
-                        image: `data:image/svg+xml;utf8,${encodeURIComponent(markerSvg)}`,
-                        imageSize: new AMap.Size(24, 24),
-                    });
+            // --- 3. 创建自定义标记点图标 ---
+            const markerColor = isDarkMode ? 'hsl(210, 40%, 98%)' : 'hsl(222.2, 84%, 10%)';
+            const markerStrokeColor = isDarkMode ? 'hsl(0, 0%, 10%)' : 'hsl(0, 0%, 99%)';
+            const markerSvg = `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="${markerColor}" stroke="${markerStrokeColor}" stroke-width="2"/></svg>`;
+            const icon = new AMap.Icon({
+                size: new AMap.Size(24, 24),
+                image: `data:image/svg+xml;utf8,${encodeURIComponent(markerSvg)}`,
+                imageSize: new AMap.Size(24, 24),
+            });
 
-                    // --- 4. 创建标记点 ---
-                    const marker = new AMap.Marker({
-                        position: gcj02Coord,
-                        map: mapInstance,
-                        icon: icon,
-                        offset: new AMap.Pixel(-12, -12),
-                    });
+            // --- 4. 创建标记点 ---
+            const marker = new AMap.Marker({
+                position: gcj02Coord,
+                map: mapInstance,
+                icon: icon,
+                offset: new AMap.Pixel(-12, -12),
+            });
 
-                    // --- 5. 创建独立的文本标签 (AMap.Text) ---
-                    const textLabel = new AMap.Text({
-                        text: restaurant.name,
-                        position: gcj02Coord,
-                        map: mapInstance,
-                        offset: new AMap.Pixel(15, -10), // 微调位置
-                        style: {
-                            'padding': '4px 10px',
-                            'background-color': isDarkMode ? 'rgba(40, 40, 40, 0.85)' : 'rgba(255, 255, 255, 0.85)',
-                            'color': isDarkMode ? 'hsl(210, 40%, 98%)' : 'hsl(222.2, 84%, 10%)',
-                            'border': `1px solid ${isDarkMode ? 'hsl(0, 0%, 20%)' : 'hsl(0, 0%, 85%)'}`,
-                            'border-radius': '8px',
-                            'font-size': '13px',
-                            'white-space': 'nowrap',
-                            'box-shadow': '0 2px 8px rgba(0,0,0,0.15)',
-                            'backdrop-filter': 'blur(5px)',
-                            '-webkit-backdrop-filter': 'blur(5px)',
-                            'transition': 'all 0.2s ease-in-out',
-                        }
-                    });
+            // --- 5. 创建独立的文本标签 (AMap.Text) ---
+            const textLabel = new AMap.Text({
+                text: restaurant.name,
+                position: gcj02Coord,
+                map: mapInstance,
+                offset: new AMap.Pixel(15, -10), // 微调位置
+                style: {
+                    'padding': '4px 10px',
+                    'background-color': isDarkMode ? 'rgba(40, 40, 40, 0.85)' : 'rgba(255, 255, 255, 0.85)',
+                    'color': isDarkMode ? 'hsl(210, 40%, 98%)' : 'hsl(222.2, 84%, 10%)',
+                    'border': `1px solid ${isDarkMode ? 'hsl(0, 0%, 20%)' : 'hsl(0, 0%, 85%)'}`,
+                    'border-radius': '8px',
+                    'font-size': '13px',
+                    'white-space': 'nowrap',
+                    'box-shadow': '0 2px 8px rgba(0,0,0,0.15)',
+                    'backdrop-filter': 'blur(5px)',
+                    '-webkit-backdrop-filter': 'blur(5px)',
+                    'transition': 'all 0.2s ease-in-out',
+                }
+            });
 
-                    // --- 6. 创建信息窗体实例 ---
-                    const infoWindow = new AMap.InfoWindow({
-                        isCustom: true,
-                        anchor: 'bottom-center',
-                        content: infoWindowContent,
-                        offset: new AMap.Pixel(0, -40)
-                    });
+            // --- 6. 创建信息窗体实例 ---
+            const infoWindow = new AMap.InfoWindow({
+                isCustom: true,
+                anchor: 'bottom-center',
+                content: infoWindowContent,
+                offset: new AMap.Pixel(0, -40)
+            });
 
-                    marker.on('click', () => {
-                        if (activeInfoWindowRef.current) {
-                            activeInfoWindowRef.current.close();
-                        }
-                        infoWindow.open(mapInstance, marker.getPosition());
-                        activeInfoWindowRef.current = infoWindow;
-                    });
+            marker.on('click', () => {
+                if (activeInfoWindowRef.current) {
+                    activeInfoWindowRef.current.close();
+                }
+                infoWindow.open(mapInstance, marker.getPosition());
+                activeInfoWindowRef.current = infoWindow;
+            });
 
-                    newMarkers.push(marker);
-                    newMarkers.push(textLabel); // 将文本标签也加入管理
-                });
-
-                markersRef.current = newMarkers
-                mapInstance.setFitView(newMarkers)
-            } else {
-                console.error('坐标转换失败', result);
-            }
+            newMarkers.push(marker);
+            newMarkers.push(textLabel); // 将文本标签也加入管理
         });
+
+        markersRef.current = newMarkers
+        mapInstance.setFitView(newMarkers)
     }, [restaurants, mapInstance, AMap, isMapReady]); // Add isMapReady to dependency array
 
 

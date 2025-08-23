@@ -38,36 +38,7 @@ const ClearIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
-// 模拟搜索数据（实际项目中应该从API获取）
-const mockSearchData: SearchResult[] = [
-    {
-        id: "1",
-        title: "React Hooks 完全指南",
-        excerpt: "深入理解 React Hooks 的工作原理和最佳实践...",
-        url: "/blog/react-hooks-guide",
-        type: "post",
-        tags: ["React", "JavaScript", "前端"],
-        date: "2024-01-15",
-    },
-    {
-        id: "2",
-        title: "Next.js 性能优化技巧",
-        excerpt: "提升 Next.js 应用性能的实用技巧和方法...",
-        url: "/blog/nextjs-performance",
-        type: "post",
-        tags: ["Next.js", "性能优化", "React"],
-        date: "2024-01-10",
-    },
-    {
-        id: "3",
-        title: "个人博客系统",
-        excerpt: "基于 Next.js 和 TypeScript 构建的现代化博客系统...",
-        url: "/projects/blog-system",
-        type: "project",
-        tags: ["Next.js", "TypeScript", "博客"],
-        date: "2024-01-05",
-    },
-];
+
 
 export function SearchBox({
     placeholder = "搜索文章、项目...",
@@ -97,38 +68,39 @@ export function SearchBox({
             }
 
             try {
-                // 模拟搜索API调用
-                await new Promise(resolve => setTimeout(resolve, 300));
-                const filteredResults = mockSearchData.filter(item =>
-                    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    item.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    item.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-                );
+                // 调用真实的搜索API
+                const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
+                const data = await response.json();
 
-                setResults(filteredResults);
-                setSelectedIndex(-1);
+                if (data.success) {
+                    setResults(data.results || []);
+                    setSelectedIndex(-1);
 
-                // 记录搜索行为
-                await fetch('/api/analytics/search', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        query: searchQuery,
-                        results: filteredResults.length,
-                        sessionId,
-                        timestamp: new Date().toISOString(),
-                    }),
-                }).catch(console.error);
+                    // 记录搜索行为
+                    await fetch('/api/analytics/search', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            query: searchQuery,
+                            results: data.results?.length || 0,
+                            sessionId,
+                            timestamp: new Date().toISOString(),
+                        }),
+                    }).catch(console.error);
 
-                onSearch?.(searchQuery, filteredResults);
+                    onSearch?.(searchQuery, data.results || []);
+                } else {
+                    console.error('Search API error:', data.error);
+                    setResults([]);
+                }
             } catch (error) {
                 console.error('Search error:', error);
             } finally {
                 setIsLoading(false);
             }
-        }, 300),
+        }, 600),
         [onSearch, sessionId]
     );
 
@@ -303,10 +275,10 @@ export function SearchBox({
                                         <div className="flex items-start gap-3">
                                             {/* 类型图标 */}
                                             <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium ${result.type === 'post'
-                                                    ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400'
-                                                    : result.type === 'project'
-                                                        ? 'bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400'
-                                                        : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                                                ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400'
+                                                : result.type === 'project'
+                                                    ? 'bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400'
+                                                    : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
                                                 }`}>
                                                 {result.type === 'post' ? '文' : result.type === 'project' ? '项' : '页'}
                                             </div>

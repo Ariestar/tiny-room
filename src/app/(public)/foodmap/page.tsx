@@ -5,7 +5,7 @@ import Loading from '@/components/ui/Loading'
 import { Restaurant } from '@/types/foodmap'
 
 export const metadata: Metadata = {
-    title: '美食地图',
+    title: 'Foodmap',
     description: '发现和分享身边的美食店铺，记录每一次美好的味觉体验',
     keywords: ['美食地图', '餐厅推荐', '美食分享', '本地美食'],
 }

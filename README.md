@@ -15,3 +15,4 @@
 -   [ ] github 两种登录方式
 -   [ ] foodmap 添加数据
 -   [ ] 清理不需要的包
+-   [ ] public_token 问题

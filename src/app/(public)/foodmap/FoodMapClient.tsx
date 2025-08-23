@@ -36,6 +36,7 @@ export default function FoodMapClient({ initialRestaurants }: FoodMapClientProps
     const [searchKeyword, setSearchKeyword] = useState('')
     const [isFullscreen, setIsFullscreen] = useState(false)
     const [isSatelliteView, setIsSatelliteView] = useState(false)
+    const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
     const { resolvedTheme } = useTheme()
 
     const mapStyle = resolvedTheme === 'dark'
@@ -70,6 +71,11 @@ export default function FoodMapClient({ initialRestaurants }: FoodMapClientProps
     const handleAddRestaurant = () => {
         // 跳转到管理面板的餐厅管理页面
         window.location.href = '/dashboard/foodmap';
+    }
+
+    // 处理位置更新
+    const handleLocationUpdate = (location: [number, number]) => {
+        setUserLocation(location);
     }
 
     return (
@@ -122,6 +128,8 @@ export default function FoodMapClient({ initialRestaurants }: FoodMapClientProps
                         restaurants={filteredRestaurants}
                         mapStyle={mapStyle}
                         showSatellite={isSatelliteView}
+                        center={userLocation || undefined}
+                        onLocationUpdate={handleLocationUpdate}
                     />
 
                     {/* 地图控制按钮 */}
