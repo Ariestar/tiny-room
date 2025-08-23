@@ -14,7 +14,6 @@ const NAV_LINKS = [
     // 示例：为每个链接添加图标
     { href: '/blog', label: '博客', icon: '✒️' },
     { href: '/gallery', label: '相册', icon: '🖼️' },
-    { href: '/projects', label: '项目', icon: '💼' },
     { href: '/dashboard', label: '仪表盘', icon: '📊' },
 ];
 
