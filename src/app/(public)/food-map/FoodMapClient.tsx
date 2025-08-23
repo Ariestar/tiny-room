@@ -6,10 +6,11 @@ import dynamic from 'next/dynamic'
 import { useTheme } from 'next-themes'
 import { PageTitle } from '@/components/ui/PageTitle'
 import { Restaurant } from '@/types/food-map'
-import { Search, Filter, Maximize2, Minimize2, Plus, Satellite } from 'lucide-react'
+import { Maximize2, Minimize2, Plus } from 'lucide-react'
+import { MapControl } from '@/components/feature/food-map/MapControl'
 
-// 动态导入地图组件，避免SSR问题
-const MapComponent = dynamic(() => import('@/components/feature/food-map/MapComponent'), {
+// 动态导入高德地图组件，避免SSR问题
+const Amap = dynamic(() => import('@/components/feature/food-map/Amap'), {
     ssr: false,
     loading: () => (
         <div className="flex items-center justify-center h-[600px] bg-muted rounded-lg">
@@ -100,7 +101,10 @@ export default function FoodMapClient() {
     const [isSatelliteView, setIsSatelliteView] = useState(false)
     const { resolvedTheme } = useTheme()
 
-    const mapStyle = isSatelliteView ? 'satellite' : resolvedTheme === 'dark' ? 'dark' : 'light';
+    const mapStyle = resolvedTheme === 'dark'
+        ? 'amap://styles/dark'
+        : 'amap://styles/normal'
+
 
     // 获取所有分类
     const categories = ['全部', ...Array.from(new Set(restaurants.map(r => r.category)))]
@@ -127,7 +131,7 @@ export default function FoodMapClient() {
     }
 
     return (
-        <div className={`w-full max-w-none px-4 sm:px-6 lg:px-8 ${isFullscreen ? 'fixed inset-0 z-50 bg-background' : ''}`}>
+        <div className={`w-full max-w-none ${isFullscreen ? 'fixed inset-0 z-50 bg-background p-0' : 'px-4 sm:px-6 lg:px-8'}`}>
             {/* 页面标题 */}
             {!isFullscreen && (
                 <>
@@ -151,54 +155,17 @@ export default function FoodMapClient() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
             >
-                <div className="bg-card border border-border rounded-lg p-4 shadow-sm">
-                    <div className="flex flex-wrap gap-4 items-center">
-                        {/* 搜索框 */}
-                        <div className="flex-1 min-w-[200px] relative">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <input
-                                type="text"
-                                placeholder="搜索餐厅、菜系、标签..."
-                                value={searchKeyword}
-                                onChange={(e) => setSearchKeyword(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent transition-colors"
-                            />
-                        </div>
-
-                        {/* 分类筛选 */}
-                        <div className="flex items-center gap-2">
-                            <Filter className="h-4 w-4 text-muted-foreground" />
-                            <select
-                                value={selectedCategory}
-                                onChange={(e) => setSelectedCategory(e.target.value)}
-                                className="px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent transition-colors"
-                            >
-                                {categories.map(category => (
-                                    <option key={category} value={category}>
-                                        {category}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* 卫星/街道切换按钮 */}
-                        <button
-                            onClick={() => setIsSatelliteView(!isSatelliteView)}
-                            className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${isSatelliteView
-                                ? 'bg-primary text-primary-foreground'
-                                : 'bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-                                }`}
-                        >
-                            <Satellite className="h-4 w-4" />
-                            <span>{isSatelliteView ? '街道' : '卫星'}</span>
-                        </button>
-
-                        {/* 统计信息 */}
-                        <div className="text-sm text-muted-foreground">
-                            显示 <span className="font-semibold text-primary">{filteredRestaurants.length}</span> / {restaurants.length} 家餐厅
-                        </div>
-                    </div>
-                </div>
+                <MapControl
+                    searchKeyword={searchKeyword}
+                    setSearchKeyword={setSearchKeyword}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                    categories={categories}
+                    isSatelliteView={isSatelliteView}
+                    setIsSatelliteView={setIsSatelliteView}
+                    filteredCount={filteredRestaurants.length}
+                    totalCount={restaurants.length}
+                />
             </motion.div>
 
             {/* 地图容器 */}
@@ -209,9 +176,10 @@ export default function FoodMapClient() {
                 transition={{ duration: 0.6, delay: 0.4 }}
             >
                 <div className="bg-card border border-border rounded-lg overflow-hidden shadow-sm h-full">
-                    <MapComponent
+                    <Amap
                         restaurants={filteredRestaurants}
                         mapStyle={mapStyle}
+                        showSatellite={isSatelliteView}
                     />
 
                     {/* 地图控制按钮 */}
