@@ -28,7 +28,13 @@ node_modules/
 # tasks.json
 # tasks/ 
 /generated/prisma
-.vercel
+.vercel/
+.vscode/
+.kiro/
+.windsurf/
+.roo/
+.cursor/
+.clinerules/
 
 /.next/
 /out/
@@ -39,5 +45,5 @@ node_modules/
 *.tsbuildinfo
 next-env.d.ts
 
-# Vercel 平台相关
-.vercel
+# PostgreSQL data
+postgres_data/

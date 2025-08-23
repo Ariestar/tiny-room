@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import AMapLoader from '@amap/amap-jsapi-loader'
 import { Restaurant } from '../../../types/foodmap'
+import { Navigation, MapPin, Star, DollarSign, Clock, Phone, Globe, Tag } from 'lucide-react'
 
 interface AmapProps {
     restaurants: Restaurant[]
@@ -21,6 +23,126 @@ if (typeof window !== 'undefined') {
 
 
 
+// InfoWindow内容组件
+const InfoWindowContent = ({ restaurant, isDarkMode }: { restaurant: Restaurant; isDarkMode: boolean }) => {
+    const navigationUrl = `https://uri.amap.com/navigation?to=${restaurant.coordinates[0]},${restaurant.coordinates[1]},${encodeURIComponent(restaurant.address)}&mode=car&policy=1&src=mypage&coordinate=gaode&callnative=0`;
+
+    return (
+        <div className={`p-4 rounded-xl w-80 shadow-lg border font-sans ${isDarkMode
+                ? 'bg-gray-900 text-gray-100 border-gray-700'
+                : 'bg-white text-gray-900 border-gray-200'
+            }`}>
+            <h3 className="font-semibold text-lg mb-1">{restaurant.name}</h3>
+
+            {/* 地址行 - 带导航图标 */}
+            <div className="flex items-center mb-3">
+                <a
+                    href={navigationUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mr-2 p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 cursor-pointer"
+                    title="使用高德地图导航"
+                >
+                    <Navigation size={16} className="text-blue-500" />
+                </a>
+                <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                    }`}>
+                    {restaurant.address}
+                </span>
+            </div>
+
+            {/* 详细信息网格 */}
+            <div className="grid grid-cols-[auto_1fr] gap-2 mb-3 text-sm">
+                {restaurant.rating && (
+                    <>
+                        <div className="flex items-center justify-center">
+                            <Star size={14} className="text-yellow-500" />
+                        </div>
+                        <div>{restaurant.rating} / 5.0</div>
+                    </>
+                )}
+
+                {restaurant.priceRange && (
+                    <>
+                        <div className="flex items-center justify-center">
+                            <DollarSign size={14} className="text-green-500" />
+                        </div>
+                        <div>{restaurant.priceRange}</div>
+                    </>
+                )}
+
+                {restaurant.openingHours && (
+                    <>
+                        <div className="flex items-center justify-center">
+                            <Clock size={14} className="text-blue-500" />
+                        </div>
+                        <div>{restaurant.openingHours}</div>
+                    </>
+                )}
+
+                {restaurant.phone && (
+                    <>
+                        <div className="flex items-center justify-center">
+                            <Phone size={14} className="text-purple-500" />
+                        </div>
+                        <div>
+                            <a
+                                href={`tel:${restaurant.phone}`}
+                                className="text-blue-500 hover:underline"
+                            >
+                                {restaurant.phone}
+                            </a>
+                        </div>
+                    </>
+                )}
+
+                {restaurant.website && (
+                    <>
+                        <div className="flex items-center justify-center">
+                            <Globe size={14} className="text-indigo-500" />
+                        </div>
+                        <div>
+                            <a
+                                href={restaurant.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-500 hover:underline"
+                            >
+                                {restaurant.website}
+                            </a>
+                        </div>
+                    </>
+                )}
+            </div>
+
+            {/* 标签 */}
+            {restaurant.tags && restaurant.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-3">
+                    {restaurant.tags.map((tag, index) => (
+                        <span
+                            key={index}
+                            className={`px-2 py-1 rounded-full text-xs ${isDarkMode
+                                    ? 'bg-gray-800 text-gray-300'
+                                    : 'bg-gray-100 text-gray-700'
+                                }`}
+                        >
+                            {tag}
+                        </span>
+                    ))}
+                </div>
+            )}
+
+            {/* 描述 */}
+            {restaurant.description && (
+                <div className={`text-sm leading-relaxed pt-3 border-t ${isDarkMode ? 'border-gray-700 text-gray-300' : 'border-gray-200 text-gray-600'
+                    }`}>
+                    {restaurant.description}
+                </div>
+            )}
+        </div>
+    );
+};
+
 const Amap = ({ restaurants, mapStyle, showSatellite, center, onLocationUpdate }: AmapProps) => {
     const mapRef = useRef<HTMLDivElement>(null)
     const [mapInstance, setMapInstance] = useState<any>(null)
@@ -29,6 +151,7 @@ const Amap = ({ restaurants, mapStyle, showSatellite, center, onLocationUpdate }
     const markersRef = useRef<any[]>([])
     const satelliteLayerRef = useRef<any>(null)
     const activeInfoWindowRef = useRef<any>(null)
+    const [activeInfoWindow, setActiveInfoWindow] = useState<{ restaurant: Restaurant; element: HTMLElement } | null>(null)
 
     useEffect(() => {
 
@@ -48,6 +171,13 @@ const Amap = ({ restaurants, mapStyle, showSatellite, center, onLocationUpdate }
                         center: defaultCenter,
                         mapStyle: mapStyle,
                         preserveDrawingBuffer: true,
+                        // 改善标签显示
+                        labelzIndex: 120,
+                        zooms: [3, 20], // 设置缩放范围
+                        // 启用POI标签显示
+                        showIndoorMap: false,
+                        // 设置地图样式参数
+                        features: ['bg', 'road', 'building', 'point'],
                     })
 
                     // 如果没有传入中心点，尝试获取用户当前位置
@@ -75,6 +205,15 @@ const Amap = ({ restaurants, mapStyle, showSatellite, center, onLocationUpdate }
 
                     map.on('complete', () => {
                         setIsMapReady(true); // Set map ready state on 'complete' event
+                    });
+
+                    // 监听缩放级别变化，动态控制标签显示
+                    map.on('zoomend', () => {
+                        const currentZoom = map.getZoom();
+                        // 在较小缩放级别时，确保POI标签可见
+                        if (currentZoom < 10) {
+                            map.setFeatures(['bg', 'road', 'building', 'point']);
+                        }
                     });
 
                     // 点击地图空白处关闭信息窗体
@@ -142,47 +281,11 @@ const Amap = ({ restaurants, mapStyle, showSatellite, center, onLocationUpdate }
 
             const isDarkMode = mapStyle.includes('dark');
 
-            // --- 1. 定义所有需要的样式 ---
-            const styles = {
-                infoContainer: `
-                            background-color: ${isDarkMode ? 'hsl(0, 0%, 10%)' : 'hsl(0, 0%, 99%)'};
-                            color: ${isDarkMode ? 'hsl(210, 40%, 98%)' : 'hsl(222.2, 84%, 10%)'};
-                            padding: 16px; border-radius: 12px; width: 320px;
-                            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-                            border: 1px solid ${isDarkMode ? 'hsl(0, 0%, 14.9%)' : 'hsl(0, 0%, 89.8%)'};
-                            font-family: 'Inter', sans-serif;
-                        `,
-                title: `font-weight: 600; font-size: 18px; margin-bottom: 4px;`,
-                address: `font-size: 13px; color: ${isDarkMode ? 'hsl(0, 0%, 62.9%)' : 'hsl(0, 0%, 45.1%)'}; margin-bottom: 12px;`,
-                detailsGrid: `display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; font-size: 14px; margin-bottom: 12px;`,
-                icon: `display: inline-block; width: 1.5em; text-align: center;`,
-                description: `margin-top: 12px; font-size: 14px; line-height: 1.6; color: ${isDarkMode ? 'hsl(0, 0%, 80%)' : 'hsl(0, 0%, 30%)'}; border-top: 1px solid ${isDarkMode ? 'hsl(0, 0%, 14.9%)' : 'hsl(0, 0%, 89.8%)'}; padding-top: 12px;`,
-                tagsContainer: `display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;`,
-                tag: `background-color: ${isDarkMode ? 'hsla(0, 0%, 98%, 0.1)' : 'hsla(0, 0%, 9%, 0.05)'}; color: ${isDarkMode ? 'hsl(0, 0%, 80%)' : 'hsl(0, 0%, 30%)'}; padding: 3px 10px; border-radius: 99px; font-size: 12px;`,
-            };
+            // 不再需要内联样式，使用Tailwind CSS类
 
-            // --- 2. 构建详细的信息窗体内容 ---
-            const detailRow = (icon: string, content: string | number | undefined | null, isLink = false, linkPrefix = '') => {
-                if (!content) return '';
-                const contentHtml = isLink ? `<a href="${linkPrefix}${content}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">${content}</a>` : content;
-                return `<div><span style="${styles.icon}">${icon}</span></div><div>${contentHtml}</div>`;
-            };
-
-            const infoWindowContent = `
-                        <div style="${styles.infoContainer}">
-                            <h3 style="${styles.title}">${restaurant.name}</h3>
-                            <p style="${styles.address}">${restaurant.address}</p>
-                            <div style="${styles.detailsGrid}">
-                                ${detailRow('⭐', restaurant.rating ? `${restaurant.rating} / 5.0` : null)}
-                                ${detailRow('💰', restaurant.priceRange)}
-                                ${detailRow('🕒', restaurant.openingHours)}
-                                ${detailRow('📞', restaurant.phone, true, 'tel:')}
-                                ${detailRow('🌐', restaurant.website, true, restaurant.website || '')}
-                            </div>
-                            ${restaurant.tags && restaurant.tags.length > 0 ? `<div style="${styles.tagsContainer}">${restaurant.tags.map((tag: string) => `<span style="${styles.tag}">${tag}</span>`).join('')}</div>` : ''}
-                            ${restaurant.description ? `<p style="${styles.description}">${restaurant.description}</p>` : ''}
-                        </div>
-                    `;
+            // 创建DOM元素用于Portal渲染
+            const infoWindowElement = document.createElement('div');
+            infoWindowElement.className = 'info-window-container';
 
             // --- 3. 创建自定义标记点图标 ---
             const markerColor = isDarkMode ? 'hsl(210, 40%, 98%)' : 'hsl(222.2, 84%, 10%)';
@@ -200,6 +303,9 @@ const Amap = ({ restaurants, mapStyle, showSatellite, center, onLocationUpdate }
                 map: mapInstance,
                 icon: icon,
                 offset: new AMap.Pixel(-12, -12),
+                // 确保在所有缩放级别下都显示
+                zooms: [3, 20],
+                zIndex: 150, // 高优先级显示
             });
 
             // --- 5. 创建独立的文本标签 (AMap.Text) ---
@@ -208,6 +314,9 @@ const Amap = ({ restaurants, mapStyle, showSatellite, center, onLocationUpdate }
                 position: gcj02Coord,
                 map: mapInstance,
                 offset: new AMap.Pixel(15, -10), // 微调位置
+                // 根据缩放级别控制显示
+                zooms: [9, 20], // 只在缩放级别 9+ 时显示名称
+                zIndex: 200, // 高优先级显示
                 style: {
                     'padding': '4px 10px',
                     'background-color': isDarkMode ? 'rgba(40, 40, 40, 0.85)' : 'rgba(255, 255, 255, 0.85)',
@@ -220,6 +329,8 @@ const Amap = ({ restaurants, mapStyle, showSatellite, center, onLocationUpdate }
                     'backdrop-filter': 'blur(5px)',
                     '-webkit-backdrop-filter': 'blur(5px)',
                     'transition': 'all 0.2s ease-in-out',
+                    // 确保标签始终可见
+                    'pointer-events': 'auto',
                 }
             });
 
@@ -227,7 +338,7 @@ const Amap = ({ restaurants, mapStyle, showSatellite, center, onLocationUpdate }
             const infoWindow = new AMap.InfoWindow({
                 isCustom: true,
                 anchor: 'bottom-center',
-                content: infoWindowContent,
+                content: infoWindowElement,
                 offset: new AMap.Pixel(0, -40)
             });
 
@@ -237,6 +348,9 @@ const Amap = ({ restaurants, mapStyle, showSatellite, center, onLocationUpdate }
                 }
                 infoWindow.open(mapInstance, marker.getPosition());
                 activeInfoWindowRef.current = infoWindow;
+
+                // 设置当前活动的InfoWindow，用于Portal渲染
+                setActiveInfoWindow({ restaurant, element: infoWindowElement });
             });
 
             newMarkers.push(marker);
@@ -248,7 +362,20 @@ const Amap = ({ restaurants, mapStyle, showSatellite, center, onLocationUpdate }
     }, [restaurants, mapInstance, AMap, isMapReady]); // Add isMapReady to dependency array
 
 
-    return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />
+    return (
+        <>
+            <div ref={mapRef} style={{ height: '100%', width: '100%' }} />
+
+            {/* 使用Portal渲染InfoWindow内容 */}
+            {activeInfoWindow && createPortal(
+                <InfoWindowContent
+                    restaurant={activeInfoWindow.restaurant}
+                    isDarkMode={mapStyle.includes('dark')}
+                />,
+                activeInfoWindow.element
+            )}
+        </>
+    )
 }
 
 export default Amap

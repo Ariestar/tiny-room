@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react";
 import Button from "@/components/ui/Button";
 import Card, { CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
-import { Github } from "lucide-react";
+import { GithubIcon } from "lucide-react";
 
 export default function LoginPage() {
 	return (
@@ -24,7 +24,7 @@ export default function LoginPage() {
 							signIn("github", { callbackUrl });
 						}}
 					>
-						<Github className='mr-2 h-5 w-5' />
+						<GithubIcon className='mr-2 h-5 w-5 inline-block' />
 						使用 GitHub 登录
 					</Button>
 				</CardContent>
