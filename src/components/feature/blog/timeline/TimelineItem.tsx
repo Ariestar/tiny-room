@@ -51,7 +51,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                     relative
                     ${isMobile
                         ? 'hidden'
-                        : 'col-start-1 flex items-center justify-end pr-6'
+                        : 'col-start-1 flex items-center justify-end pr-6 mt-12'
                     }
                 `}
                 style={{ gridRow: index + 1 }}
