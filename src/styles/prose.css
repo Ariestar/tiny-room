@@ -1,3 +1,11 @@
+/* 博客字体控制CSS变量 */
+:root {
+    --blog-font-size: 16px;
+    --blog-font-family: font-blog;
+    --blog-line-height: 1.6;
+    --blog-letter-spacing: 0px;
+}
+
 /* 移除prose字体配置，继承根布局的字体设置 */
 
 .prose p,
@@ -18,8 +26,48 @@
 .prose img,
 .prose figure,
 .prose figcaption {
-    @apply text-2xl;
+    font-size: var(--blog-font-size);
+    font-family: var(--blog-font-family);
+    line-height: var(--blog-line-height);
+    letter-spacing: var(--blog-letter-spacing);
     @apply text-foreground;
+}
+
+/* 标题样式 */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+    font-family: var(--blog-font-family);
+    line-height: var(--blog-line-height);
+    letter-spacing: var(--blog-letter-spacing);
+    @apply text-foreground font-bold;
+}
+
+.prose h1 {
+    font-size: calc(var(--blog-font-size) * 2.5);
+}
+
+.prose h2 {
+    font-size: calc(var(--blog-font-size) * 2);
+}
+
+.prose h3 {
+    font-size: calc(var(--blog-font-size) * 1.75);
+}
+
+.prose h4 {
+    font-size: calc(var(--blog-font-size) * 1.5);
+}
+
+.prose h5 {
+    font-size: calc(var(--blog-font-size) * 1.25);
+}
+
+.prose h6 {
+    font-size: var(--blog-font-size);
 }
 
 /* Custom typography styles for blog content */
@@ -525,4 +573,64 @@ h6 .subheading-anchor::before {
 /* 高亮文本样式 */
 .prose mark {
     @apply bg-yellow-200 dark:bg-yellow-800 px-1 rounded;
+}
+
+/* 自定义slider样式 */
+.slider {
+    background: linear-gradient(to right, hsl(var(--muted)) 0%, hsl(var(--muted)) 50%, hsl(var(--primary)) 50%, hsl(var(--primary)) 100%);
+}
+
+.slider::-webkit-slider-thumb {
+    appearance: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: hsl(var(--primary));
+    cursor: pointer;
+    border: 2px solid hsl(var(--background));
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.slider::-moz-range-thumb {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: hsl(var(--primary));
+    cursor: pointer;
+    border: 2px solid hsl(var(--background));
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.slider::-webkit-slider-track {
+    height: 8px;
+    border-radius: 4px;
+    background: transparent;
+}
+
+.slider::-moz-range-track {
+    height: 8px;
+    border-radius: 4px;
+    background: transparent;
+}
+
+/* 确保字体控制功能正常工作 */
+.prose * {
+    font-family: inherit;
+}
+
+/* 代码块保持等宽字体 */
+.prose pre,
+.prose code {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace !important;
+}
+
+/* 表格保持原有样式 */
+.prose table {
+    font-family: inherit;
+}
+
+/* 列表保持原有样式 */
+.prose ul,
+.prose ol {
+    font-family: inherit;
 }

@@ -33,11 +33,19 @@ export function TableOfContents({ toc, position = 'right' }: TocProps) {
 		const activeIndex = toc.findIndex(i => i.url.substring(1) === activeId);
 		const activeEl = activeIndex >= 0 ? itemRefs.current[activeIndex] : null;
 		if (!activeEl) return;
+
 		const containerHeight = container.clientHeight;
 		const itemOffsetTop = activeEl.offsetTop;
 		const itemHeight = activeEl.clientHeight;
+
+		// 计算滚动位置，确保活跃项目在容器中央
 		const scrollTop = itemOffsetTop - (containerHeight / 2) + (itemHeight / 2);
-		container.scrollTo({ top: scrollTop, behavior: 'smooth' });
+
+		// 使用平滑滚动，并确保不会滚动到负值
+		container.scrollTo({
+			top: Math.max(0, scrollTop),
+			behavior: 'smooth'
+		});
 	}, [activeId, toc]);
 
 	if (!toc.length || !isMounted) return null;
@@ -48,7 +56,7 @@ export function TableOfContents({ toc, position = 'right' }: TocProps) {
 		<div className='space-y-4 h-full'>
 			<motion.div
 				ref={tocContainerRef}
-				className='relative h-full space-y-2 overflow-y-auto scrollbar-none flex flex-col justify-center'
+				className='relative h-full space-y-2 overflow-y-auto scrollbar-none flex flex-col'
 				onHoverStart={() => setIsHovered(true)}
 				onHoverEnd={() => { setIsHovered(false); setMouseY(null); setNearestIndex(null); }}
 				onMouseMove={(e) => {

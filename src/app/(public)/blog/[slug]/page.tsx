@@ -12,6 +12,7 @@ import { RelatedPosts } from "@/components/feature/blog/RelatedPosts";
 import { FAQ } from "@/components/feature/blog/FAQ";
 import { ArticleStructuredData } from "@/components/seo/EnhancedStructuredData";
 import { PageTitle } from "@/components/ui/PageTitle";
+import { TypographyControls } from "@/components/feature/blog/TypographyControls";
 
 export async function generateStaticParams() {
 	const slugs = getAllPostSlugs();
@@ -77,6 +78,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 					<TableOfContents toc={post.toc} position="left" />
 				</aside>
 			)}
+
+			{/* 字体控制组件 */}
+			<TypographyControls />
 
 			<div className='container mx-auto max-w-4xl px-4 py-12'>
 				<PageTransition transitionType="slide">
