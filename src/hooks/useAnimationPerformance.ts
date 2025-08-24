@@ -246,7 +246,7 @@ function generateRecommendations(metrics: AnimationMetrics): string[] {
 	}
 
 	// 移动端特殊建议
-	if (typeof window !== "undefined" && window.innerWidth < 768) {
+	if (typeof window !== "undefined" && window.innerWidth < 900) {
 		recommendations.push(
 			"移动端建议：使用 transform 和 opacity 进行动画，避免修改 layout 属性"
 		);

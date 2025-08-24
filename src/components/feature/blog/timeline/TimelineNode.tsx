@@ -52,7 +52,7 @@ export const TimelineNode: React.FC<TimelineNodeProps> = ({
                 <div
                     className={`
                         absolute inset-0 rounded-full blur-sm
-                        transition-opacity duration-fast top-2
+                        transition-opacity duration-fast 
                         ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}
                         ${isHovered ? 'opacity-60' : 'opacity-0'}
                     `}
@@ -64,7 +64,7 @@ export const TimelineNode: React.FC<TimelineNodeProps> = ({
                 {/* 新增: 连接卡片的短线 */}
                 {!isMobile && (
                     <motion.div
-                        className="absolute left-1/2 top-[1.1rem] h-0.5 -translate-y-1/2"
+                        className="absolute left-1/2 top-[0.67em] h-0.5 -translate-y-1/2"
                         style={{
                             backgroundColor: post.nodeColor,
                             width: 'calc(100% + 1rem)'
@@ -79,7 +79,7 @@ export const TimelineNode: React.FC<TimelineNodeProps> = ({
                     />
                 )}
                 {/* 连接线 */}
-                <div className="absolute left-1/2 top-8 w-0.5 h-full -translate-x-1/2"
+                <div className="absolute left-1/2 w-0.5 h-full -translate-x-1/2"
                     style={{
                         background: post.nodeColor,
                     }}
@@ -88,7 +88,6 @@ export const TimelineNode: React.FC<TimelineNodeProps> = ({
                 <motion.div
                     className={`
                         relative rounded-full border-4 border-background shadow-lg 
-                       top-2
                         ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}
                     `}
                     style={{

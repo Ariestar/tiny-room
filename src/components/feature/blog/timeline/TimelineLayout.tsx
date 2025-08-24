@@ -26,7 +26,7 @@ export const TimelineLayout: React.FC<TimelineLayoutProps> = ({
     posts,
     disabled = false,
 }) => {
-    const { isMobile } = useResponsive();
+    const { isMobile, windowWidth } = useResponsive();
     const containerRef = useRef<HTMLDivElement>(null);
 
     // 滚动监听和视差效果
@@ -66,6 +66,10 @@ export const TimelineLayout: React.FC<TimelineLayoutProps> = ({
         return <TimelineEmptyState />;
     }
 
+    // 优化响应式断点：在更早的断点隐藏左侧时间线
+    // 当屏幕宽度小于900px时，使用移动端布局
+    const shouldUseMobileLayout = windowWidth < 900;
+
     return (
         <div ref={containerRef} className="relative w-full max-w-none py-12">
 
@@ -73,7 +77,7 @@ export const TimelineLayout: React.FC<TimelineLayoutProps> = ({
             <div
                 className={`
                     relative grid items-start mx-auto
-                    ${isMobile
+                    ${shouldUseMobileLayout
                         ? 'grid-cols-[32px_1fr] max-w-4xl px-4'
                         : 'grid-cols-[200px_48px_1fr] max-w-7xl px-24'
                     }
@@ -86,7 +90,7 @@ export const TimelineLayout: React.FC<TimelineLayoutProps> = ({
                         index={index}
                         scrollYProgress={scrollYProgress}
                         disabled={disabled}
-                        isMobile={isMobile}
+                        isMobile={shouldUseMobileLayout}
                         isLastItem={index === allPosts.length - 1}
                         yearGroups={yearGroups}
                     />
@@ -97,7 +101,7 @@ export const TimelineLayout: React.FC<TimelineLayoutProps> = ({
             <TimelineFooter
                 scrollYProgress={scrollYProgress}
                 disabled={disabled}
-                isMobile={isMobile}
+                isMobile={shouldUseMobileLayout}
                 decorationY={decorationY}
                 rotate={rotate}
                 rotateReverse={rotateReverse}

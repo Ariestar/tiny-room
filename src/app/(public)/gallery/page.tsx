@@ -191,7 +191,7 @@ function GalleryClient() {
 													width={image.width}
 													height={image.height}
 													className='rounded-md transition-transform duration-300 ease-in-out group-hover/card:scale-105'
-													sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+													sizes='(max-width: 900px) 100vw, (max-width: 1200px) 50vw, 33vw'
 													priority={i < 5} // Prioritize loading for the first few images
 												/>
 											</motion.div>

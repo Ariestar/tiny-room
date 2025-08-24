@@ -73,7 +73,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                     isLastItem={isLastItem}
                     isHovered={isHovered}
                     className={`
-                        flex h-full items-start justify-center pt-2
+                        flex h-full items-start justify-center mt-20
                         ${isMobile ? 'col-start-1' : 'col-start-2'}
                     `}
                     style={{ gridRow: index + 1 }}
