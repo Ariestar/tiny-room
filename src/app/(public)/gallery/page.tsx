@@ -39,6 +39,7 @@ function GalleryClient() {
 	const photoId = searchParams.get("photoId");
 
 	const selectedImage = images.find(img => img.key === photoId);
+	const selectedImageIndex = selectedImage ? images.findIndex(img => img.key === photoId) : -1;
 
 	const handleClose = () => {
 		router.push(pathname as any, { scroll: false });
@@ -48,6 +49,20 @@ function GalleryClient() {
 		const params = new URLSearchParams(searchParams);
 		params.set("photoId", key);
 		router.push(`${pathname}?${params.toString()}` as any, { scroll: false });
+	};
+
+	const handleNext = () => {
+		if (selectedImageIndex >= 0 && selectedImageIndex < images.length - 1) {
+			const nextImage = images[selectedImageIndex + 1];
+			handleImageClick(nextImage.key);
+		}
+	};
+
+	const handlePrev = () => {
+		if (selectedImageIndex > 0) {
+			const prevImage = images[selectedImageIndex - 1];
+			handleImageClick(prevImage.key);
+		}
 	};
 
 	const preloadImage = useCallback(
@@ -89,12 +104,21 @@ function GalleryClient() {
 
 	useEffect(() => {
 		if (photoId) {
-			document.body.classList.add("overflow-hidden");
+			// 强制隐藏body滚动条
+			document.body.style.overflow = 'hidden';
+			document.body.style.overflowX = 'hidden';
+			document.body.style.overflowY = 'hidden';
 		} else {
-			document.body.classList.remove("overflow-hidden");
+			// 恢复body滚动条
+			document.body.style.overflow = '';
+			document.body.style.overflowX = '';
+			document.body.style.overflowY = '';
 		}
 		return () => {
-			document.body.classList.remove("overflow-hidden");
+			// 清理函数：组件卸载时恢复body滚动条
+			document.body.style.overflow = '';
+			document.body.style.overflowX = '';
+			document.body.style.overflowY = '';
 		};
 	}, [photoId]);
 
@@ -189,6 +213,10 @@ function GalleryClient() {
 						: null
 				}
 				onClose={handleClose}
+				onNext={handleNext}
+				onPrev={handlePrev}
+				hasNext={selectedImageIndex >= 0 && selectedImageIndex < images.length - 1}
+				hasPrev={selectedImageIndex > 0}
 			/>
 		</div>
 	);

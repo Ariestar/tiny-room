@@ -29,18 +29,28 @@ export function PersonalizedLoading({
     showProgress = false,
     className = ""
 }: PersonalizedLoadingProps) {
+    // 使用固定的初始消息，避免水合错误
     const [currentMessage, setCurrentMessage] = useState(
-        message || loadingMessages[Math.floor(Math.random() * loadingMessages.length)]
+        message || loadingMessages[0] // 使用固定的第一条消息
     );
     const [progress, setProgress] = useState(0);
 
-    // 随机切换加载消息
+    // 随机切换加载消息 - 只在客户端渲染后开始
     useEffect(() => {
         if (!message) {
+            // 延迟一下再开始随机切换，确保水合完成
+            const timer = setTimeout(() => {
+                setCurrentMessage(loadingMessages[Math.floor(Math.random() * loadingMessages.length)]);
+            }, 100);
+
             const interval = setInterval(() => {
                 setCurrentMessage(loadingMessages[Math.floor(Math.random() * loadingMessages.length)]);
             }, 2000);
-            return () => clearInterval(interval);
+
+            return () => {
+                clearTimeout(timer);
+                clearInterval(interval);
+            };
         }
     }, [message]);
 
