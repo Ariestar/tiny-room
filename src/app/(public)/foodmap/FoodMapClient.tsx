@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic'
 import { useTheme } from 'next-themes'
 import { PageTitle } from '@/components/ui/PageTitle'
 import { Restaurant } from '@/types/foodmap'
-import { Maximize2, Minimize2, Plus } from 'lucide-react'
+import { Maximize2, Minimize2, Plus, MapPin } from 'lucide-react'
 import { MapControl } from '@/components/feature/foodmap/MapControl'
 
 // 动态导入高德地图组件，避免SSR问题
@@ -22,9 +22,6 @@ const Amap = dynamic(() => import('@/components/feature/foodmap/Amap'), {
     )
 })
 
-// 示例数据
-// 我们将把这个数据移到API中，并作为props传入
-// const sampleRestaurants: Restaurant[] = [ ... ]
 
 export interface FoodMapClientProps {
     initialRestaurants: Restaurant[]
@@ -76,6 +73,49 @@ export default function FoodMapClient({ initialRestaurants }: FoodMapClientProps
     // 处理位置更新
     const handleLocationUpdate = (location: [number, number]) => {
         setUserLocation(location);
+    }
+
+    // 手动获取用户位置
+    const handleGetUserLocation = () => {
+        if (!navigator.geolocation) {
+            alert('您的浏览器不支持地理位置功能');
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const location: [number, number] = [
+                    position.coords.longitude,
+                    position.coords.latitude
+                ];
+                setUserLocation(location);
+                console.log('手动获取位置成功:', location);
+
+                // 地图会自动通过 center prop 定位到新位置
+                // 因为 Amap 组件会监听 center 变化并调用 setCenter
+            },
+            (error) => {
+                let errorMessage = '无法获取位置信息';
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = '位置访问被拒绝，请在浏览器设置中允许位置访问';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = '位置信息不可用';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = '获取位置信息超时';
+                        break;
+                }
+                alert(errorMessage);
+                console.error('位置获取失败:', error);
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 300000 // 5分钟缓存
+            }
+        );
     }
 
     return (
@@ -144,6 +184,14 @@ export default function FoodMapClient({ initialRestaurants }: FoodMapClientProps
                             ) : (
                                 <Maximize2 className="h-5 w-5 text-foreground" />
                             )}
+                        </button>
+
+                        <button
+                            onClick={handleGetUserLocation}
+                            className="bg-background border border-border p-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:bg-accent"
+                            title="定位到当前位置"
+                        >
+                            <MapPin className="h-5 w-5" />
                         </button>
 
                         <button

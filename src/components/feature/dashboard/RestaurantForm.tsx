@@ -7,6 +7,13 @@ import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
 import { RestaurantSearch } from './RestaurantSearch'
 import type { Restaurant, FoodCategory } from '@/types/foodmap'
+import { ChevronDown } from 'lucide-react'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/DropdownMenu'
 
 // API 输入数据类型（tags 是字符串而不是数组）
 type RestaurantApiInput = Omit<Restaurant, 'id' | 'tags'> & {
@@ -180,17 +187,26 @@ export function RestaurantForm({ onSubmit, onCancel, initialData }: RestaurantFo
                     {/* 分类 */}
                     <div>
                         <label className="block text-sm font-medium mb-1">分类</label>
-                        <select
-                            value={formData.category}
-                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('category', e.target.value)}
-                            className="w-full px-3 py-2 border border-input rounded-md bg-background text-sm"
-                        >
-                            {categories.map((category) => (
-                                <option key={category} value={category}>
-                                    {category}
-                                </option>
-                            ))}
-                        </select>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button className="w-full flex items-center justify-between px-3 py-2 border border-input rounded-md bg-background text-sm hover:bg-accent hover:text-accent-foreground transition-colors focus:ring-2 focus:ring-ring focus:border-transparent">
+                                    <span>{formData.category}</span>
+                                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                                </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start" className="w-full min-w-[200px]">
+                                {categories.map((category) => (
+                                    <DropdownMenuItem
+                                        key={category}
+                                        onClick={() => handleInputChange('category', category)}
+                                        className={`cursor-pointer ${formData.category === category ? '!bg-accent !text-accent-foreground' : ''}`}
+                                        data-selected={formData.category === category}
+                                    >
+                                        {category}
+                                    </DropdownMenuItem>
+                                ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
 
                     {/* 评分 */}
@@ -212,17 +228,26 @@ export function RestaurantForm({ onSubmit, onCancel, initialData }: RestaurantFo
                     {/* 价格区间 */}
                     <div>
                         <label className="block text-sm font-medium mb-1">价格区间</label>
-                        <select
-                            value={formData.priceRange}
-                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('priceRange', e.target.value)}
-                            className="w-full px-3 py-2 border border-input rounded-md bg-background text-sm"
-                        >
-                            {priceRanges.map((range) => (
-                                <option key={range} value={range}>
-                                    {range}
-                                </option>
-                            ))}
-                        </select>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button className="w-full flex items-center justify-between px-3 py-2 border border-input rounded-md bg-background text-sm hover:bg-accent hover:text-accent-foreground transition-colors focus:ring-2 focus:ring-ring focus:border-transparent">
+                                    <span>{formData.priceRange}</span>
+                                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                                </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start" className="w-full min-w-[200px]">
+                                {priceRanges.map((range) => (
+                                    <DropdownMenuItem
+                                        key={range}
+                                        onClick={() => handleInputChange('priceRange', range)}
+                                        className={`cursor-pointer ${formData.priceRange === range ? '!bg-accent !text-accent-foreground' : ''}`}
+                                        data-selected={formData.priceRange === range}
+                                    >
+                                        {range}
+                                    </DropdownMenuItem>
+                                ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
 
                     {/* 电话 */}

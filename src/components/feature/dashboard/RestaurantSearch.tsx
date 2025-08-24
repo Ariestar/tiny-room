@@ -27,6 +27,7 @@ export function RestaurantSearch({ onSelect, className = '', userLocation }: Res
     const [isLoading, setIsLoading] = useState(false)
     const [showResults, setShowResults] = useState(false)
     const [error, setError] = useState('')
+    const [hasSelected, setHasSelected] = useState(false) // 跟踪是否已选择餐厅
     const searchTimeoutRef = useRef<NodeJS.Timeout>()
     const containerRef = useRef<HTMLDivElement>(null)
 
@@ -111,6 +112,9 @@ export function RestaurantSearch({ onSelect, className = '', userLocation }: Res
         onSelect(result)
         setKeyword(result.name)
         setShowResults(false)
+        setHasSelected(true) // 标记已选择餐厅
+        // 清空搜索结果，防止再次聚焦时重新显示
+        setResults([])
     }
 
     return (
@@ -120,11 +124,18 @@ export function RestaurantSearch({ onSelect, className = '', userLocation }: Res
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                     value={keyword}
-                    onChange={(e) => setKeyword(e.target.value)}
+                    onChange={(e) => {
+                        setKeyword(e.target.value)
+                        // 用户开始输入时，重置选择状态
+                        if (hasSelected) {
+                            setHasSelected(false)
+                        }
+                    }}
                     placeholder="搜索餐厅名称或地址..."
                     className="pl-9 pr-10"
                     onFocus={() => {
-                        if (results.length > 0) {
+                        // 只有在有搜索结果、用户正在输入且未选择餐厅时才显示
+                        if (results.length > 0 && keyword.trim() && !hasSelected) {
                             setShowResults(true)
                         }
                     }}
@@ -141,7 +152,7 @@ export function RestaurantSearch({ onSelect, className = '', userLocation }: Res
 
             {/* 搜索结果列表 */}
             <AnimatePresence>
-                {showResults && results.length > 0 && (
+                {showResults && results.length > 0 && !hasSelected && (
                     <motion.div
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/shared/utils";
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
@@ -58,6 +58,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 	) => {
 		const [showPassword, setShowPassword] = useState(false);
 		const [isFocused, setIsFocused] = useState(false);
+		const inputRef = useRef<HTMLInputElement | null>(null);
 
 		// 生成唯一ID
 		const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
@@ -71,6 +72,27 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 		const hasError = error || state === "error";
 		const hasSuccess = state === "success";
 		const hasWarning = state === "warning";
+
+		// 使用 useEffect 处理滚轮事件，防止数字输入框滚动时页面滚动
+		useEffect(() => {
+			const inputElement = inputRef.current;
+			if (!inputElement || type !== "number") return;
+
+			const handleWheel = (e: WheelEvent) => {
+				// 只有当输入框获得焦点时才阻止页面滚动
+				// 这样数字输入框的滚轮调整功能仍然可以正常工作
+				if (document.activeElement === inputElement) {
+					e.stopPropagation();
+				}
+			};
+
+			// 添加非被动事件监听器
+			inputElement.addEventListener("wheel", handleWheel, { passive: false });
+
+			return () => {
+				inputElement.removeEventListener("wheel", handleWheel);
+			};
+		}, [type]);
 
 		// 基础样式
 		const baseStyles = [
@@ -296,7 +318,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
 					{/* 输入框 */}
 					<input
-						ref={ref}
+						ref={(element) => {
+							inputRef.current = element;
+							if (typeof ref === 'function') {
+								ref(element);
+							} else if (ref) {
+								ref.current = element;
+							}
+						}}
 						id={inputId}
 						type={inputType}
 						placeholder={placeholder}

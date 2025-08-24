@@ -29,8 +29,8 @@ const InfoWindowContent = ({ restaurant, isDarkMode }: { restaurant: Restaurant;
 
     return (
         <div className={`p-4 rounded-xl w-80 shadow-lg border font-sans ${isDarkMode
-                ? 'bg-gray-900 text-gray-100 border-gray-700'
-                : 'bg-white text-gray-900 border-gray-200'
+            ? 'bg-gray-900 text-gray-100 border-gray-700'
+            : 'bg-white text-gray-900 border-gray-200'
             }`}>
             <h3 className="font-semibold text-lg mb-1">{restaurant.name}</h3>
 
@@ -122,8 +122,8 @@ const InfoWindowContent = ({ restaurant, isDarkMode }: { restaurant: Restaurant;
                         <span
                             key={index}
                             className={`px-2 py-1 rounded-full text-xs ${isDarkMode
-                                    ? 'bg-gray-800 text-gray-300'
-                                    : 'bg-gray-100 text-gray-700'
+                                ? 'bg-gray-800 text-gray-300'
+                                : 'bg-gray-100 text-gray-700'
                                 }`}
                         >
                             {tag}
@@ -180,28 +180,8 @@ const Amap = ({ restaurants, mapStyle, showSatellite, center, onLocationUpdate }
                         features: ['bg', 'road', 'building', 'point'],
                     })
 
-                    // 如果没有传入中心点，尝试获取用户当前位置
-                    if (!center && navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(
-                            (position) => {
-                                const userLocation: [number, number] = [
-                                    position.coords.longitude,
-                                    position.coords.latitude
-                                ];
-                                map.setCenter(userLocation);
-                                onLocationUpdate?.(userLocation);
-                                console.log('用户位置获取成功:', userLocation);
-                            },
-                            (error) => {
-                                console.warn('无法获取用户位置，使用默认位置:', error.message);
-                            },
-                            {
-                                enableHighAccuracy: true,
-                                timeout: 10000,
-                                maximumAge: 300000 // 5分钟缓存
-                            }
-                        );
-                    }
+                    // 只有在明确传入中心点时才设置地图中心
+                    // 移除了自动获取用户位置的逻辑，改为手动触发
 
                     map.on('complete', () => {
                         setIsMapReady(true); // Set map ready state on 'complete' event
@@ -258,6 +238,14 @@ const Amap = ({ restaurants, mapStyle, showSatellite, center, onLocationUpdate }
             }
         }
     }, [showSatellite, mapInstance, AMap])
+
+    // 处理手动定位时地图中心的更新
+    useEffect(() => {
+        if (mapInstance && center) {
+            mapInstance.setCenter(center);
+            console.log('地图中心已更新到:', center);
+        }
+    }, [center, mapInstance])
 
 
     useEffect(() => {
@@ -331,7 +319,20 @@ const Amap = ({ restaurants, mapStyle, showSatellite, center, onLocationUpdate }
                     'transition': 'all 0.2s ease-in-out',
                     // 确保标签始终可见
                     'pointer-events': 'auto',
+                    'cursor': 'pointer', // 添加手型光标
                 }
+            });
+
+            // 为文字标签添加点击事件
+            textLabel.on('click', () => {
+                if (activeInfoWindowRef.current) {
+                    activeInfoWindowRef.current.close();
+                }
+                infoWindow.open(mapInstance, textLabel.getPosition());
+                activeInfoWindowRef.current = infoWindow;
+
+                // 设置当前活动的InfoWindow，用于Portal渲染
+                setActiveInfoWindow({ restaurant, element: infoWindowElement });
             });
 
             // --- 6. 创建信息窗体实例 ---
