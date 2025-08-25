@@ -1,8 +1,8 @@
 ---
-tags: vim 操作 键盘
+tags: [vim, 操作, 键盘]
 status: publish
 date created: 2025-08-07 18:37:04
-date modified: 2025-08-25 12:33:10
+date modified: 2025-08-25 23:25:22
 ---
 
 # 插入模式操作
@@ -53,7 +53,7 @@ path\to\im-select.exe 1031 # 根据句柄切换为某个输入法
 ```
 
 参考配置
-```cpp
+```json
 {
     "vim.autoSwitchInputMethod.enable": true,
     "vim.autoSwitchInputMethod.defaultIM": "英语模式",
