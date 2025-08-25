@@ -4,6 +4,10 @@ import FoodMapClient, { FoodMapClientProps } from './FoodMapClient'
 import Loading from '@/components/ui/Loading'
 import { Restaurant } from '@/types/foodmap'
 
+// 强制动态渲染，解决Next.js 15的静态渲染问题
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export const metadata: Metadata = {
     title: 'Foodmap',
     description: '发现和分享身边的美食店铺，记录每一次美好的味觉体验',
@@ -14,7 +18,8 @@ async function getRestaurants(): Promise<Restaurant[]> {
     try {
         // 调用真实的API获取餐厅数据
         const res = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/food-map/restaurants`, {
-            cache: 'no-store' // 禁用缓存，确保获取最新数据
+            cache: 'no-store', // 禁用缓存，确保获取最新数据
+            next: { revalidate: 0 } // 明确指定不缓存
         });
 
         if (!res.ok) {

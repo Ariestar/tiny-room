@@ -47,3 +47,4 @@ next-env.d.ts
 
 # PostgreSQL data
 postgres_data/
+.vercel
