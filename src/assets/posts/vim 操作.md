@@ -2,7 +2,7 @@
 tags: vim 操作 键盘
 status: publish
 date created: 2025-08-07 18:37:04
-date modified: 2025-08-25 10:16:08
+date modified: 2025-08-25 12:33:10
 ---
 
 # 插入模式操作
