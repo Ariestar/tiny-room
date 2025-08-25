@@ -2,7 +2,7 @@
 tags: vim 操作 键盘
 status: publish
 date created: 2025-08-07 18:37:04
-date modified: 2025-08-12 16:57:18
+date modified: 2025-08-25 10:16:08
 ---
 
 # 插入模式操作
@@ -43,11 +43,21 @@ date modified: 2025-08-12 16:57:18
 
 # 自动切换输入法
 
-由于在中文输入模式无法使用 vim normal 模式指令，所以需要切换成英文输入法，在 input 模式又要切换为中文输入，非常影响 vim 操作体验，需要一个工具**自动切换输入法**，[im-select](https://github.com/daipeihust/im-select)
+由于在中文输入模式无法使用 vim normal 模式指令，所以需要切换成英文输入法，在 input 模式又要切换为中文输入，非常影响 vim 操作体验，需要一个工具**自动切换输入法**，[im-select-mspy](https://github.com/daipeihust/im-select/tree/master/win-mspy)
 
 指令
 ```shell
 path\to\im-select.exe # 获取当前输入法句柄
 path\to\im-select.exe locale # 切换下一个输入法 
 path\to\im-select.exe 1031 # 根据句柄切换为某个输入法
+```
+
+参考配置
+```cpp
+{
+    "vim.autoSwitchInputMethod.enable": true,
+    "vim.autoSwitchInputMethod.defaultIM": "英语模式",
+    "vim.autoSwitchInputMethod.obtainIMCmd": "D:\\workspace\\im-select-mspy\\build\\Release\\im-select-mspy.exe",
+    "vim.autoSwitchInputMethod.switchIMCmd": "D:\\workspace\\im-select-mspy\\build\\Release\\im-select-mspy.exe {im}",
+}
 ```
