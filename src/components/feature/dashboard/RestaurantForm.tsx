@@ -1,12 +1,13 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Input from '@/components/ui/Input'
 import Textarea from '@/components/ui/Textarea'
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
+import Checkbox from '@/components/ui/Checkbox'
 import { RestaurantSearch } from './RestaurantSearch'
-import type { Restaurant, FoodCategory } from '@/types/foodmap'
+import type { Restaurant, FoodCategory, VisitStatus } from '@/types/foodmap'
 import { ChevronDown } from 'lucide-react'
 import {
     DropdownMenu,
@@ -16,16 +17,25 @@ import {
 } from '@/components/ui/DropdownMenu'
 
 // API 输入数据类型（tags 是字符串而不是数组）
-type RestaurantApiInput = Omit<Restaurant, 'id' | 'tags'> & {
+type RestaurantApiInput = Omit<Restaurant, 'id' | 'tags' | 'category'> & {
     tags?: string
 }
 
-const categories: FoodCategory[] = [
+// 常用标签建议，用户可以自由选择和组合
+const suggestedTags = [
+    // 菜系标签
     "川菜", "粤菜", "湘菜", "鲁菜", "苏菜", "浙菜", "闽菜", "徽菜",
-    "北京菜", "东北菜", "西北菜", "火锅", "烧烤", "日料", "韩料",
-    "西餐", "快餐", "小吃", "甜品", "咖啡", "酒吧", "面食",
-    "小笼包", "麻辣小龙虾", "其他"
-]
+    "北京菜", "东北菜", "西北菜", "新疆菜", "云南菜", "贵州菜", "广西菜", "海南菜",
+    // 特色标签
+    "火锅", "烧烤", "烤肉", "麻辣烫", "串串香", "冒菜", "干锅", "铁板烧",
+    // 国际标签
+    "日料", "韩料", "西餐", "意餐", "法餐", "美式", "泰餐", "越南菜", "印度菜", "中东菜",
+    // 场景标签
+    "快餐", "面食", "包子", "饺子", "馄饨", "煎饼", "炸鸡", "汉堡", "披萨",
+    "甜品", "咖啡", "奶茶", "果汁", "冰淇淋", "蛋糕", "面包", "酒吧", "清吧",
+    // 特色标签
+    "小龙虾", "海鲜", "素食", "清真", "有机", "无麸质", "麻辣", "清淡", "重口味"
+];
 
 const priceRanges = ["¥0-30", "¥30-60", "¥60-100", "¥100-200", "¥200+"]
 
@@ -36,9 +46,11 @@ interface RestaurantFormProps {
 }
 
 export function RestaurantForm({ onSubmit, onCancel, initialData }: RestaurantFormProps) {
+    const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
+
     const [formData, setFormData] = useState({
         name: initialData?.name?.toString() || '',
-        category: initialData?.category || categories[0],
+        visitStatus: initialData?.visitStatus || '未去',
         address: initialData?.address?.toString() || '',
         coordinates: initialData?.coordinates || [116.397428, 39.90923] as [number, number],
         rating: initialData?.rating?.toString() || '',
@@ -52,6 +64,31 @@ export function RestaurantForm({ onSubmit, onCancel, initialData }: RestaurantFo
 
     const [errors, setErrors] = useState<Record<string, string>>({})
     const [isSubmitting, setIsSubmitting] = useState(false)
+
+    // 获取用户位置
+    useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { longitude, latitude } = position.coords
+                    setUserLocation([longitude, latitude])
+                    console.log('获取到用户位置:', [longitude, latitude])
+                },
+                (error) => {
+                    console.log('获取用户位置失败:', error.message)
+                    setUserLocation(null)
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 60000
+                }
+            )
+        } else {
+            console.log('浏览器不支持地理位置')
+            setUserLocation(null)
+        }
+    }, [])
 
     const handleInputChange = (field: string, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }))
@@ -135,7 +172,7 @@ export function RestaurantForm({ onSubmit, onCancel, initialData }: RestaurantFo
         try {
             const restaurantData: RestaurantApiInput = {
                 name: formData.name?.toString().trim() || '',
-                category: formData.category as FoodCategory,
+                visitStatus: formData.visitStatus,
                 address: formData.address?.toString().trim() || '',
                 coordinates: formData.coordinates,
                 rating: formData.rating ? Number(formData.rating) : undefined,
@@ -163,7 +200,7 @@ export function RestaurantForm({ onSubmit, onCancel, initialData }: RestaurantFo
                     <label className="block text-sm font-medium mb-1">
                         搜索餐厅 <span className="text-blue-500">💡</span>
                     </label>
-                    <RestaurantSearch onSelect={handleSearchSelect} />
+                    <RestaurantSearch onSelect={handleSearchSelect} userLocation={userLocation} />
                     <p className="text-xs text-muted-foreground mt-1">
                         输入餐厅名称或地址，自动获取准确位置信息
                     </p>
@@ -184,29 +221,30 @@ export function RestaurantForm({ onSubmit, onCancel, initialData }: RestaurantFo
                         {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                     </div>
 
-                    {/* 分类 */}
+                    {/* 标签 */}
                     <div>
-                        <label className="block text-sm font-medium mb-1">分类</label>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <button className="w-full flex items-center justify-between px-3 py-2 border border-input rounded-md bg-background text-sm hover:bg-accent hover:text-accent-foreground transition-colors focus:ring-2 focus:ring-ring focus:border-transparent">
-                                    <span>{formData.category}</span>
-                                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                                </button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="start" className="w-full min-w-[200px]">
-                                {categories.map((category) => (
-                                    <DropdownMenuItem
-                                        key={category}
-                                        onClick={() => handleInputChange('category', category)}
-                                        className={`cursor-pointer ${formData.category === category ? '!bg-accent !text-accent-foreground' : ''}`}
-                                        data-selected={formData.category === category}
-                                    >
-                                        {category}
-                                    </DropdownMenuItem>
-                                ))}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        <label className="block text-sm font-medium mb-1">标签</label>
+                        <Input
+                            value={formData.tags}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('tags', e.target.value)}
+                            placeholder="用逗号分隔，如: 川菜, 火锅, 麻辣, 适合聚餐"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                            常用标签：川菜、粤菜、火锅、烧烤、日料、西餐、快餐、甜品、咖啡等
+                        </p>
+                    </div>
+
+                    {/* 访问状态 */}
+                    <div>
+                        <label className="block text-sm font-medium mb-1">是否已去</label>
+                        <div className="flex items-center space-x-4">
+                            <Checkbox
+                                size="sm"
+                                id="visitStatus"
+                                checked={formData.visitStatus === '已去'}
+                                onChange={(e) => handleInputChange('visitStatus', e.target.checked ? '已去' : '未去')}
+                            />
+                        </div>
                     </div>
 
                     {/* 评分 */}
@@ -362,15 +400,7 @@ export function RestaurantForm({ onSubmit, onCancel, initialData }: RestaurantFo
                     />
                 </div>
 
-                {/* 标签 */}
-                <div>
-                    <label className="block text-sm font-medium mb-1">标签</label>
-                    <Input
-                        value={formData.tags}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('tags', e.target.value)}
-                        placeholder="用逗号分隔，如: 环境好, 服务佳, 性价比高"
-                    />
-                </div>
+
 
                 {/* 描述 */}
                 <div>
