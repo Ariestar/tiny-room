@@ -103,9 +103,8 @@ export default function Home() {
 				<HeroSection
 					height="screen"
 					pattern="none"
-					className="relative overflow-hidden mobile-safe-area mobile-hero-optimized select-none"
+					className="relative overflow-hidden mobile-safe-area mobile-hero-optimized"
 				>
-					{/* 动态背景效果 */}
 					<DynamicBackground
 						variant="gradient"
 						intensity="medium"
@@ -114,7 +113,6 @@ export default function Home() {
 						className="absolute inset-1"
 					/>
 
-					{/* 动画渐变背景 */}
 					<AnimatedGradient
 						variant="aurora"
 						speed="normal"
@@ -122,25 +120,23 @@ export default function Home() {
 						className="absolute inset-0"
 					/>
 
-					{/* 鼠标跟随粒子系统 */}
-					<MouseFollowParticles
+					{/* <MouseFollowParticles
 						particleCount={15}
 						colors={["hsl(var(--accent-blue))", "hsl(var(--accent-purple))", "hsl(var(--accent-pink))"]}
 						sizeRange={[2, 4]}
 						followStrength={0.03}
 						enabled={true}
 						className="absolute inset-0"
-					/>
+					/> */}
 
-					{/* 互动元素和彩蛋 */}
 					<InteractiveElements
 						enableEasterEggs={true}
 						enableMicroInteractions={true}
 						showActivityStatus={true}
-						className="absolute inset-0 z-10"
+						className="absolute inset-0"
 					/>
 
-					<div className="relative text-center space-y-20 select-none pointer-events-none">
+					<div className="relative text-center space-y-20">
 						{/* 个性化问候 */}
 						<div className="space-y-4 sm:space-y-6 px-4 sm:px-0">
 							<div className="mobile-hero-title">
@@ -161,7 +157,7 @@ export default function Home() {
 							{/* 副标题 - 打字机效果 */}
 							<div className="mobile-hero-subtitle">
 								<TypewriterText
-									text=""
+									text="祝你早安，午安，晚安。"
 									speed={20}
 									showCursor={true}
 									className="text-base sm:text-lg lg:text-xl xl:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed block mobile-text-optimized"

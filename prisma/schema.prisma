@@ -111,7 +111,6 @@ model Album {
 model Restaurant {
   id           String   @id @default(cuid())
   name         String
-  category     String
   address      String
   rating       Float?
   priceRange   String?
@@ -120,6 +119,7 @@ model Restaurant {
   phone        String?
   openingHours String?
   website      String?
+  visitStatus  String   @default("未去")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   authorId     String

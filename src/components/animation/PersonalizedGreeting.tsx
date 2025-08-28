@@ -208,7 +208,7 @@ export function PersonalizedGreeting({
         <div className={cn("relative", className)}>
             {/* 装饰性 emoji */}
             {showEmoji && (
-                <div className="absolute -inset-4 pointer-events-none">
+                <div className="absolute -inset-4 -z-10 user-select-none">
                     <AnimatePresence>
                         {decorativeEmojis.map((emoji, index) => (
                             <motion.div
@@ -324,23 +324,21 @@ export function SimpleGreeting({
     }, []);
 
     return (
-        <div className={cn("text-center", className)}>
-            <motion.h2
-                className="text-2xl font-semibold text-muted-foreground"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-            >
-                {greeting}
-                {showTime && (
-                    <span className="ml-2 text-lg">
-                        {new Date().toLocaleTimeString('zh-CN', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        })}
-                    </span>
-                )}
-            </motion.h2>
-        </div>
+        <motion.h2
+            className={cn("text-2xl font-semibold text-muted-foreground", className)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+        >
+            {greeting}
+            {showTime && (
+                <span className="ml-2 text-lg">
+                    {new Date().toLocaleTimeString('zh-CN', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })}
+                </span>
+            )}
+        </motion.h2>
     );
 }

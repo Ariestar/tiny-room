@@ -42,9 +42,10 @@ export default function FoodMapClient({ initialRestaurants }: FoodMapClientProps
 
 
     // 获取所有分类
-    const categories = useMemo(() => {
-        return ['全部', ...Array.from(new Set(restaurants.map(r => r.category)))]
-    }, [restaurants])
+    const categories = useMemo(
+        () => ['全部', ...[...new Set(restaurants.map(r => r.category).filter((c): c is string => !!c))]],
+        [restaurants]
+    )
 
     // 过滤餐厅
     const filteredRestaurants = useMemo(() => {
