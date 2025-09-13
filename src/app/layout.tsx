@@ -48,6 +48,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					integrity='sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV'
 					crossOrigin='anonymous'
 				/>
+				<meta name="baidu-site-verification" content="codeva-odPra98Ilf" />
 			</head>
 			<body
 				className={`  ${fonts.daHei.variable} ${inter.className} ${fonts.lxgwWenkai.variable} ${fonts.bookerly.variable} ${bevan.variable} bg-background text-foreground antialiased`}
