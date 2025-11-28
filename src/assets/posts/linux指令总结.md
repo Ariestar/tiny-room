@@ -5,7 +5,7 @@ tags:
   - 指令
   - 总结 
 date created: 2025-07-16 00:36:48
-date modified: 2025-08-20 10:34:23
+date modified: 2025-11-28 13:59:41
 status: publish
 ---
 
@@ -95,4 +95,5 @@ systemctl daemon-reload # 刷新
 实用命令  
 `pwd` 显示当前路径  
 `tail` 查看文件最新内容  
-`htop` 查看内存占用
+`htop` 查看内存占用  
+`wget -qObench.sh | bash` 测网速
