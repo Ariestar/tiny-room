@@ -3,7 +3,7 @@ tags:
   - git
   - 版本管理
 date created: 2025-08-16 14:37:26
-date modified: 2025-08-23 13:12:57
+date modified: 2025-11-29 02:00:35
 status: publish
 ---
 
@@ -22,6 +22,7 @@ git blame <filename> # 查看是谁更改的代码
 git show <sha-flag> # 在命令行查看某个commit版本
 git stash # 将你的本地修改保存起来，并将工作目录还原为与`HEAD`提交相匹配
 git rm <filename> # 从暂存区中删除文件
+git commit --amend --no-edit 
 ```
 
 # git 基础
