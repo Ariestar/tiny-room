@@ -3,7 +3,7 @@ tags:
   - git
   - 版本管理
 date created: 2025-08-16 14:37:26
-date modified: 2025-11-29 02:00:35
+date modified: 2025-11-30 23:17:53
 status: publish
 ---
 
@@ -23,6 +23,7 @@ git show <sha-flag> # 在命令行查看某个commit版本
 git stash # 将你的本地修改保存起来，并将工作目录还原为与`HEAD`提交相匹配
 git rm <filename> # 从暂存区中删除文件
 git commit --amend --no-edit 
+ssh-keygen -t ed25519 -C "email or other stuff"
 ```
 
 # git 基础
