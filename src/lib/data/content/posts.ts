@@ -45,6 +45,10 @@ export type PostData = {
 
 export function getSortedPostsData() {
 	// Get file names under /posts
+	if (!fs.existsSync(postsDirectory)) {
+		console.warn(`Posts directory not found: ${postsDirectory}`);
+		return [];
+	}
 	const fileNames = fs.readdirSync(postsDirectory);
 	const allPostsData = fileNames.map(fileName => {
 		// Decode URI component to handle non-ASCII characters
@@ -94,6 +98,9 @@ export function getSortedPostsData() {
 }
 
 export function getAllPostSlugs() {
+	if (!fs.existsSync(postsDirectory)) {
+		return [];
+	}
 	const fileNames = fs.readdirSync(postsDirectory);
 	return fileNames.map(fileName => {
 		// Decode URI component to handle non-ASCII characters
@@ -209,6 +216,9 @@ export const getPostBySlug = cache(async (slug: string): Promise<PostData | null
 });
 
 export async function getAllPosts() {
+	if (!fs.existsSync(postsDirectory)) {
+		return [];
+	}
 	const slugs = fs.readdirSync(postsDirectory).map(file => file.replace(/\.md$/, ""));
 	const allPosts = await Promise.all(slugs.map(slug => getPostBySlug(slug)));
 
