@@ -46,7 +46,7 @@ export const TimelineNode: React.FC<TimelineNodeProps> = ({
             <div
                 className="relative group cursor-pointer h-full"
 
-                title={`${post.title} (${new Date(post.date).toLocaleDateString('zh-CN')})`}
+                title={`${post.title} (${post.date ? new Date(post.date).toLocaleDateString('zh-CN') : "草稿"})`}
             >
                 {/* 节点光晕 */}
                 <div

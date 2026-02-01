@@ -106,7 +106,7 @@ const PostCard = ({
 
                         {/* 元信息 */}
                         <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-2">
-                            <span>{new Date(post.date).toLocaleDateString('zh-CN')}</span>
+                            <span>{post.date ? new Date(post.date).toLocaleDateString('zh-CN') : "草稿"}</span>
                             {post.readingTime && (
                                 <span>{post.readingTime} 分钟阅读</span>
                             )}

@@ -157,7 +157,7 @@ export function ImageDetails({
                 <div className="mt-4">
                     {process.env.NEXT_PUBLIC_GISCUS_REPO && process.env.NEXT_PUBLIC_GISCUS_REPO_ID ? (
                         <Giscus
-                            repo={process.env.NEXT_PUBLIC_GISCUS_REPO}
+                            repo={process.env.NEXT_PUBLIC_GISCUS_REPO as `${string}/${string}`}
                             repoId={process.env.NEXT_PUBLIC_GISCUS_REPO_ID}
                             category={process.env.NEXT_PUBLIC_GISCUS_CATEGORY || "Announcements"}
                             categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID || ""}

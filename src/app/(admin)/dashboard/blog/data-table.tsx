@@ -30,7 +30,7 @@ import {
 export type Post = {
 	slug: string;
 	title: string;
-	date: string;
+	date?: string;
 };
 
 // A new component for the actions cell to use hooks correctly
@@ -93,7 +93,10 @@ export const columns: ColumnDef<Post>[] = [
 	{
 		accessorKey: "date",
 		header: "Date",
-		cell: ({ row }) => <div>{new Date(row.getValue("date")).toLocaleDateString()}</div>,
+		cell: ({ row }) => {
+			const date = row.getValue("date");
+			return <div>{date ? new Date(date as string).toLocaleDateString() : "Draft"}</div>;
+		},
 	},
 	{
 		id: "actions",

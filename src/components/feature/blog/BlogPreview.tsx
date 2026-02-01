@@ -11,7 +11,7 @@ import { ScrollReveal, ScrollRevealContainer, ScrollRevealItem } from "@/compone
 export interface BlogPost {
     slug: string;
     title: string;
-    date: string;
+    date?: string;
     tags: string[];
     description?: string;
     readingTime: string;
@@ -123,11 +123,14 @@ function BlogPreviewCard({
         const date = new Date(dateString);
         const now = new Date();
         const diffTime = Math.abs(now.getTime() - date.getTime());
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const daysSincePublished = Math.floor(
+            diffTime / (1000 * 60 * 60 * 24)
+        );
 
-        if (diffDays === 1) return "昨天";
-        if (diffDays <= 7) return `${diffDays}天前`;
-        if (diffDays <= 30) return `${Math.ceil(diffDays / 7)}周前`;
+        if (daysSincePublished === 0) return "今天";
+        if (daysSincePublished === 1) return "昨天";
+        if (daysSincePublished <= 7) return `${daysSincePublished}天前`;
+        if (daysSincePublished <= 30) return `${Math.ceil(daysSincePublished / 7)}周前`;
 
         return date.toLocaleDateString('zh-CN', {
             year: 'numeric',
@@ -189,7 +192,7 @@ function BlogPreviewCard({
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
                             <div className="flex items-center gap-1">
                                 <Calendar className="w-3 h-3" />
-                                <span>{formatDate(post.date)}</span>
+                                <span>{post.date ? formatDate(post.date) : "草稿"}</span>
                             </div>
                             <div className="flex items-center gap-1">
                                 <Clock className="w-3 h-3" />
@@ -245,7 +248,7 @@ export function CompactBlogPreview({
                             {post.title}
                         </h4>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <span>{new Date(post.date).toLocaleDateString('zh-CN')}</span>
+                            <span>{post.date ? new Date(post.date).toLocaleDateString('zh-CN') : "草稿"}</span>
                             <span>·</span>
                             <span>{post.readingTime}</span>
                         </div>

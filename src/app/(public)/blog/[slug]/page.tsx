@@ -55,8 +55,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 				title={post.title}
 				description={post.description || post.content.slice(0, 150)}
 				url={currentUrl}
-				datePublished={post.date}
-				dateModified={post.date}
+				datePublished={post.date || new Date().toISOString()} // Fallback to current date or handle explicitly if preferred
+				dateModified={post.modified || post.date || new Date().toISOString()}
 				tags={post.tags}
 				image={post.image}
 			/>
@@ -101,6 +101,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
 							<ArticleMetadata
 								date={post.date}
+								modified={post.modified}
 								readingTime={post.readingTime || 0}
 								tags={post.tags}
 								url={currentUrl}

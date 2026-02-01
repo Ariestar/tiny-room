@@ -39,7 +39,7 @@ export function calculateFreshnessScore(
   decayFactor: number = 0.1
 ): number {
   const now = new Date();
-  const postDate = new Date(publishDate);
+  const postDate = new Date(publishDate || new Date().toISOString());
   const daysDiff = Math.floor(
     (now.getTime() - postDate.getTime()) / (1000 * 60 * 60 * 24)
   );
@@ -222,7 +222,7 @@ export function getPopularPosts(posts: Post[], limit: number = 5): Post[] {
 // 获取最新文章
 export function getLatestPosts(posts: Post[], limit: number = 5): Post[] {
   return posts
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .sort((a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime())
     .slice(0, limit);
 }
 

@@ -30,7 +30,8 @@ const postsDirectory = path.join(process.cwd(), "src/assets/posts");
 export type PostData = {
 	slug: string;
 	title: string;
-	date: string;
+	date?: string;
+	modified?: string; // Add modified date
 	tags: string[];
 	contentHtml: string;
 	content: string; // Add raw content
@@ -70,9 +71,9 @@ export function getSortedPostsData() {
 			slug,
 			title: (matterResult.data as { title?: string }).title || slug,
 			date:
-				(matterResult.data as { "date created"?: string })["date created"] ||
-				(matterResult.data as { date?: string }).date ||
-				stats.mtime.toISOString(),
+				(matterResult.data as { created?: string }).created ||
+				(matterResult.data as { date?: string }).date,
+			modified: (matterResult.data as { modified?: string }).modified,
 			status: (matterResult.data as { status?: string }).status || "draft",
 			description: (matterResult.data as { description?: string }).description || "",
 			tags: tags,
@@ -82,6 +83,8 @@ export function getSortedPostsData() {
 	});
 	// Sort posts by date
 	return allPostsData.sort((a, b) => {
+		if (!a.date) return 1;
+		if (!b.date) return -1;
 		if (a.date < b.date) {
 			return 1;
 		} else {
@@ -191,7 +194,8 @@ export const getPostBySlug = cache(async (slug: string): Promise<PostData | null
 	return {
 		slug,
 		title: (data.title as string) || slug,
-		date: (data["date created"] as string) || (data.date as string),
+		date: (data.created as string) || (data.date as string),
+		modified: data.modified as string,
 		tags: tags_processed,
 		contentHtml: processedContent.toString(),
 		content: content, // Return raw content
@@ -210,9 +214,11 @@ export async function getAllPosts() {
 
 	// Filter out null posts if any were not found
 	return allPosts
-		.filter(post => post !== null)
+		.filter((post): post is PostData => post !== null)
 		.sort((a, b) => {
-			if (a!.date < b!.date) {
+			if (!a.date) return 1;
+			if (!b.date) return -1;
+			if (a.date < b.date) {
 				return 1;
 			} else {
 				return -1;

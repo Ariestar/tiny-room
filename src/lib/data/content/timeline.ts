@@ -58,7 +58,9 @@ const groupPostsByYear = (posts: PostSummary[]): YearGroup[] => {
 
   // 按年份分组
   posts.forEach((post) => {
-    const year = new Date(post.date).getFullYear();
+    // Skip posts without date or use a default
+    const dateStr = post.date || new Date().toISOString(); 
+    const year = new Date(dateStr).getFullYear();
     if (!yearMap.has(year)) {
       yearMap.set(year, []);
     }
@@ -72,7 +74,7 @@ const groupPostsByYear = (posts: PostSummary[]): YearGroup[] => {
       posts: yearPosts.map((post, index) => ({
         slug: post.slug,
         title: post.title,
-        date: post.date,
+        date: post.date || new Date().toISOString(), // Ensure date is string
         tags: post.tags,
         status: post.status,
         readingTime: post.readingTime,
@@ -96,7 +98,7 @@ export const generateTimelineData = (posts: PostSummary[]): TimelineData => {
 
   // 按时间排序（最新的在前）
   const sortedPosts = [...posts].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    (a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()
   );
 
   // 按年份分组
@@ -107,7 +109,7 @@ export const generateTimelineData = (posts: PostSummary[]): TimelineData => {
   yearGroups.forEach((group) => {
     // 每个年份组内的文章按时间降序排列
     const sortedGroupPosts = group.posts.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      (a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()
     );
     timelinePosts.push(...sortedGroupPosts);
   });
@@ -148,7 +150,7 @@ export const getYearGroups = (posts: PostSummary[]): YearGroup[] => {
   if (posts.length === 0) return [];
 
   const sortedPosts = [...posts].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    (a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()
   );
 
   return groupPostsByYear(sortedPosts);

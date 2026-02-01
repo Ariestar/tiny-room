@@ -17,7 +17,7 @@ function generateRSSFeed(posts: any[]): string {
 	const rssItems = publishedPosts
 		.map(post => {
 			const postUrl = `${siteUrl}/blog/${post.slug}`;
-			const pubDate = new Date(post.date).toUTCString();
+			const pubDate = new Date(post.date || new Date().toISOString()).toUTCString();
 
 			// 清理内容，移除HTML标签用于描述
 			const description =

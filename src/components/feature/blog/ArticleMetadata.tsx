@@ -2,7 +2,8 @@ import Badge from "@/components/ui/Badge";
 import { SocialShare } from "@/components/feature/blog/SocialShare";
 
 interface ArticleMetadataProps {
-	date: string;
+	date?: string;
+	modified?: string;
 	readingTime: number;
 	tags: string[];
 	viewCount?: number;
@@ -16,6 +17,7 @@ interface ArticleMetadataProps {
 
 export function ArticleMetadata({
 	date,
+	modified,
 	readingTime,
 	tags,
 	viewCount,
@@ -25,26 +27,41 @@ export function ArticleMetadata({
 	description,
 	showShare = false,
 }: ArticleMetadataProps) {
+	const formatDate = (dateString: string) => {
+		try {
+			return new Date(dateString).toLocaleDateString('zh-CN');
+		} catch (e) {
+			return dateString;
+		}
+	};
+
 	return (
 		<div className={className}>
 			{/* 桌面端布局：左右分布 */}
 			<div className="hidden sm:flex items-center justify-between gap-6">
 				{/* 左侧：文章元数据 */}
 				<div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-					<div className='flex items-center gap-1'>
+					<div className='flex items-center gap-1.5' title="发布时间">
 						<span className='text-base'>📅</span>
-						<span>{new Date(date).toLocaleDateString('zh-CN')}</span>
+						<span>{date ? formatDate(date) : "草稿"}</span>
 					</div>
 
-					<div className='flex items-center gap-1'>
+					{modified && modified !== date && (
+						<div className='flex items-center gap-1.5 text-gray-500' title="最后修改">
+							<span className='text-base'>📝</span>
+							<span>{formatDate(modified)}</span>
+						</div>
+					)}
+
+					<div className='flex items-center gap-1.5'>
 						<span className='text-base'>⏱️</span>
 						<span>{readingTime} min</span>
 					</div>
 
 					{viewCount !== undefined && (
-						<div className='flex items-center gap-1'>
+						<div className='flex items-center gap-1.5'>
 							<span className='text-base'>👁️</span>
-							<span>{viewCount.toLocaleString()} 次浏览</span>
+							<span>{viewCount.toLocaleString()}</span>
 						</div>
 					)}
 
@@ -84,8 +101,15 @@ export function ArticleMetadata({
 				<div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 dark:text-gray-400 justify-center">
 					<div className='flex items-center gap-1'>
 						<span className='text-base'>📅</span>
-						<span>{new Date(date).toLocaleDateString('zh-CN')}</span>
+						<span>{date ? formatDate(date) : "草稿"}</span>
 					</div>
+
+					{modified && modified !== date && (
+						<div className='flex items-center gap-1 text-gray-500'>
+							<span className='text-base'>📝</span>
+							<span>{formatDate(modified)}</span>
+						</div>
+					)}
 
 					<div className='flex items-center gap-1'>
 						<span className='text-base'>⏱️</span>
@@ -95,7 +119,7 @@ export function ArticleMetadata({
 					{viewCount !== undefined && (
 						<div className='flex items-center gap-1'>
 							<span className='text-base'>👁️</span>
-							<span>{viewCount.toLocaleString()} 次浏览</span>
+							<span>{viewCount.toLocaleString()}</span>
 						</div>
 					)}
 

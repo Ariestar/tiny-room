@@ -9,7 +9,7 @@ import Badge from "@/components/ui/Badge";
 interface PostData {
     slug: string;
     title: string;
-    date: string;
+    date?: string;
     tags: string[];
     status: string;
     content: string;
@@ -99,7 +99,7 @@ function calculateRelevanceScore(currentPost: PostData, candidatePost: PostData)
 
     // 3. 时间新鲜度得分
     const daysDiff = Math.abs(
-        (new Date(currentPost.date).getTime() - new Date(candidatePost.date).getTime())
+        (new Date(currentPost.date || new Date()).getTime() - new Date(candidatePost.date || new Date()).getTime())
         / (1000 * 60 * 60 * 24)
     );
     const recencyScore = Math.max(0, 1 - daysDiff / 365); // 一年内的文章有新鲜度加分
@@ -124,7 +124,7 @@ function calculateHomepageScore(post: PostData): number {
 
     // 发布时间新鲜度 (权重: 40%)
     const daysSincePublished = Math.floor(
-        (Date.now() - new Date(post.date).getTime()) / (1000 * 60 * 60 * 24)
+        (Date.now() - new Date(post.date || new Date()).getTime()) / (1000 * 60 * 60 * 24)
     );
     const freshnessScore = Math.max(0, 1 - daysSincePublished / 30); // 30天内为新鲜
     score += freshnessScore * 0.4;
@@ -306,7 +306,7 @@ export function RelatedPosts({
                                     </h4>
 
                                     <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                                        <span>{new Date(post.date).toLocaleDateString('zh-CN')}</span>
+                                        <span>{post.date ? new Date(post.date).toLocaleDateString('zh-CN') : "草稿"}</span>
                                         <span>{post.readingTime}</span>
                                     </div>
 

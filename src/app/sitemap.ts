@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 	const posts = getSortedPostsData();
 	const blogEntries = posts.map(post => ({
 		url: `${process.env.NEXT_PUBLIC_SITE_URL}/blog/${post.slug}`,
-		lastModified: new Date(post.date),
+		lastModified: new Date(post.modified || post.date || new Date().toISOString()),
 		changeFrequency: "daily" as const,
 		priority: 1,
 	}));
