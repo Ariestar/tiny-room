@@ -6,7 +6,6 @@ import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import type { R2Image } from "@/app/(public)/gallery/page";
 // import { useRouter, usePathname, useSearchParams } from "next/navigation"; // 暂时保留，后续可能用于导航功能
 import { useEffect, useState, useRef } from "react";
-import { ScrollIndicator } from "@/components/animation/ScrollIndicator";
 import { ImageDetails } from "./ImageDetails";
 
 type FullscreenCarouselProps = {
@@ -25,7 +24,6 @@ export function FullscreenCarousel({ image, onClose, onNext, onPrev, hasNext = f
 
 	// 滚动状态管理
 	const [scrollProgress, setScrollProgress] = useState(0);
-	const [showScrollIndicator, setShowScrollIndicator] = useState(true);
 	const [showImageDetails, setShowImageDetails] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 
@@ -67,12 +65,10 @@ export function FullscreenCarousel({ image, onClose, onNext, onPrev, hasNext = f
 
 		setScrollProgress(progress);
 
-		// 滚动超过 20% 时隐藏指示器，显示详情
+		// 滚动超过 20% 时显示详情
 		if (progress > 0.2) {
-			setShowScrollIndicator(false);
 			setShowImageDetails(true);
 		} else {
-			setShowScrollIndicator(true);
 			setShowImageDetails(false);
 		}
 	};
@@ -188,7 +184,6 @@ export function FullscreenCarousel({ image, onClose, onNext, onPrev, hasNext = f
 	useEffect(() => {
 		if (image) {
 			setScrollProgress(0);
-			setShowScrollIndicator(true);
 			setShowImageDetails(false);
 			if (containerRef.current) {
 				containerRef.current.scrollTop = 0;
@@ -251,17 +246,17 @@ export function FullscreenCarousel({ image, onClose, onNext, onPrev, hasNext = f
 						onScroll={handleScroll}
 						onClick={(e) => e.stopPropagation()}
 					>
-						{/* 图片区域 */}
+						{/* 图片区域 - 全屏展示 */}
 						<motion.div
-							className="relative w-full h-screen flex items-center justify-center"
-							initial={{ scale: 0.8, opacity: 0 }}
+							className="relative w-full h-screen flex items-center justify-center overflow-hidden"
+							initial={{ scale: 0.9, opacity: 0 }}
 							animate={{
 								scale: 1,
 								opacity: 1,
-								y: scrollProgress * -50, // 轻微的视差效果
+								y: scrollProgress * -30, // 轻微的视差效果
 								x: isDragging ? Math.max(-100, Math.min(100, dragOffset * 0.3)) : 0, // 限制拖拽范围，添加阻尼效果
 							}}
-							exit={{ scale: 0.8, opacity: 0 }}
+							exit={{ scale: 0.9, opacity: 0 }}
 							transition={{
 								type: "spring",
 								damping: 25,
@@ -278,7 +273,7 @@ export function FullscreenCarousel({ image, onClose, onNext, onPrev, hasNext = f
 						>
 							{/* 图片容器 - 占满全屏 */}
 							<div
-								className="relative bg-transparent"
+								className="relative w-full h-full"
 								style={{
 									width: isAutoRotate && orientation === 'portrait' ? '100vh' : '100%',
 									height: isAutoRotate && orientation === 'portrait' ? '100vw' : '100%',
@@ -296,24 +291,24 @@ export function FullscreenCarousel({ image, onClose, onNext, onPrev, hasNext = f
 									className="bg-transparent transition-transform duration-300 object-contain"
 									sizes='100vw'
 									priority
+									quality={95}
 								/>
 							</div>
 						</motion.div>
 
-						{/* 详情区域 */}
+						{/* 详情区域 - 下滑显示 */}
 						<motion.div
-							className="min-h-screen p-8 flex items-center justify-center"
-							initial={{ opacity: 0, y: 100 }}
+							className="min-h-screen p-4 md:p-8 flex items-start justify-center pt-20"
+							initial={{ opacity: 0 }}
 							animate={{
-								opacity: showImageDetails ? 1 : 0.3,
-								y: showImageDetails ? 0 : 50,
+								opacity: showImageDetails ? 1 : 0.5,
 							}}
 							transition={{ duration: 0.6, ease: "easeOut" }}
 						>
 							<ImageDetails
 								image={image}
 								visible={true}
-								className="max-w-4xl"
+								className="max-w-4xl w-full"
 							/>
 						</motion.div>
 					</div>

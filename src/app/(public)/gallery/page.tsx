@@ -138,7 +138,13 @@ function GalleryClient() {
 	}
 
 	if (!images || images.length === 0) {
-		return <p>No images found.</p>;
+		return (
+			<div className='flex flex-col items-center justify-center min-h-screen bg-background text-foreground'>
+				<div className='text-center'>
+					<h1 className='text-9xl font-extrabold text-primary'>No Image</h1>
+				</div>
+			</div>
+		);
 	}
 
 	return (
