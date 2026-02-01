@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 
 async function getRestaurants(): Promise<Restaurant[]> {
     try {
+        console.log('Fetching restaurants from:', `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/food-map/restaurants`); // DEBUG LOG
         // 调用真实的API获取餐厅数据
         const res = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/food-map/restaurants`, {
             cache: 'no-store', // 禁用缓存，确保获取最新数据

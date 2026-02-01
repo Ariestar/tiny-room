@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import { z } from "zod";
 import { auth } from "@/auth";
-
-const prisma = new PrismaClient();
 
 const restaurantApiSchema = z.object({
 	name: z.string().min(2, "名称至少需要2个字符"),
@@ -20,11 +18,13 @@ const restaurantApiSchema = z.object({
 
 export async function GET() {
 	try {
+		console.log("API: Fetching restaurants from DB...");
 		const restaurantsFromDb = await prisma.restaurant.findMany({
 			orderBy: {
 				createdAt: "desc",
 			},
 		});
+		console.log(`API: Successfully fetched ${restaurantsFromDb.length} restaurants from DB.`);
 
 		// Prisma returns Decimal types for Float, so we need to ensure they are numbers
 		const restaurants = restaurantsFromDb.map(r => ({
